@@ -282,7 +282,9 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
           <option value="sv">Svenska</option>
           <option value="da">Dansk</option>
           <option value="nb">Norsk</option>
+          <option value="fi">Suomi</option>
           <option value="tr">Türkçe</option>
+          <option value="el">Ελληνικά</option>
           <option value="ru">Русский</option>
           <option value="uk">Українська</option>
           <option value="bg">Български</option>
@@ -500,7 +502,24 @@ fr:{eqHowTitle:"Comment estimer ton équité",
   mods:{preflop:"Préflop — ranges d'ouverture",defense:"Défense — face à une relance",equity:"Équité main contre main",potodds:"Pot odds et outs",showdown:"Showdown — lecture du board"},
   overall:"Global",sub:(ok,n)=>`${ok} bonnes sur ${n}`,subAll:(n,b)=>`${n} questions · meilleure série ${b}`,
   reset:"Remettre les stats à zéro",confirmReset:"Confirmer la remise à zéro",empty:"Tes résultats apparaîtront ici après tes premières mains. Ils restent sur cet appareil."},
-es:{settings:"Ajustes",setLang:"Idioma",setTerms:"Mantener los términos de póker en inglés",
+es:{eqHowTitle:"Cómo estimar tu equity",
+  eqHow:`<p><b>1. Cuenta tus outs.</b> Los outs son las cartas que te ponen por delante: un proyecto de color tiene 9, un proyecto de escalera abierta 8, un gutshot 4, dos overcards unos 6.</p>
+<p><b>2. Regla del 4 y del 2.</b> En el flop, con dos cartas por salir: outs × 4. En el turn, con una carta por salir: outs × 2. Con más de 8 outs en el flop, resta los outs que sobran: 15 outs ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Si vas por delante,</b> cuenta los outs de tu rival y quédate con el resto: tiene 9 outs en el flop ≈ 36 %, así que tú tienes cerca del 64 %.</p>
+<p><b>4. En preflop, apréndete los enfrentamientos clásicos</b> (la parte del favorito):</p>
+<ul><li>Pareja mayor contra pareja menor (KK contra QQ): ≈ 80 %</li><li>Pareja contra dos cartas más bajas (QQ contra JT): ≈ 80 %</li><li>Pareja contra una overcard (QQ contra AJ): ≈ 70 %</li><li>Mano dominada, carta compartida (AK contra AQ): ≈ 70 %</li><li>Dos overcards contra dos cartas más bajas (AK contra 98): ≈ 60 %</li><li>Pareja contra dos overcards (QQ contra AK): ≈ 55 %, un cara o cruz</li></ul>`,
+  ruleOf:n=>`Regla del ${n}`,
+  youOuts:(o,rule,est)=>`Vas por detrás con <b>${o} outs</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Vas por delante; tu rival tiene <b>${o} outs</b>. ${rule} ≈ ${est} % para él, así que cerca del <b>${mine} %</b> para ti.`,
+  mu:{pp:"pareja mayor contra pareja menor",pover2:"pareja contra dos overcards",pover1:"pareja contra una overcard",punder:"pareja contra dos cartas más bajas",dom:"mano dominada (carta compartida)",over:"dos overcards contra dos cartas más bajas",mixed:"una carta alta cada uno"},
+  muLine:(name,fav)=>`Enfrentamiento: ${name}. El favorito suele tener cerca del <b>${fav} %</b>.`,
+  poHowTitle:"Cómo hacer el cálculo",
+  poHow:`<p><b>1. Equity necesaria = tu call ÷ el bote final.</b> El bote final es el bote, más la apuesta, más tu call: apuesta ÷ (bote + 2 × apuesta).</p>
+<p class="ex">Ejemplo: el bote es de 100 y tu rival apuesta 50. Pagas 50 para ganar un bote final de 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Apréndete los atajos según el tamaño de la apuesta:</b></p>
+<ul><li>1/3 del bote → 20 %</li><li>1/2 del bote → 25 %</li><li>2/3 del bote → 28,6 %</li><li>3/4 del bote → 30 %</li><li>Bote → 33 %</li><li>2× bote → 40 %</li></ul>
+<p><b>3. Compara con tu equity.</b> En el turn, outs × 2. Paga si tu equity es mayor, haz fold si es menor. Las odds implícitas (lo que puedes ganar en las calles siguientes) pueden justificar un call un poco justo.</p>`,
+  settings:"Ajustes",setLang:"Idioma",setTerms:"Mantener los términos de póker en inglés",
   setTermsHint:"Los nombres de manos, posiciones y acciones quedan en inglés (Flush, Full house, Button, Raise…); el resto usa tu idioma.",
   setTermsOff:"Disponible cuando la app está en otro idioma.",setTable:"Mesa",done:"Listo",
   tabVillains:"Rivales",oppLbl:"Rival",random:"Al azar",exploitLbl:"Cómo jugarle:",statsLbl:"VPIP / PFR típicos",
@@ -575,7 +594,24 @@ es:{settings:"Ajustes",setLang:"Idioma",setTerms:"Mantener los términos de pók
   mods:{preflop:"Preflop — ranges de apertura",defense:"Defensa — ante un open",equity:"Equity mano contra mano",potodds:"Pot odds y outs",showdown:"Showdown — leer el board"},
   overall:"General",sub:(ok,n)=>`${ok} bien de ${n}`,subAll:(n,b)=>`${n} preguntas · mejor racha ${b}`,
   reset:"Reiniciar estadísticas",confirmReset:"Confirmar reinicio",empty:"Tus resultados aparecerán aquí después de tus primeras manos. Se quedan en este dispositivo."},
-pt:{settings:"Configurações",setLang:"Idioma",setTerms:"Manter os termos de poker em inglês",
+pt:{eqHowTitle:"Como estimar sua equity",
+  eqHow:`<p><b>1. Conte seus outs.</b> Outs são as cartas que te colocam na frente: um flush draw tem 9, um open-ended 8, um gutshot 4, duas overcards cerca de 6.</p>
+<p><b>2. Regra do 4 e do 2.</b> No flop, com duas cartas por vir: outs × 4. No turn, com uma carta por vir: outs × 2. Com mais de 8 outs no flop, tire os outs a mais: 15 outs ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Se você está na frente,</b> conte os outs do adversário e fique com o resto: ele tem 9 outs no flop ≈ 36 %, então você tem cerca de 64 %.</p>
+<p><b>4. No preflop, decore os confrontos clássicos</b> (a parte do favorito):</p>
+<ul><li>Par maior contra par menor (KK contra QQ): ≈ 80 %</li><li>Par contra duas cartas menores (QQ contra JT): ≈ 80 %</li><li>Par contra uma overcard (QQ contra AJ): ≈ 70 %</li><li>Mão dominada, carta em comum (AK contra AQ): ≈ 70 %</li><li>Duas overcards contra duas cartas menores (AK contra 98): ≈ 60 %</li><li>Par contra duas overcards (QQ contra AK): ≈ 55 %, um cara ou coroa</li></ul>`,
+  ruleOf:n=>`Regra do ${n}`,
+  youOuts:(o,rule,est)=>`Você está atrás com <b>${o} outs</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Você está na frente; o adversário tem <b>${o} outs</b>. ${rule} ≈ ${est} % para ele, então cerca de <b>${mine} %</b> para você.`,
+  mu:{pp:"par maior contra par menor",pover2:"par contra duas overcards",pover1:"par contra uma overcard",punder:"par contra duas cartas menores",dom:"mão dominada (carta em comum)",over:"duas overcards contra duas cartas menores",mixed:"uma carta alta para cada um"},
+  muLine:(name,fav)=>`Confronto: ${name}. O favorito costuma ter cerca de <b>${fav} %</b>.`,
+  poHowTitle:"Como fazer a conta",
+  poHow:`<p><b>1. Equity necessária = seu call ÷ o pote final.</b> O pote final é o pote, mais a aposta, mais o seu call: aposta ÷ (pote + 2 × aposta).</p>
+<p class="ex">Exemplo: o pote é 100 e o adversário aposta 50. Você paga 50 para ganhar um pote final de 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Decore os atalhos por tamanho de aposta:</b></p>
+<ul><li>1/3 pote → 20 %</li><li>1/2 pote → 25 %</li><li>2/3 pote → 28,6 %</li><li>3/4 pote → 30 %</li><li>Pote → 33 %</li><li>2× pote → 40 %</li></ul>
+<p><b>3. Compare com sua equity.</b> No turn, outs × 2. Pague se sua equity for maior, dê fold se for menor. As odds implícitas (o que você pode ganhar nas próximas streets) podem justificar um call um pouco abaixo.</p>`,
+  settings:"Configurações",setLang:"Idioma",setTerms:"Manter os termos de poker em inglês",
   setTermsHint:"Nomes das mãos, posições e ações ficam em inglês (Flush, Full house, Button, Raise…); o resto fica em português.",
   setTermsOff:"Disponível quando o app está em outro idioma.",setTable:"Mesa",done:"OK",
   tabVillains:"Adversários",oppLbl:"Adversário",random:"Aleatório",exploitLbl:"Como jogar contra ele:",statsLbl:"VPIP / PFR típicos",
@@ -650,7 +686,24 @@ pt:{settings:"Configurações",setLang:"Idioma",setTerms:"Manter os termos de po
   mods:{preflop:"Preflop — ranges de abertura",defense:"Defesa — contra um open",equity:"Equity mão contra mão",potodds:"Pot odds e outs",showdown:"Showdown — leitura do board"},
   overall:"Geral",sub:(ok,n)=>`${ok} certas de ${n}`,subAll:(n,b)=>`${n} perguntas · melhor sequência ${b}`,
   reset:"Zerar estatísticas",confirmReset:"Confirmar zerar",empty:"Seus resultados vão aparecer aqui depois das primeiras mãos. Eles ficam neste aparelho."},
-de:{settings:"Einstellungen",setLang:"Sprache",setTerms:"Pokerbegriffe auf Englisch lassen",
+de:{eqHowTitle:"So schätzt du deine Equity",
+  eqHow:`<p><b>1. Zähl deine Outs.</b> Outs sind die Karten, die dich nach vorn bringen: Ein Flush Draw hat 9, ein Open-Ended Straight Draw 8, ein Gutshot 4, zwei Overcards etwa 6.</p>
+<p><b>2. 4er- und 2er-Regel.</b> Am Flop, mit zwei kommenden Karten: Outs × 4. Am Turn, mit einer kommenden Karte: Outs × 2. Mit mehr als 8 Outs am Flop ziehst du die überzähligen Outs ab: 15 Outs ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Wenn du vorn liegst,</b> zähl die Outs deines Gegners und nimm den Rest: Er hat 9 Outs am Flop ≈ 36 %, also hast du etwa 64 %.</p>
+<p><b>4. Preflop: Lern die klassischen Matchups</b> (Anteil des Favoriten):</p>
+<ul><li>Höheres Paar gegen niedrigeres Paar (KK gegen QQ): ≈ 80 %</li><li>Paar gegen zwei niedrigere Karten (QQ gegen JT): ≈ 80 %</li><li>Paar gegen eine Overcard (QQ gegen AJ): ≈ 70 %</li><li>Dominierte Hand, gemeinsame Karte (AK gegen AQ): ≈ 70 %</li><li>Zwei Overcards gegen zwei niedrigere Karten (AK gegen 98): ≈ 60 %</li><li>Paar gegen zwei Overcards (QQ gegen AK): ≈ 55 %, ein Coinflip</li></ul>`,
+  ruleOf:n=>`${n}er-Regel`,
+  youOuts:(o,rule,est)=>`Du liegst hinten mit <b>${o} Outs</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Du liegst vorn; dein Gegner hat <b>${o} Outs</b>. ${rule} ≈ ${est} % für ihn, also etwa <b>${mine} %</b> für dich.`,
+  mu:{pp:"höheres Paar gegen niedrigeres Paar",pover2:"Paar gegen zwei Overcards",pover1:"Paar gegen eine Overcard",punder:"Paar gegen zwei niedrigere Karten",dom:"dominierte Hand (gemeinsame Karte)",over:"zwei Overcards gegen zwei niedrigere Karten",mixed:"je eine hohe Karte"},
+  muLine:(name,fav)=>`Matchup: ${name}. Der Favorit hat meist etwa <b>${fav} %</b>.`,
+  poHowTitle:"So rechnest du",
+  poHow:`<p><b>1. Nötige Equity = dein Call ÷ der Endpot.</b> Der Endpot ist der Pot plus die Bet plus dein Call: Bet ÷ (Pot + 2 × Bet).</p>
+<p class="ex">Beispiel: Der Pot ist 100 und dein Gegner bettet 50. Du callst 50, um einen Endpot von 200 zu gewinnen: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Lern die Abkürzungen nach Bet-Größe:</b></p>
+<ul><li>1/3 Pot → 20 %</li><li>1/2 Pot → 25 %</li><li>2/3 Pot → 28,6 %</li><li>3/4 Pot → 30 %</li><li>Pot → 33 %</li><li>2× Pot → 40 %</li></ul>
+<p><b>3. Vergleich mit deiner Equity.</b> Am Turn: Outs × 2. Calle, wenn deine Equity höher ist, folde, wenn sie niedriger ist. Implied Odds (Geld, das du auf späteren Streets gewinnen kannst) können einen knapp zu teuren Call rechtfertigen.</p>`,
+  settings:"Einstellungen",setLang:"Sprache",setTerms:"Pokerbegriffe auf Englisch lassen",
   setTermsHint:"Handnamen, Positionen und Aktionen bleiben auf Englisch (Flush, Full house, Button, Raise…); alles andere ist auf Deutsch.",
   setTermsOff:"Verfügbar, wenn die App auf eine andere Sprache eingestellt ist.",setTable:"Tisch",done:"Fertig",
   tabVillains:"Gegner",oppLbl:"Gegner",random:"Zufällig",exploitLbl:"So spielst du gegen ihn:",statsLbl:"Typische VPIP / PFR",
@@ -725,7 +778,24 @@ de:{settings:"Einstellungen",setLang:"Sprache",setTerms:"Pokerbegriffe auf Engli
   mods:{preflop:"Preflop — Opening-Ranges",defense:"Verteidigung — gegen ein Open",equity:"Equity Hand gegen Hand",potodds:"Pot Odds und Outs",showdown:"Showdown — Board lesen"},
   overall:"Gesamt",sub:(ok,n)=>`${ok} richtig von ${n}`,subAll:(n,b)=>`${n} Fragen · beste Serie ${b}`,
   reset:"Statistik zurücksetzen",confirmReset:"Zurücksetzen bestätigen",empty:"Deine Ergebnisse erscheinen hier nach deinen ersten Händen. Sie bleiben auf diesem Gerät."},
-it:{settings:"Impostazioni",setLang:"Lingua",setTerms:"Mantieni i termini di poker in inglese",
+it:{eqHowTitle:"Come stimare la tua equity",
+  eqHow:`<p><b>1. Conta i tuoi outs.</b> Gli outs sono le carte che ti mettono avanti: un progetto di colore ne ha 9, un progetto di scala bilaterale 8, un gutshot 4, due overcard circa 6.</p>
+<p><b>2. Regola del 4 e del 2.</b> Al flop, con due carte da scoprire: outs × 4. Al turn, con una carta da scoprire: outs × 2. Con più di 8 outs al flop, togli gli outs in eccesso: 15 outs ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Se sei avanti,</b> conta gli outs del tuo avversario e prendi il resto: ha 9 outs al flop ≈ 36 %, quindi tu hai circa il 64 %.</p>
+<p><b>4. Al preflop, impara gli scontri classici</b> (la quota del favorito):</p>
+<ul><li>Coppia più alta contro coppia più bassa (KK contro QQ): ≈ 80 %</li><li>Coppia contro due carte più basse (QQ contro JT): ≈ 80 %</li><li>Coppia contro una overcard (QQ contro AJ): ≈ 70 %</li><li>Mano dominata, carta in comune (AK contro AQ): ≈ 70 %</li><li>Due overcard contro due carte più basse (AK contro 98): ≈ 60 %</li><li>Coppia contro due overcard (QQ contro AK): ≈ 55 %, un testa o croce</li></ul>`,
+  ruleOf:n=>`Regola del ${n}`,
+  youOuts:(o,rule,est)=>`Sei dietro con <b>${o} outs</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Sei avanti; il tuo avversario ha <b>${o} outs</b>. ${rule} ≈ ${est} % per lui, quindi circa il <b>${mine} %</b> per te.`,
+  mu:{pp:"coppia più alta contro coppia più bassa",pover2:"coppia contro due overcard",pover1:"coppia contro una overcard",punder:"coppia contro due carte più basse",dom:"mano dominata (carta in comune)",over:"due overcard contro due carte più basse",mixed:"una carta alta a testa"},
+  muLine:(name,fav)=>`Scontro: ${name}. Il favorito ha di solito circa il <b>${fav} %</b>.`,
+  poHowTitle:"Come fare il calcolo",
+  poHow:`<p><b>1. Equity richiesta = il tuo call ÷ il piatto finale.</b> Il piatto finale è il piatto, più la puntata, più il tuo call: puntata ÷ (piatto + 2 × puntata).</p>
+<p class="ex">Esempio: il piatto è 100 e il tuo avversario punta 50. Chiami 50 per vincere un piatto finale di 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Impara le scorciatoie in base alla size della puntata:</b></p>
+<ul><li>1/3 pot → 20 %</li><li>1/2 pot → 25 %</li><li>2/3 pot → 28,6 %</li><li>3/4 pot → 30 %</li><li>Pot → 33 %</li><li>2× pot → 40 %</li></ul>
+<p><b>3. Confronta con la tua equity.</b> Al turn, outs × 2. Chiama se la tua equity è più alta, folda se è più bassa. Le implied odds (quello che puoi vincere nelle street successive) possono giustificare un call un po' al limite.</p>`,
+  settings:"Impostazioni",setLang:"Lingua",setTerms:"Mantieni i termini di poker in inglese",
   setTermsHint:"Nomi delle mani, posizioni e azioni restano in inglese (Flush, Full house, Button, Raise…); il resto è in italiano.",
   setTermsOff:"Disponibile quando l'app è in un'altra lingua.",setTable:"Tavolo",done:"OK",
   tabVillains:"Avversari",oppLbl:"Avversario",random:"Casuale",exploitLbl:"Come giocarci contro:",statsLbl:"VPIP / PFR tipici",
@@ -800,7 +870,24 @@ it:{settings:"Impostazioni",setLang:"Lingua",setTerms:"Mantieni i termini di pok
   mods:{preflop:"Preflop — range di apertura",defense:"Difesa — contro un open",equity:"Equity mano contro mano",potodds:"Pot odds e outs",showdown:"Showdown — leggere il board"},
   overall:"Totale",sub:(ok,n)=>`${ok} giuste su ${n}`,subAll:(n,b)=>`${n} domande · serie migliore ${b}`,
   reset:"Azzera le statistiche",confirmReset:"Conferma l'azzeramento",empty:"I tuoi risultati appariranno qui dopo le prime mani. Restano su questo dispositivo."},
-ru:{settings:"Настройки",setLang:"Язык",setTerms:"Покерные термины на английском",
+ru:{eqHowTitle:"Как оценить эквити",
+  eqHow:`<p><b>1. Посчитай ауты.</b> Ауты — это карты, которые выводят тебя вперёд: у флеш-дро их 9, у двустороннего стрит-дро 8, у гатшота 4, у двух оверкарт около 6.</p>
+<p><b>2. Правило 4 и 2.</b> На флопе, когда впереди две карты: ауты × 4. На тёрне, когда осталась одна карта: ауты × 2. Если на флопе больше 8 аутов, вычти лишние: 15 аутов ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Если ты впереди,</b> посчитай ауты оппонента и возьми остаток: у него 9 аутов на флопе ≈ 36 %, значит у тебя около 64 %.</p>
+<p><b>4. На префлопе запомни классические расклады</b> (доля фаворита):</p>
+<ul><li>Старшая пара против младшей (KK против QQ): ≈ 80 %</li><li>Пара против двух младших карт (QQ против JT): ≈ 80 %</li><li>Пара против одной оверкарты (QQ против AJ): ≈ 70 %</li><li>Доминируемая рука, общая карта (AK против AQ): ≈ 70 %</li><li>Две оверкарты против двух младших карт (AK против 98): ≈ 60 %</li><li>Пара против двух оверкарт (QQ против AK): ≈ 55 %, почти монетка</li></ul>`,
+  ruleOf:n=>`Правило ${n}`,
+  youOuts:(o,rule,est)=>`Ты позади, у тебя <b>${o} аутов</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Ты впереди; у оппонента <b>${o} аутов</b>. ${rule} ≈ ${est} % у него, значит у тебя около <b>${mine} %</b>.`,
+  mu:{pp:"старшая пара против младшей",pover2:"пара против двух оверкарт",pover1:"пара против одной оверкарты",punder:"пара против двух младших карт",dom:"доминируемая рука (общая карта)",over:"две оверкарты против двух младших карт",mixed:"у каждого по одной старшей карте"},
+  muLine:(name,fav)=>`Расклад: ${name}. У фаворита обычно около <b>${fav} %</b>.`,
+  poHowTitle:"Как посчитать",
+  poHow:`<p><b>1. Нужное эквити = твой колл ÷ итоговый банк.</b> Итоговый банк — это банк, плюс ставка, плюс твой колл: ставка ÷ (банк + 2 × ставка).</p>
+<p class="ex">Пример: в банке 100, оппонент ставит 50. Ты коллируешь 50, чтобы выиграть итоговый банк 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Запомни ориентиры по размеру ставки:</b></p>
+<ul><li>1/3 банка → 20 %</li><li>1/2 банка → 25 %</li><li>2/3 банка → 28,6 %</li><li>3/4 банка → 30 %</li><li>Банк → 33 %</li><li>2× банк → 40 %</li></ul>
+<p><b>3. Сравни со своим эквити.</b> На тёрне ауты × 2. Коллируй, если твоё эквити выше, фолди, если ниже. Имплайд-оддсы (деньги, которые можно выиграть на следующих улицах) могут оправдать колл, которому чуть-чуть не хватает.</p>`,
+  settings:"Настройки",setLang:"Язык",setTerms:"Покерные термины на английском",
   setTermsHint:"Названия рук, позиции и действия остаются на английском (Flush, Full house, Button, Raise…); всё остальное — на русском.",
   setTermsOff:"Доступно, когда приложение на другом языке.",setTable:"Стол",done:"Готово",
   tabVillains:"Оппоненты",oppLbl:"Оппонент",random:"Случайный",exploitLbl:"Как играть против него:",statsLbl:"Типичные VPIP / PFR",
@@ -875,7 +962,24 @@ ru:{settings:"Настройки",setLang:"Язык",setTerms:"Покерные 
   mods:{preflop:"Префлоп — рейнджи открытия",defense:"Защита — против опена",equity:"Эквити рука против руки",potodds:"Пот-оддсы и ауты",showdown:"Шоудаун — чтение борда"},
   overall:"Всего",sub:(ok,n)=>`${ok} верно из ${n}`,subAll:(n,b)=>`${n} вопросов · лучшая серия ${b}`,
   reset:"Сбросить статистику",confirmReset:"Подтвердить сброс",empty:"Результаты появятся здесь после первых раздач. Они хранятся только на этом устройстве."},
-zh:{settings:"设置",setLang:"语言",setTerms:"扑克术语保留英文",
+zh:{eqHowTitle:"如何估算胜率",
+  eqHow:`<p><b>1. 数你的补牌。</b>补牌就是能让你反超的牌：同花听牌有 9 张，两头顺子听牌 8 张，卡顺听牌 4 张，两张高张约 6 张。</p>
+<p><b>2. 4 和 2 法则。</b>翻牌时还有两张牌要发：补牌 × 4。转牌时还有一张牌要发：补牌 × 2。翻牌时补牌超过 8 张，要减去多出的张数：15 张补牌 ≈ 15 × 4 − 7 = 53 %。</p>
+<p><b>3. 如果你领先，</b>数对手的补牌，剩下的就是你的：对手翻牌时有 9 张补牌 ≈ 36 %，所以你约有 64 %。</p>
+<p><b>4. 翻牌前，记住经典对决</b>（优势方的胜率）：</p>
+<ul><li>大对子对小对子（KK 对 QQ）：≈ 80 %</li><li>对子对两张小牌（QQ 对 JT）：≈ 80 %</li><li>对子对一张高张（QQ 对 AJ）：≈ 70 %</li><li>被压制的牌，有一张共同牌（AK 对 AQ）：≈ 70 %</li><li>两张高张对两张小牌（AK 对 98）：≈ 60 %</li><li>对子对两张高张（QQ 对 AK）：≈ 55 %，接近掷硬币</li></ul>`,
+  ruleOf:n=>`${n} 法则`,
+  youOuts:(o,rule,est)=>`你落后，有 <b>${o} 张补牌</b>。${rule} ≈ <b>${est} %</b>。`,
+  vilOuts:(o,rule,est,mine)=>`你领先；对手有 <b>${o} 张补牌</b>。${rule} ≈ 对手 ${est} %，所以你约有 <b>${mine} %</b>。`,
+  mu:{pp:"大对子对小对子",pover2:"对子对两张高张",pover1:"对子对一张高张",punder:"对子对两张小牌",dom:"被压制的牌（有共同牌）",over:"两张高张对两张小牌",mixed:"双方各有一张大牌"},
+  muLine:(name,fav)=>`对决：${name}。优势方通常约有 <b>${fav} %</b>。`,
+  poHowTitle:"如何计算",
+  poHow:`<p><b>1. 所需胜率 = 你的跟注 ÷ 最终底池。</b>最终底池 = 底池 + 下注 + 你的跟注，即：下注 ÷（底池 + 2 × 下注）。</p>
+<p class="ex">例子：底池 100，对手下注 50。你跟注 50，争夺 200 的最终底池：50 ÷ 200 = 25 %。</p>
+<p><b>2. 按下注大小记住速算值：</b></p>
+<ul><li>1/3 底池 → 20 %</li><li>1/2 底池 → 25 %</li><li>2/3 底池 → 28.6 %</li><li>3/4 底池 → 30 %</li><li>满池 → 33 %</li><li>2× 底池 → 40 %</li></ul>
+<p><b>3. 与你的胜率比较。</b>转牌时，补牌 × 2。胜率更高就跟注，更低就弃牌。隐含赔率（之后几条街还能赢到的钱）可以让略差一点的跟注变得合理。</p>`,
+  settings:"设置",setLang:"语言",setTerms:"扑克术语保留英文",
   setTermsHint:"牌型、位置和动作保留英文（Flush、Full house、Button、Raise…），其余内容使用你的语言。",
   setTermsOff:"当应用设置为其他语言时可用。",setTable:"牌桌",done:"完成",
   tabVillains:"对手",oppLbl:"对手",random:"随机",exploitLbl:"如何对付他们：",statsLbl:"典型 VPIP / PFR",
@@ -950,7 +1054,24 @@ zh:{settings:"设置",setLang:"语言",setTerms:"扑克术语保留英文",
   mods:{preflop:"翻牌前 — 开池范围",defense:"防守 — 面对开池",equity:"手牌对手牌胜率",potodds:"底池赔率与补牌",showdown:"摊牌 — 读懂牌面"},
   overall:"总计",sub:(ok,n)=>`${n} 题答对 ${ok} 题`,subAll:(n,b)=>`${n} 题 · 最佳连对 ${b}`,
   reset:"重置统计",confirmReset:"确认重置",empty:"打完第一手牌后，你的成绩会显示在这里。数据只保存在本设备上。"},
-ja:{settings:"設定",setLang:"言語",setTerms:"ポーカー用語を英語で表示",
+ja:{eqHowTitle:"エクイティの見積もり方",
+  eqHow:`<p><b>1. アウツを数える。</b>アウツとは、あなたを逆転させるカードです。フラッシュドローは9枚、オープンエンド・ストレートドローは8枚、ガットショットは4枚、オーバーカード2枚は約6枚です。</p>
+<p><b>2. 4と2のルール。</b>フロップでは残り2枚：アウツ × 4。ターンでは残り1枚：アウツ × 2。フロップでアウツが8枚を超えるときは、超えた分を引きます：15アウツ ≈ 15 × 4 − 7 = 53 %。</p>
+<p><b>3. リードしているときは、</b>相手のアウツを数えて残りを取ります：相手がフロップで9アウツ ≈ 36 % なら、あなたは約64 %です。</p>
+<p><b>4. プリフロップは定番の対決を覚える</b>（有利な側の取り分）：</p>
+<ul><li>大きいペア vs 小さいペア（KK vs QQ）：≈ 80 %</li><li>ペア vs 下のカード2枚（QQ vs JT）：≈ 80 %</li><li>ペア vs オーバーカード1枚（QQ vs AJ）：≈ 70 %</li><li>ドミネートされたハンド、共通カードあり（AK vs AQ）：≈ 70 %</li><li>オーバーカード2枚 vs 下のカード2枚（AK vs 98）：≈ 60 %</li><li>ペア vs オーバーカード2枚（QQ vs AK）：≈ 55 %、ほぼコインフリップ</li></ul>`,
+  ruleOf:n=>`${n}のルール`,
+  youOuts:(o,rule,est)=>`あなたは劣勢で、<b>${o}アウツ</b>あります。${rule} ≈ <b>${est} %</b>。`,
+  vilOuts:(o,rule,est,mine)=>`あなたがリードしています。相手は<b>${o}アウツ</b>。${rule} ≈ 相手 ${est} %、つまりあなたは約<b>${mine} %</b>。`,
+  mu:{pp:"大きいペア vs 小さいペア",pover2:"ペア vs オーバーカード2枚",pover1:"ペア vs オーバーカード1枚",punder:"ペア vs 下のカード2枚",dom:"ドミネートされたハンド（共通カード）",over:"オーバーカード2枚 vs 下のカード2枚",mixed:"互いに高いカードが1枚ずつ"},
+  muLine:(name,fav)=>`対決：${name}。有利な側は通常約<b>${fav} %</b>です。`,
+  poHowTitle:"計算のしかた",
+  poHow:`<p><b>1. 必要エクイティ = あなたのコール ÷ 最終ポット。</b>最終ポットは、ポット＋ベット＋あなたのコールです：ベット ÷（ポット + 2 × ベット）。</p>
+<p class="ex">例：ポットが100で、相手が50をベット。50をコールして最終ポット200を狙います：50 ÷ 200 = 25 %。</p>
+<p><b>2. ベットサイズ別の目安を覚える：</b></p>
+<ul><li>1/3ポット → 20 %</li><li>1/2ポット → 25 %</li><li>2/3ポット → 28.6 %</li><li>3/4ポット → 30 %</li><li>ポット → 33 %</li><li>2×ポット → 40 %</li></ul>
+<p><b>3. 自分のエクイティと比べる。</b>ターンではアウツ × 2。エクイティが上ならコール、下ならフォールド。インプライドオッズ（後のストリートで勝てるお金）があれば、少し足りないコールも正当化できます。</p>`,
+  settings:"設定",setLang:"言語",setTerms:"ポーカー用語を英語で表示",
   setTermsHint:"役名・ポジション・アクションは英語のまま表示されます（Flush、Full house、Button、Raise…）。それ以外は選択した言語で表示されます。",
   setTermsOff:"アプリを英語以外の言語に設定すると利用できます。",setTable:"テーブル",done:"完了",
   tabVillains:"相手",oppLbl:"相手",random:"ランダム",exploitLbl:"攻略法：",statsLbl:"典型的な VPIP / PFR",
@@ -1025,7 +1146,24 @@ ja:{settings:"設定",setLang:"言語",setTerms:"ポーカー用語を英語で�
   mods:{preflop:"プリフロップ — オープンレンジ",defense:"ディフェンス — オープンに対して",equity:"ハンド対ハンドのエクイティ",potodds:"ポットオッズとアウツ",showdown:"ショーダウン — ボードの読み方"},
   overall:"全体",sub:(ok,n)=>`${n}問中${ok}問正解`,subAll:(n,b)=>`${n}問 · 最高連続正解 ${b}`,
   reset:"統計をリセット",confirmReset:"リセットを確認",empty:"最初のハンドをプレイすると、ここに結果が表示されます。データはこの端末に保存されます。"},
-ko:{settings:"설정",setLang:"언어",setTerms:"포커 용어는 영어로 표시",
+ko:{eqHowTitle:"에퀴티 추정하는 법",
+  eqHow:`<p><b>1. 아웃츠를 세세요.</b> 아웃츠는 나를 앞서게 해 주는 카드예요. 플러시 드로우는 9장, 양방향 스트레이트 드로우는 8장, 거셧은 4장, 투 오버카드는 약 6장이에요.</p>
+<p><b>2. 4와 2의 법칙.</b> 플랍에서 두 장이 남았을 때: 아웃츠 × 4. 턴에서 한 장이 남았을 때: 아웃츠 × 2. 플랍에서 아웃츠가 8장보다 많으면 초과분을 빼세요: 아웃츠 15장 ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. 내가 앞서 있다면,</b> 상대의 아웃츠를 세고 나머지를 가져가세요: 상대가 플랍에서 아웃츠 9장 ≈ 36 %면, 나는 약 64 %예요.</p>
+<p><b>4. 프리플랍에서는 대표적인 매치업을 외우세요</b> (우세한 쪽의 몫):</p>
+<ul><li>높은 페어 vs 낮은 페어 (KK vs QQ): ≈ 80 %</li><li>페어 vs 낮은 카드 두 장 (QQ vs JT): ≈ 80 %</li><li>페어 vs 오버카드 한 장 (QQ vs AJ): ≈ 70 %</li><li>도미네이트된 핸드, 공유 카드 (AK vs AQ): ≈ 70 %</li><li>투 오버카드 vs 낮은 카드 두 장 (AK vs 98): ≈ 60 %</li><li>페어 vs 투 오버카드 (QQ vs AK): ≈ 55 %, 거의 코인 플립</li></ul>`,
+  ruleOf:n=>`${n}의 법칙`,
+  youOuts:(o,rule,est)=>`뒤처져 있고 <b>아웃츠 ${o}장</b>이 있어요. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`앞서 있어요. 상대는 <b>아웃츠 ${o}장</b>. ${rule} ≈ 상대 ${est} %, 그래서 나는 약 <b>${mine} %</b>.`,
+  mu:{pp:"높은 페어 vs 낮은 페어",pover2:"페어 vs 투 오버카드",pover1:"페어 vs 오버카드 한 장",punder:"페어 vs 낮은 카드 두 장",dom:"도미네이트된 핸드 (공유 카드)",over:"투 오버카드 vs 낮은 카드 두 장",mixed:"서로 높은 카드 한 장씩"},
+  muLine:(name,fav)=>`매치업: ${name}. 우세한 쪽은 보통 약 <b>${fav} %</b>예요.`,
+  poHowTitle:"계산하는 법",
+  poHow:`<p><b>1. 필요 에퀴티 = 내 콜 ÷ 최종 팟.</b> 최종 팟은 팟 + 베팅 + 내 콜이에요: 베팅 ÷ (팟 + 2 × 베팅).</p>
+<p class="ex">예: 팟이 100이고 상대가 50을 베팅해요. 50을 콜해서 최종 팟 200을 노려요: 50 ÷ 200 = 25 %.</p>
+<p><b>2. 베팅 크기별 단축값을 외우세요:</b></p>
+<ul><li>1/3 팟 → 20 %</li><li>1/2 팟 → 25 %</li><li>2/3 팟 → 28.6 %</li><li>3/4 팟 → 30 %</li><li>팟 → 33 %</li><li>2× 팟 → 40 %</li></ul>
+<p><b>3. 내 에퀴티와 비교하세요.</b> 턴에서는 아웃츠 × 2. 에퀴티가 더 높으면 콜, 더 낮으면 폴드하세요. 임플라이드 오즈(이후 스트리트에서 더 딸 수 있는 돈)가 있으면 살짝 모자란 콜도 정당화될 수 있어요.</p>`,
+  settings:"설정",setLang:"언어",setTerms:"포커 용어는 영어로 표시",
   setTermsHint:"족보, 포지션, 액션은 영어로 표시돼요 (Flush, Full house, Button, Raise…). 나머지는 선택한 언어로 나와요.",
   setTermsOff:"앱 언어가 영어가 아닐 때 사용할 수 있어요.",setTable:"테이블",done:"완료",
   tabVillains:"상대",oppLbl:"상대",random:"랜덤",exploitLbl:"상대하는 법:",statsLbl:"일반적인 VPIP / PFR",
@@ -1100,7 +1238,24 @@ ko:{settings:"설정",setLang:"언어",setTerms:"포커 용어는 영어로 표�
   mods:{preflop:"프리플랍 — 오픈 레인지",defense:"디펜스 — 오픈에 대응",equity:"핸드 대 핸드 에퀴티",potodds:"팟 오즈와 아웃츠",showdown:"쇼다운 — 보드 읽기"},
   overall:"전체",sub:(ok,n)=>`${n}문제 중 ${ok}개 정답`,subAll:(n,b)=>`${n}문제 · 최고 연속 ${b}`,
   reset:"통계 초기화",confirmReset:"초기화 확인",empty:"첫 핸드를 풀면 여기에 결과가 표시돼요. 결과는 이 기기에만 저장돼요."},
-pl:{settings:"Ustawienia",setLang:"Język",setTerms:"Zostaw terminy pokerowe po angielsku",
+pl:{eqHowTitle:"Jak oszacować equity",
+  eqHow:`<p><b>1. Policz swoje outy.</b> Outy to karty, które dają ci prowadzenie: flush draw ma ich 9, open-ended straight draw 8, gutshot 4, dwie overcardy około 6.</p>
+<p><b>2. Reguła 4 i 2.</b> Na flopie, gdy zostały dwie karty: outy × 4. Na turnie, gdy została jedna karta: outy × 2. Gdy masz na flopie więcej niż 8 outów, odejmij nadwyżkę: 15 outów ≈ 15 × 4 − 7 = 53%.</p>
+<p><b>3. Jeśli prowadzisz,</b> policz outy przeciwnika i weź resztę: ma 9 outów na flopie ≈ 36%, więc ty masz około 64%.</p>
+<p><b>4. Preflop zapamiętaj klasyczne starcia</b> (udział faworyta):</p>
+<ul><li>Wyższa para kontra niższa para (KK vs QQ): ≈ 80%</li><li>Para kontra dwie niższe karty (QQ vs JT): ≈ 80%</li><li>Para kontra jedna overcarda (QQ vs AJ): ≈ 70%</li><li>Zdominowana ręka, wspólna karta (AK vs AQ): ≈ 70%</li><li>Dwie overcardy kontra dwie niższe karty (AK vs 98): ≈ 60%</li><li>Para kontra dwie overcardy (QQ vs AK): ≈ 55%, rzut monetą</li></ul>`,
+  ruleOf:n=>`Reguła ${n}`,
+  youOuts:(o,rule,est)=>`Przegrywasz i masz <b>${o} outów</b>. ${rule} ≈ <b>${est}%</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Prowadzisz; przeciwnik ma <b>${o} outów</b>. ${rule} ≈ ${est}% dla niego, więc około <b>${mine}%</b> dla ciebie.`,
+  mu:{pp:"wyższa para kontra niższa para",pover2:"para kontra dwie overcardy",pover1:"para kontra jedna overcarda",punder:"para kontra dwie niższe karty",dom:"zdominowana ręka (wspólna karta)",over:"dwie overcardy kontra dwie niższe karty",mixed:"każdy ma jedną wysoką kartę"},
+  muLine:(name,fav)=>`Starcie: ${name}. Faworyt ma zwykle około <b>${fav}%</b>.`,
+  poHowTitle:"Jak to policzyć",
+  poHow:`<p><b>1. Wymagane equity = twój call ÷ końcowa pula.</b> Końcowa pula to pula plus bet plus twój call: bet ÷ (pula + 2 × bet).</p>
+<p class="ex">Przykład: w puli jest 100, a przeciwnik betuje 50. Płacisz 50, żeby wygrać końcową pulę 200: 50 ÷ 200 = 25%.</p>
+<p><b>2. Zapamiętaj skróty według wielkości betu:</b></p>
+<ul><li>1/3 puli → 20%</li><li>1/2 puli → 25%</li><li>2/3 puli → 28,6%</li><li>3/4 puli → 30%</li><li>Pula → 33%</li><li>2× pula → 40%</li></ul>
+<p><b>3. Porównaj ze swoim equity.</b> Na turnie outy × 2. Calluj, gdy twoje equity jest wyższe, folduj, gdy jest niższe. Implied odds (pieniądze, które możesz wygrać na kolejnych ulicach) mogą uzasadnić call, któremu trochę brakuje.</p>`,
+  settings:"Ustawienia",setLang:"Język",setTerms:"Zostaw terminy pokerowe po angielsku",
   setTermsHint:"Nazwy układów, pozycje i akcje zostają po angielsku (Flush, Full house, Button, Raise…); reszta jest po polsku.",
   setTermsOff:"Dostępne, gdy aplikacja jest w innym języku.",setTable:"Stół",done:"OK",
   tabVillains:"Przeciwnicy",oppLbl:"Przeciwnik",random:"Losowo",exploitLbl:"Jak z nim grać:",statsLbl:"Typowe VPIP / PFR",
@@ -1175,7 +1330,24 @@ pl:{settings:"Ustawienia",setLang:"Język",setTerms:"Zostaw terminy pokerowe po 
   mods:{preflop:"Preflop — range'e otwarcia",defense:"Obrona — przeciw openowi",equity:"Equity ręka przeciw ręce",potodds:"Pot odds i outy",showdown:"Showdown — czytanie boardu"},
   overall:"Ogółem",sub:(ok,n)=>`${ok} dobrze na ${n}`,subAll:(n,b)=>`${n} pytań · najlepsza seria ${b}`,
   reset:"Zresetuj statystyki",confirmReset:"Potwierdź reset",empty:"Twoje wyniki pojawią się tu po pierwszych rozdaniach. Zostają na tym urządzeniu."},
-cs:{settings:"Nastavení",setLang:"Jazyk",setTerms:"Nechat pokerové výrazy anglicky",
+cs:{eqHowTitle:"Jak odhadnout equitu",
+  eqHow:`<p><b>1. Spočítej si outy.</b> Outy jsou karty, které tě dostanou do vedení: flush draw jich má 9, oboustranný straight draw 8, gutshot 4, dvě overcardy zhruba 6.</p>
+<p><b>2. Pravidlo 4 a 2.</b> Na flopu, kdy přijdou ještě dvě karty: outy × 4. Na turnu, kdy přijde ještě jedna karta: outy × 2. Když máš na flopu víc než 8 outů, odečti outy navíc: 15 outů ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Když vedeš,</b> spočítej outy soupeře a vezmi zbytek: má na flopu 9 outů ≈ 36 %, takže ty máš zhruba 64 %.</p>
+<p><b>4. Preflop si zapamatuj klasické souboje</b> (podíl favorita):</p>
+<ul><li>Vyšší pár proti nižšímu páru (KK proti QQ): ≈ 80 %</li><li>Pár proti dvěma nižším kartám (QQ proti JT): ≈ 80 %</li><li>Pár proti jedné overcardě (QQ proti AJ): ≈ 70 %</li><li>Dominovaná kombinace, společná karta (AK proti AQ): ≈ 70 %</li><li>Dvě overcardy proti dvěma nižším kartám (AK proti 98): ≈ 60 %</li><li>Pár proti dvěma overcardám (QQ proti AK): ≈ 55 %, hod mincí</li></ul>`,
+  ruleOf:n=>`Pravidlo ${n}`,
+  youOuts:(o,rule,est)=>`Prohráváš a máš <b>${o} outů</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Vedeš; soupeř má <b>${o} outů</b>. ${rule} ≈ ${est} % pro něj, takže zhruba <b>${mine} %</b> pro tebe.`,
+  mu:{pp:"vyšší pár proti nižšímu páru",pover2:"pár proti dvěma overcardám",pover1:"pár proti jedné overcardě",punder:"pár proti dvěma nižším kartám",dom:"dominovaná kombinace (společná karta)",over:"dvě overcardy proti dvěma nižším kartám",mixed:"každý jednu vysokou kartu"},
+  muLine:(name,fav)=>`Souboj: ${name}. Favorit má obvykle zhruba <b>${fav} %</b>.`,
+  poHowTitle:"Jak to spočítat",
+  poHow:`<p><b>1. Potřebná equita = tvůj call ÷ konečný pot.</b> Konečný pot je pot plus bet plus tvůj call: bet ÷ (pot + 2 × bet).</p>
+<p class="ex">Příklad: v potu je 100 a soupeř betuje 50. Platíš 50, abys vyhrál konečný pot 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Zapamatuj si zkratky podle velikosti betu:</b></p>
+<ul><li>1/3 potu → 20 %</li><li>1/2 potu → 25 %</li><li>2/3 potu → 28,6 %</li><li>3/4 potu → 30 %</li><li>Pot → 33 %</li><li>2× pot → 40 %</li></ul>
+<p><b>3. Porovnej to se svou equitou.</b> Na turnu outy × 2. Calluj, když je tvoje equita vyšší, folduj, když je nižší. Implied odds (peníze, které můžeš vyhrát v dalších kolech) můžou ospravedlnit call, který těsně nevychází.</p>`,
+  settings:"Nastavení",setLang:"Jazyk",setTerms:"Nechat pokerové výrazy anglicky",
   setTermsHint:"Názvy kombinací, pozice a akce zůstanou anglicky (Flush, Full house, Button, Raise…); zbytek je česky.",
   setTermsOff:"Dostupné, když je aplikace v jiném jazyce.",setTable:"Stůl",done:"Hotovo",
   tabVillains:"Soupeři",oppLbl:"Soupeř",random:"Náhodně",exploitLbl:"Jak proti němu hrát:",statsLbl:"Typické VPIP / PFR",
@@ -1250,7 +1422,24 @@ cs:{settings:"Nastavení",setLang:"Jazyk",setTerms:"Nechat pokerové výrazy ang
   mods:{preflop:"Preflop — otevírací range",defense:"Obrana — proti openu",equity:"Equita karta proti kartě",potodds:"Pot odds a outy",showdown:"Showdown — čtení boardu"},
   overall:"Celkem",sub:(ok,n)=>`${ok} správně z ${n}`,subAll:(n,b)=>`${n} otázek · nejlepší série ${b}`,
   reset:"Vynulovat statistiky",confirmReset:"Potvrdit vynulování",empty:"Tvoje výsledky se tu objeví po prvních hrách. Zůstávají v tomto zařízení."},
-hu:{settings:"Beállítások",setLang:"Nyelv",setTerms:"Pókerkifejezések angolul",
+hu:{eqHowTitle:"Hogyan becsüld meg az equityt",
+  eqHow:`<p><b>1. Számold meg az outjaidat.</b> Az outok azok a lapok, amelyekkel előnybe kerülsz: egy flöss húzónak 9 van, egy nyitott sorhúzónak 8, egy gutshotnak 4, két overcardnak kb. 6.</p>
+<p><b>2. A négyes és kettes szabály.</b> Flopon, ha két lap van hátra: outok × 4. Turnön, ha egy lap van hátra: outok × 2. Ha flopon 8-nál több outod van, vond le a többletet: 15 out ≈ 15 × 4 − 7 = 53%.</p>
+<p><b>3. Ha előnyben vagy,</b> számold meg az ellenfeled outjait, és vedd a maradékot: ha flopon 9 outja van ≈ 36%, akkor neked kb. 64% jut.</p>
+<p><b>4. Preflop tanuld meg a klasszikus párharcokat</b> (a favorit része):</p>
+<ul><li>Nagyobb pár kontra kisebb pár (KK kontra QQ): ≈ 80%</li><li>Pár kontra két alacsonyabb lap (QQ kontra JT): ≈ 80%</li><li>Pár kontra egy overcard (QQ kontra AJ): ≈ 70%</li><li>Dominált kéz, közös lap (AK kontra AQ): ≈ 70%</li><li>Két overcard kontra két alacsonyabb lap (AK kontra 98): ≈ 60%</li><li>Pár kontra két overcard (QQ kontra AK): ≈ 55%, fej vagy írás</li></ul>`,
+  ruleOf:n=>`Szabály: outok × ${n}`,
+  youOuts:(o,rule,est)=>`Hátrányban vagy, outok száma: <b>${o}</b>. ${rule} ≈ <b>${est}%</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Előnyben vagy; az ellenfeled outjainak száma: <b>${o}</b>. ${rule} ≈ ${est}% neki, így neked kb. <b>${mine}%</b> jut.`,
+  mu:{pp:"nagyobb pár kontra kisebb pár",pover2:"pár kontra két overcard",pover1:"pár kontra egy overcard",punder:"pár kontra két alacsonyabb lap",dom:"dominált kéz (közös lap)",over:"két overcard kontra két alacsonyabb lap",mixed:"fejenként egy magas lap"},
+  muLine:(name,fav)=>`Párharc: ${name}. A favorit esélye általában kb. <b>${fav}%</b>.`,
+  poHowTitle:"Hogyan számolj",
+  poHow:`<p><b>1. Szükséges equity = a callod ÷ a végső pot.</b> A végső pot a pot, plusz a bet, plusz a callod: bet ÷ (pot + 2 × bet).</p>
+<p class="ex">Példa: a pot 100, és az ellenfeled 50-et betel. 50-et callolsz, hogy egy 200-as végső potot nyerj: 50 ÷ 200 = 25%.</p>
+<p><b>2. Tanuld meg a gyorsszabályokat betméret szerint:</b></p>
+<ul><li>1/3 pot → 20%</li><li>1/2 pot → 25%</li><li>2/3 pot → 28,6%</li><li>3/4 pot → 30%</li><li>Pot → 33%</li><li>2× pot → 40%</li></ul>
+<p><b>3. Hasonlítsd össze az equityddel.</b> Turnön outok × 2. Callolj, ha az equityd nagyobb, és dobj, ha kisebb. Az implied odds (a későbbi utcákon nyerhető pénz) igazolhat egy kicsit alulmaradó callt is.</p>`,
+  settings:"Beállítások",setLang:"Nyelv",setTerms:"Pókerkifejezések angolul",
   setTermsHint:"A kezek nevei, a pozíciók és az akciók angolul maradnak (Flush, Full house, Button, Raise…); minden más magyarul jelenik meg.",
   setTermsOff:"Akkor érhető el, ha az app más nyelvre van állítva.",setTable:"Asztal",done:"Kész",
   tabVillains:"Ellenfelek",oppLbl:"Ellenfél",random:"Véletlen",exploitLbl:"Így játssz ellene:",statsLbl:"Tipikus VPIP / PFR",
@@ -1325,7 +1514,24 @@ hu:{settings:"Beállítások",setLang:"Nyelv",setTerms:"Pókerkifejezések angol
   mods:{preflop:"Preflop — nyitó range-ek",defense:"Védekezés — nyitással szemben",equity:"Kéz kontra kéz equity",potodds:"Pot odds és outok",showdown:"Showdown — a board olvasása"},
   overall:"Összesen",sub:(ok,n)=>`${ok} / ${n} helyes`,subAll:(n,b)=>`${n} kérdés · legjobb sorozat: ${b}`,
   reset:"Statisztika törlése",confirmReset:"Törlés megerősítése",empty:"Az eredményeid az első leosztások után jelennek meg itt. Ezen az eszközön maradnak."},
-ro:{settings:"Setări",setLang:"Limbă",setTerms:"Termenii de poker în engleză",
+ro:{eqHowTitle:"Cum estimezi equity-ul",
+  eqHow:`<p><b>1. Numără-ți outs-urile.</b> Outs-urile sunt cărțile care te pun în avantaj: un draw de culoare are 9, un draw de chintă deschisă 8, un gutshot 4, două overcard-uri cam 6.</p>
+<p><b>2. Regula lui 4 și 2.</b> Pe flop, cu două cărți de venit: outs × 4. Pe turn, cu o carte de venit: outs × 2. Cu mai mult de 8 outs pe flop, scade outs-urile în plus: 15 outs ≈ 15 × 4 − 7 = 53%.</p>
+<p><b>3. Dacă ești în avantaj,</b> numără outs-urile adversarului și ia restul: el are 9 outs pe flop ≈ 36%, deci tu ai cam 64%.</p>
+<p><b>4. Preflop, învață duelurile clasice</b> (partea favoritului):</p>
+<ul><li>Pereche mai mare contra pereche mai mică (KK contra QQ): ≈ 80%</li><li>Pereche contra două cărți mai mici (QQ contra JT): ≈ 80%</li><li>Pereche contra un overcard (QQ contra AJ): ≈ 70%</li><li>Mână dominată, carte comună (AK contra AQ): ≈ 70%</li><li>Două overcard-uri contra două cărți mai mici (AK contra 98): ≈ 60%</li><li>Pereche contra două overcard-uri (QQ contra AK): ≈ 55%, cap sau pajură</li></ul>`,
+  ruleOf:n=>`Regula lui ${n}`,
+  youOuts:(o,rule,est)=>`Ești în urmă cu <b>${o} outs</b>. ${rule} ≈ <b>${est}%</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Ești în avantaj; adversarul are <b>${o} outs</b>. ${rule} ≈ ${est}% pentru el, deci cam <b>${mine}%</b> pentru tine.`,
+  mu:{pp:"pereche mai mare contra pereche mai mică",pover2:"pereche contra două overcard-uri",pover1:"pereche contra un overcard",punder:"pereche contra două cărți mai mici",dom:"mână dominată (carte comună)",over:"două overcard-uri contra două cărți mai mici",mixed:"câte o carte mare fiecare"},
+  muLine:(name,fav)=>`Duel: ${name}. Favoritul are de obicei cam <b>${fav}%</b>.`,
+  poHowTitle:"Cum faci calculul",
+  poHow:`<p><b>1. Equity necesar = call-ul tău ÷ potul final.</b> Potul final e potul, plus pariul, plus call-ul tău: pariu ÷ (pot + 2 × pariu).</p>
+<p class="ex">Exemplu: potul e 100 și adversarul pariază 50. Plătești 50 ca să câștigi un pot final de 200: 50 ÷ 200 = 25%.</p>
+<p><b>2. Învață scurtăturile după mărimea pariului:</b></p>
+<ul><li>1/3 pot → 20%</li><li>1/2 pot → 25%</li><li>2/3 pot → 28,6%</li><li>3/4 pot → 30%</li><li>Pot → 33%</li><li>2× pot → 40%</li></ul>
+<p><b>3. Compară cu equity-ul tău.</b> Pe turn, outs × 2. Fă call dacă equity-ul tău e mai mare și fold dacă e mai mic. Implied odds (banii pe care îi poți câștiga pe străzile următoare) pot justifica un call puțin sub prag.</p>`,
+  settings:"Setări",setLang:"Limbă",setTerms:"Termenii de poker în engleză",
   setTermsHint:"Numele mâinilor, pozițiile și acțiunile rămân în engleză (Flush, Full house, Button, Raise…); restul e în română.",
   setTermsOff:"Disponibil când aplicația e setată pe altă limbă.",setTable:"Masă",done:"Gata",
   tabVillains:"Adversari",oppLbl:"Adversar",random:"Aleatoriu",exploitLbl:"Cum joci contra lui:",statsLbl:"VPIP / PFR tipice",
@@ -1400,7 +1606,24 @@ ro:{settings:"Setări",setLang:"Limbă",setTerms:"Termenii de poker în engleză
   mods:{preflop:"Preflop — range-uri de deschidere",defense:"Apărare — contra unui open",equity:"Equity mână contra mână",potodds:"Pot odds și outs",showdown:"Showdown — citirea board-ului"},
   overall:"Total",sub:(ok,n)=>`${ok} corecte din ${n}`,subAll:(n,b)=>`${n} întrebări · cea mai bună serie ${b}`,
   reset:"Resetează statisticile",confirmReset:"Confirmă resetarea",empty:"Rezultatele tale apar aici după primele mâini. Rămân pe acest dispozitiv."},
-uk:{settings:"Налаштування",setLang:"Мова",setTerms:"Залишати покерні терміни англійською",
+uk:{eqHowTitle:"Як оцінити еквіті",
+  eqHow:`<p><b>1. Порахуй свої аути.</b> Аути — це карти, які виводять тебе вперед: у флеш-дро їх 9, у відкритому стріт-дро 8, у гатшоті 4, у двох оверкартах приблизно 6.</p>
+<p><b>2. Правило 4 і 2.</b> На флопі, коли попереду дві карти: аути × 4. На терні, коли попереду одна карта: аути × 2. Якщо на флопі в тебе більше 8 аутів, відніми зайві: 15 аутів ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Якщо ти попереду,</b> порахуй аути суперника і візьми решту: у нього 9 аутів на флопі ≈ 36 %, тож у тебе приблизно 64 %.</p>
+<p><b>4. Префлоп запам'ятай класичні розклади</b> (частка фаворита):</p>
+<ul><li>Старша пара проти молодшої (KK проти QQ): ≈ 80 %</li><li>Пара проти двох молодших карт (QQ проти JT): ≈ 80 %</li><li>Пара проти однієї оверкарти (QQ проти AJ): ≈ 70 %</li><li>Домінована рука, спільна карта (AK проти AQ): ≈ 70 %</li><li>Дві оверкарти проти двох молодших карт (AK проти 98): ≈ 60 %</li><li>Пара проти двох оверкарт (QQ проти AK): ≈ 55 %, практично монетка</li></ul>`,
+  ruleOf:n=>`Правило ${n}`,
+  youOuts:(o,rule,est)=>`Ти позаду. Твої аути: <b>${o}</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Ти попереду; аути суперника: <b>${o}</b>. ${rule} ≈ ${est} % для нього, тож у тебе приблизно <b>${mine} %</b>.`,
+  mu:{pp:"старша пара проти молодшої",pover2:"пара проти двох оверкарт",pover1:"пара проти однієї оверкарти",punder:"пара проти двох молодших карт",dom:"домінована рука (спільна карта)",over:"дві оверкарти проти двох молодших карт",mixed:"по одній старшій карті в кожного"},
+  muLine:(name,fav)=>`Розклад: ${name}. Фаворит зазвичай має приблизно <b>${fav} %</b>.`,
+  poHowTitle:"Як рахувати",
+  poHow:`<p><b>1. Потрібне еквіті = твій кол ÷ підсумковий банк.</b> Підсумковий банк — це банк, плюс ставка, плюс твій кол: ставка ÷ (банк + 2 × ставка).</p>
+<p class="ex">Приклад: у банку 100, суперник ставить 50. Ти колиш 50, щоб виграти підсумковий банк 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Запам'ятай орієнтири за розміром ставки:</b></p>
+<ul><li>1/3 банку → 20 %</li><li>1/2 банку → 25 %</li><li>2/3 банку → 28,6 %</li><li>3/4 банку → 30 %</li><li>Банк → 33 %</li><li>2× банк → 40 %</li></ul>
+<p><b>3. Порівняй зі своїм еквіті.</b> На терні: аути × 2. Колюй, якщо твоє еквіті вище, фолдь, якщо нижче. Імплайд-оддси (гроші, які можна виграти на наступних вулицях) можуть виправдати кол, якому трохи бракує.</p>`,
+  settings:"Налаштування",setLang:"Мова",setTerms:"Залишати покерні терміни англійською",
   setTermsHint:"Назви комбінацій, позиції та дії залишаються англійською (Flush, Full house, Button, Raise…); решта — українською.",
   setTermsOff:"Доступно, коли застосунок іншою мовою.",setTable:"Стіл",done:"Готово",
   tabVillains:"Суперники",oppLbl:"Суперник",random:"Випадковий",exploitLbl:"Як грати проти нього:",statsLbl:"Типові VPIP / PFR",
@@ -1475,7 +1698,24 @@ uk:{settings:"Налаштування",setLang:"Мова",setTerms:"Залиш�
   mods:{preflop:"Префлоп — рейнджі відкриття",defense:"Захист — проти опену",equity:"Еквіті рука проти руки",potodds:"Пот-оддси та аути",showdown:"Шоудаун — читання борду"},
   overall:"Загалом",sub:(ok,n)=>`${ok} правильних із ${n}`,subAll:(n,b)=>`${n} питань · найкраща серія ${b}`,
   reset:"Скинути статистику",confirmReset:"Підтвердити скидання",empty:"Твої результати з'являться тут після перших роздач. Вони зберігаються на цьому пристрої."},
-bg:{settings:"Настройки",setLang:"Език",setTerms:"Покер термините на английски",
+bg:{eqHowTitle:"Как да прецениш еквитито",
+  eqHow:`<p><b>1. Преброй аутовете си.</b> Аутовете са картите, които те изкарват напред: флъш дро има 9, отворено дро за кента 8, гътшот 4, две овъркарти около 6.</p>
+<p><b>2. Правило на 4 и 2.</b> На флопа, с две карти до края: аутове × 4. На търна, с една карта до края: аутове × 2. С повече от 8 аута на флопа извади излишните: 15 аута ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Ако си напред,</b> преброй аутовете на противника и вземи остатъка: той има 9 аута на флопа ≈ 36 %, значи ти имаш около 64 %.</p>
+<p><b>4. Префлоп запомни класическите сблъсъци</b> (делът на фаворита):</p>
+<ul><li>По-голям чифт срещу по-малък (KK срещу QQ): ≈ 80 %</li><li>Чифт срещу две по-ниски карти (QQ срещу JT): ≈ 80 %</li><li>Чифт срещу една овъркарта (QQ срещу AJ): ≈ 70 %</li><li>Доминирана ръка, обща карта (AK срещу AQ): ≈ 70 %</li><li>Две овъркарти срещу две по-ниски карти (AK срещу 98): ≈ 60 %</li><li>Чифт срещу две овъркарти (QQ срещу AK): ≈ 55 %, почти ези-тура</li></ul>`,
+  ruleOf:n=>`Правило на ${n}`,
+  youOuts:(o,rule,est)=>`Изоставаш с <b>${o} аута</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Водиш; противникът има <b>${o} аута</b>. ${rule} ≈ ${est} % за него, значи около <b>${mine} %</b> за теб.`,
+  mu:{pp:"по-голям чифт срещу по-малък",pover2:"чифт срещу две овъркарти",pover1:"чифт срещу една овъркарта",punder:"чифт срещу две по-ниски карти",dom:"доминирана ръка (обща карта)",over:"две овъркарти срещу две по-ниски карти",mixed:"по една висока карта всеки"},
+  muLine:(name,fav)=>`Сблъсък: ${name}. Фаворитът обикновено има около <b>${fav} %</b>.`,
+  poHowTitle:"Как да сметнеш",
+  poHow:`<p><b>1. Нужно еквити = твоят кол ÷ крайния пот.</b> Крайният пот е потът, плюс залогът, плюс твоя кол: залог ÷ (пот + 2 × залог).</p>
+<p class="ex">Пример: потът е 100 и противникът залага 50. Колваш 50, за да спечелиш краен пот от 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Запомни бързите стойности според размера на залога:</b></p>
+<ul><li>1/3 пот → 20 %</li><li>1/2 пот → 25 %</li><li>2/3 пот → 28,6 %</li><li>3/4 пот → 30 %</li><li>Пот → 33 %</li><li>2× пот → 40 %</li></ul>
+<p><b>3. Сравни с еквитито си.</b> На търна: аутове × 2. Колвай, ако еквитито ти е по-голямо, фолдвай, ако е по-малко. Имплайд одс (парите, които можеш да спечелиш на следващите улици) могат да оправдаят кол, на който леко не му стига.</p>`,
+  settings:"Настройки",setLang:"Език",setTerms:"Покер термините на английски",
   setTermsHint:"Имената на ръцете, позициите и действията остават на английски (Flush, Full house, Button, Raise…); всичко останало е на български.",
   setTermsOff:"Достъпно, когато приложението е на друг език.",setTable:"Маса",done:"Готово",
   tabVillains:"Противници",oppLbl:"Противник",random:"Случаен",exploitLbl:"Как да играеш срещу него:",statsLbl:"Типични VPIP / PFR",
@@ -1550,7 +1790,24 @@ bg:{settings:"Настройки",setLang:"Език",setTerms:"Покер тер
   mods:{preflop:"Префлоп — рейнджове за отваряне",defense:"Защита — срещу оупън",equity:"Еквити ръка срещу ръка",potodds:"Пот одс и аутове",showdown:"Шоудаун — четене на борда"},
   overall:"Общо",sub:(ok,n)=>`${ok} верни от ${n}`,subAll:(n,b)=>`${n} въпроса · най-добра серия ${b}`,
   reset:"Нулирай статистиката",confirmReset:"Потвърди нулирането",empty:"Резултатите ти ще се появят тук след първите ти ръце. Остават на това устройство."},
-nl:{settings:"Instellingen",setLang:"Taal",setTerms:"Pokertermen in het Engels houden",
+nl:{eqHowTitle:"Zo schat je je equity",
+  eqHow:`<p><b>1. Tel je outs.</b> Outs zijn de kaarten die je op voorsprong zetten: een flush draw heeft er 9, een open-ended straight draw 8, een gutshot 4, twee overcards ongeveer 6.</p>
+<p><b>2. Regel van 4 en 2.</b> Op de flop, met nog twee kaarten te komen: outs × 4. Op de turn, met nog één kaart te komen: outs × 2. Met meer dan 8 outs op de flop trek je de extra outs eraf: 15 outs ≈ 15 × 4 − 7 = 53%.</p>
+<p><b>3. Sta je voor,</b> tel dan de outs van je tegenstander en neem de rest: hij heeft 9 outs op de flop ≈ 36%, dus jij hebt ongeveer 64%.</p>
+<p><b>4. Leer preflop de klassieke matchups</b> (het aandeel van de favoriet):</p>
+<ul><li>Hoger paar tegen lager paar (KK tegen QQ): ≈ 80%</li><li>Paar tegen twee lagere kaarten (QQ tegen JT): ≈ 80%</li><li>Paar tegen één overcard (QQ tegen AJ): ≈ 70%</li><li>Gedomineerde hand, gedeelde kaart (AK tegen AQ): ≈ 70%</li><li>Twee overcards tegen twee lagere kaarten (AK tegen 98): ≈ 60%</li><li>Paar tegen twee overcards (QQ tegen AK): ≈ 55%, een coinflip</li></ul>`,
+  ruleOf:n=>`Regel van ${n}`,
+  youOuts:(o,rule,est)=>`Je ligt achter met <b>${o} outs</b>. ${rule} ≈ <b>${est}%</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Je staat voor; je tegenstander heeft <b>${o} outs</b>. ${rule} ≈ ${est}% voor hem, dus ongeveer <b>${mine}%</b> voor jou.`,
+  mu:{pp:"hoger paar tegen lager paar",pover2:"paar tegen twee overcards",pover1:"paar tegen één overcard",punder:"paar tegen twee lagere kaarten",dom:"gedomineerde hand (gedeelde kaart)",over:"twee overcards tegen twee lagere kaarten",mixed:"elk één hoge kaart"},
+  muLine:(name,fav)=>`Matchup: ${name}. De favoriet heeft meestal ongeveer <b>${fav}%</b>.`,
+  poHowTitle:"Zo reken je het uit",
+  poHow:`<p><b>1. Benodigde equity = je call ÷ de eindpot.</b> De eindpot is de pot, plus de bet, plus je call: bet ÷ (pot + 2 × bet).</p>
+<p class="ex">Voorbeeld: de pot is 100 en je tegenstander bet 50. Je callt 50 om een eindpot van 200 te winnen: 50 ÷ 200 = 25%.</p>
+<p><b>2. Leer de vuistregels per betgrootte:</b></p>
+<ul><li>1/3 pot → 20%</li><li>1/2 pot → 25%</li><li>2/3 pot → 28,6%</li><li>3/4 pot → 30%</li><li>Pot → 33%</li><li>2× pot → 40%</li></ul>
+<p><b>3. Vergelijk met je equity.</b> Op de turn: outs × 2. Call als je equity hoger is, fold als die lager is. Implied odds (geld dat je op latere straten kunt winnen) kunnen een call rechtvaardigen die net tekortschiet.</p>`,
+  settings:"Instellingen",setLang:"Taal",setTerms:"Pokertermen in het Engels houden",
   setTermsHint:"Namen van handen, posities en acties blijven Engels (Flush, Full house, Button, Raise…); de rest is in het Nederlands.",
   setTermsOff:"Beschikbaar als de app in een andere taal staat.",setTable:"Tafel",done:"Klaar",
   tabVillains:"Tegenstanders",oppLbl:"Tegenstander",random:"Willekeurig",exploitLbl:"Zo speel je tegen hem:",statsLbl:"Typische VPIP / PFR",
@@ -1625,7 +1882,24 @@ nl:{settings:"Instellingen",setLang:"Taal",setTerms:"Pokertermen in het Engels h
   mods:{preflop:"Preflop — openingsranges",defense:"Verdediging — tegen een open",equity:"Equity hand tegen hand",potodds:"Pot odds en outs",showdown:"Showdown — het board lezen"},
   overall:"Totaal",sub:(ok,n)=>`${ok} goed van ${n}`,subAll:(n,b)=>`${n} vragen · beste reeks ${b}`,
   reset:"Stats wissen",confirmReset:"Wissen bevestigen",empty:"Je resultaten verschijnen hier na je eerste handen. Ze blijven op dit apparaat."},
-sv:{settings:"Inställningar",setLang:"Språk",setTerms:"Behåll pokertermer på engelska",
+sv:{eqHowTitle:"Så uppskattar du din equity",
+  eqHow:`<p><b>1. Räkna dina outs.</b> Outs är korten som tar dig i ledning: ett flush draw har 9, ett öppet straight draw 8, en gutshot 4, två overcards ungefär 6.</p>
+<p><b>2. 4- och 2-regeln.</b> På floppen, med två kort kvar: outs × 4. På turn, med ett kort kvar: outs × 2. Med fler än 8 outs på floppen drar du av de extra outsen: 15 outs ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Om du leder,</b> räkna motståndarens outs och ta resten: hen har 9 outs på floppen ≈ 36 %, så du har ungefär 64 %.</p>
+<p><b>4. Lär dig de klassiska matchupsen preflop</b> (favoritens andel):</p>
+<ul><li>Högre par mot lägre par (KK mot QQ): ≈ 80 %</li><li>Par mot två lägre kort (QQ mot JT): ≈ 80 %</li><li>Par mot ett overcard (QQ mot AJ): ≈ 70 %</li><li>Dominerad hand, delat kort (AK mot AQ): ≈ 70 %</li><li>Två overcards mot två lägre kort (AK mot 98): ≈ 60 %</li><li>Par mot två overcards (QQ mot AK): ≈ 55 %, ett myntkast</li></ul>`,
+  ruleOf:n=>`${n}-regeln`,
+  youOuts:(o,rule,est)=>`Du ligger efter med <b>${o} outs</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Du leder; motståndaren har <b>${o} outs</b>. ${rule} ≈ ${est} % för hen, så ungefär <b>${mine} %</b> för dig.`,
+  mu:{pp:"högre par mot lägre par",pover2:"par mot två overcards",pover1:"par mot ett overcard",punder:"par mot två lägre kort",dom:"dominerad hand (delat kort)",over:"två overcards mot två lägre kort",mixed:"ett högt kort var"},
+  muLine:(name,fav)=>`Matchup: ${name}. Favoriten har oftast ungefär <b>${fav} %</b>.`,
+  poHowTitle:"Så räknar du",
+  poHow:`<p><b>1. Krävd equity = din call ÷ slutpotten.</b> Slutpotten är potten, plus betten, plus din call: bet ÷ (pott + 2 × bet).</p>
+<p class="ex">Exempel: potten är 100 och motståndaren bettar 50. Du callar 50 för att vinna en slutpott på 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Lär dig genvägarna efter betstorlek:</b></p>
+<ul><li>1/3 pott → 20 %</li><li>1/2 pott → 25 %</li><li>2/3 pott → 28,6 %</li><li>3/4 pott → 30 %</li><li>Pott → 33 %</li><li>2× pott → 40 %</li></ul>
+<p><b>3. Jämför med din equity.</b> På turn: outs × 2. Calla om din equity är högre, folda om den är lägre. Implied odds (pengar du kan vinna på senare gator) kan motivera en call som är lite för tunn.</p>`,
+  settings:"Inställningar",setLang:"Språk",setTerms:"Behåll pokertermer på engelska",
   setTermsHint:"Handnamn, positioner och actions stannar på engelska (Flush, Full house, Button, Raise…); allt annat är på svenska.",
   setTermsOff:"Tillgängligt när appen är inställd på ett annat språk.",setTable:"Bord",done:"Klar",
   tabVillains:"Motståndare",oppLbl:"Motståndare",random:"Slumpa",exploitLbl:"Så spelar du mot hen:",statsLbl:"Typisk VPIP / PFR",
@@ -1700,7 +1974,24 @@ sv:{settings:"Inställningar",setLang:"Språk",setTerms:"Behåll pokertermer på
   mods:{preflop:"Preflop — öppningsranger",defense:"Försvar — mot en open",equity:"Equity hand mot hand",potodds:"Pot odds och outs",showdown:"Showdown — läsa boardet"},
   overall:"Totalt",sub:(ok,n)=>`${ok} rätt av ${n}`,subAll:(n,b)=>`${n} frågor · bästa svit ${b}`,
   reset:"Nollställ statistik",confirmReset:"Bekräfta nollställning",empty:"Dina resultat visas här efter dina första händer. De stannar på den här enheten."},
-da:{settings:"Indstillinger",setLang:"Sprog",setTerms:"Behold pokerudtryk på engelsk",
+da:{eqHowTitle:"Sådan anslår du din equity",
+  eqHow:`<p><b>1. Tæl dine outs.</b> Outs er de kort, der bringer dig foran: et flush draw har 9, et åbent straight draw 8, et gutshot 4, to overcards cirka 6.</p>
+<p><b>2. 4- og 2-reglen.</b> På floppet, med to kort tilbage: outs × 4. På turn, med ét kort tilbage: outs × 2. Med flere end 8 outs på floppet trækker du de ekstra outs fra: 15 outs ≈ 15 × 4 − 7 = 53 %.</p>
+<p><b>3. Hvis du er foran,</b> så tæl din modstanders outs og tag resten: de har 9 outs på floppet ≈ 36 %, så du har cirka 64 %.</p>
+<p><b>4. Lær de klassiske matchups preflop</b> (favorittens andel):</p>
+<ul><li>Højere par mod lavere par (KK mod QQ): ≈ 80 %</li><li>Par mod to lavere kort (QQ mod JT): ≈ 80 %</li><li>Par mod ét overcard (QQ mod AJ): ≈ 70 %</li><li>Domineret hånd, fælles kort (AK mod AQ): ≈ 70 %</li><li>To overcards mod to lavere kort (AK mod 98): ≈ 60 %</li><li>Par mod to overcards (QQ mod AK): ≈ 55 %, et coinflip</li></ul>`,
+  ruleOf:n=>`${n}-reglen`,
+  youOuts:(o,rule,est)=>`Du er bagud med <b>${o} outs</b>. ${rule} ≈ <b>${est} %</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Du er foran; din modstander har <b>${o} outs</b>. ${rule} ≈ ${est} % til dem, så cirka <b>${mine} %</b> til dig.`,
+  mu:{pp:"højere par mod lavere par",pover2:"par mod to overcards",pover1:"par mod ét overcard",punder:"par mod to lavere kort",dom:"domineret hånd (fælles kort)",over:"to overcards mod to lavere kort",mixed:"ét højt kort hver"},
+  muLine:(name,fav)=>`Matchup: ${name}. Favoritten har som regel cirka <b>${fav} %</b>.`,
+  poHowTitle:"Sådan regner du det ud",
+  poHow:`<p><b>1. Krævet equity = dit call ÷ den endelige pot.</b> Den endelige pot er potten plus bettet plus dit call: bet ÷ (pot + 2 × bet).</p>
+<p class="ex">Eksempel: potten er 100, og din modstander better 50. Du caller 50 for at vinde en endelig pot på 200: 50 ÷ 200 = 25 %.</p>
+<p><b>2. Lær genvejene efter betstørrelse:</b></p>
+<ul><li>1/3 pot → 20 %</li><li>1/2 pot → 25 %</li><li>2/3 pot → 28,6 %</li><li>3/4 pot → 30 %</li><li>Pot → 33 %</li><li>2× pot → 40 %</li></ul>
+<p><b>3. Sammenlign med din equity.</b> På turn: outs × 2. Call, hvis din equity er højere, fold, hvis den er lavere. Implied odds (penge du kan vinde på senere streets) kan retfærdiggøre et call, der er lidt for tyndt.</p>`,
+  settings:"Indstillinger",setLang:"Sprog",setTerms:"Behold pokerudtryk på engelsk",
   setTermsHint:"Håndnavne, positioner og handlinger forbliver på engelsk (Flush, Full house, Button, Raise…); resten er på dansk.",
   setTermsOff:"Tilgængelig når appen er sat til et andet sprog.",setTable:"Bord",done:"OK",
   tabVillains:"Modstandere",oppLbl:"Modstander",random:"Tilfældig",exploitLbl:"Sådan spiller du mod dem:",statsLbl:"Typisk VPIP / PFR",
@@ -1850,7 +2141,24 @@ nb:{settings:"Innstillinger",setLang:"Språk",setTerms:"Behold pokeruttrykk på 
   mods:{preflop:"Preflop — åpningsranges",defense:"Forsvar — mot en open",equity:"Equity hånd mot hånd",potodds:"Pot odds og outs",showdown:"Showdown — les boardet"},
   overall:"Samlet",sub:(ok,n)=>`${ok} riktige av ${n}`,subAll:(n,b)=>`${n} spørsmål · beste rekke ${b}`,
   reset:"Nullstill statistikk",confirmReset:"Bekreft nullstilling",empty:"Resultatene dine vises her etter de første hendene. De blir på denne enheten."},
-tr:{settings:"Ayarlar",setLang:"Dil",setTerms:"Poker terimlerini İngilizce tut",
+tr:{eqHowTitle:"Equity nasıl tahmin edilir",
+  eqHow:`<p><b>1. Out'larını say.</b> Out'lar seni öne geçiren kartlardır: floş draw'unda 9, açık uçlu kent draw'unda 8, gutshot'ta 4, iki overcard'da yaklaşık 6 out vardır.</p>
+<p><b>2. 4 ve 2 kuralı.</b> Flop'ta, gelecek iki kartla: out × 4. Turn'de, gelecek bir kartla: out × 2. Flop'ta 8'den fazla out varsa fazla out'ları çıkar: 15 out ≈ 15 × 4 − 7 = %53.</p>
+<p><b>3. Öndeysen,</b> rakibinin out'larını say ve kalanı al: rakibinin flop'ta 9 out'u varsa ≈ %36, yani senin equity'n yaklaşık %64.</p>
+<p><b>4. Preflop'ta klasik eşleşmeleri öğren</b> (favorinin payı):</p>
+<ul><li>Büyük per vs küçük per (KK vs QQ): ≈ %80</li><li>Per vs iki küçük kart (QQ vs JT): ≈ %80</li><li>Per vs bir overcard (QQ vs AJ): ≈ %70</li><li>Domine el, ortak kart (AK vs AQ): ≈ %70</li><li>İki overcard vs iki küçük kart (AK vs 98): ≈ %60</li><li>Per vs iki overcard (QQ vs AK): ≈ %55, yazı tura</li></ul>`,
+  ruleOf:n=>`${n} kuralı`,
+  youOuts:(o,rule,est)=>`Gerideysin. Out sayın: <b>${o}</b>. ${rule} ≈ <b>%${est}</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Öndesin; rakibinin out sayısı: <b>${o}</b>. ${rule} ≈ onun için %${est}, yani senin için yaklaşık <b>%${mine}</b>.`,
+  mu:{pp:"büyük per vs küçük per",pover2:"per vs iki overcard",pover1:"per vs bir overcard",punder:"per vs iki küçük kart",dom:"domine el (ortak kart)",over:"iki overcard vs iki küçük kart",mixed:"iki tarafta da birer yüksek kart"},
+  muLine:(name,fav)=>`Eşleşme: ${name}. Favorinin equity'si genelde yaklaşık <b>%${fav}</b>.`,
+  poHowTitle:"Hesap nasıl yapılır",
+  poHow:`<p><b>1. Gereken equity = call'ın ÷ final pot.</b> Final pot; pot, artı bet, artı senin call'ındır: bet ÷ (pot + 2 × bet).</p>
+<p class="ex">Örnek: pot 100 ve rakibin 50 bet ediyor. 200'lük bir final potu kazanmak için 50 call edersin: 50 ÷ 200 = %25.</p>
+<p><b>2. Bet boyutuna göre kısayolları öğren:</b></p>
+<ul><li>1/3 pot → %20</li><li>1/2 pot → %25</li><li>2/3 pot → %28,6</li><li>3/4 pot → %30</li><li>Pot → %33</li><li>2× pot → %40</li></ul>
+<p><b>3. Equity'nle karşılaştır.</b> Turn'de out × 2. Equity'n daha yüksekse call et, daha düşükse fold et. Implied odds (sonraki street'lerde kazanabileceğin para) biraz eksik kalan bir call'ı haklı çıkarabilir.</p>`,
+  settings:"Ayarlar",setLang:"Dil",setTerms:"Poker terimlerini İngilizce tut",
   setTermsHint:"El adları, pozisyonlar ve aksiyonlar İngilizce kalır (Flush, Full house, Button, Raise…); geri kalan her şey Türkçe olur.",
   setTermsOff:"Uygulama başka bir dildeyken kullanılabilir.",setTable:"Masa",done:"Tamam",
   tabVillains:"Rakipler",oppLbl:"Rakip",random:"Rastgele",exploitLbl:"Ona karşı nasıl oynanır:",statsLbl:"Tipik VPIP / PFR",
@@ -1925,7 +2233,24 @@ tr:{settings:"Ayarlar",setLang:"Dil",setTerms:"Poker terimlerini İngilizce tut"
   mods:{preflop:"Preflop — açılış range'leri",defense:"Savunma — bir open'a karşı",equity:"El vs el equity",potodds:"Pot odds ve out'lar",showdown:"Showdown — board'u okumak"},
   overall:"Genel",sub:(ok,n)=>`${n} sorudan ${ok} doğru`,subAll:(n,b)=>`${n} soru · en iyi seri ${b}`,
   reset:"İstatistikleri sıfırla",confirmReset:"Sıfırlamayı onayla",empty:"Sonuçların ilk ellerinden sonra burada görünecek. Bu cihazda kalırlar."},
-vi:{settings:"Cài đặt",setLang:"Ngôn ngữ",setTerms:"Giữ thuật ngữ poker bằng tiếng Anh",
+vi:{eqHowTitle:"Cách ước lượng equity",
+  eqHow:`<p><b>1. Đếm outs của bạn.</b> Outs là những lá giúp bạn vượt lên: draw thùng có 9, draw sảnh hai đầu có 8, gutshot có 4, hai overcard khoảng 6.</p>
+<p><b>2. Quy tắc 4 và 2.</b> Ở flop, còn hai lá: outs × 4. Ở turn, còn một lá: outs × 2. Nếu có hơn 8 outs ở flop, hãy trừ bớt số outs dư: 15 outs ≈ 15 × 4 − 7 = 53%.</p>
+<p><b>3. Nếu bạn đang dẫn,</b> đếm outs của đối thủ và lấy phần còn lại: họ có 9 outs ở flop ≈ 36%, vậy bạn có khoảng 64%.</p>
+<p><b>4. Ở preflop, hãy nhớ các thế đối đầu kinh điển</b> (phần của bên cửa trên):</p>
+<ul><li>Đôi lớn vs đôi nhỏ (KK vs QQ): ≈ 80%</li><li>Đôi vs hai lá nhỏ hơn (QQ vs JT): ≈ 80%</li><li>Đôi vs một overcard (QQ vs AJ): ≈ 70%</li><li>Bài bị dominate, chung một lá (AK vs AQ): ≈ 70%</li><li>Hai overcard vs hai lá nhỏ hơn (AK vs 98): ≈ 60%</li><li>Đôi vs hai overcard (QQ vs AK): ≈ 55%, một kèo coin flip</li></ul>`,
+  ruleOf:n=>`Quy tắc ${n}`,
+  youOuts:(o,rule,est)=>`Bạn đang bị dẫn, có <b>${o} outs</b>. ${rule} ≈ <b>${est}%</b>.`,
+  vilOuts:(o,rule,est,mine)=>`Bạn đang dẫn; đối thủ có <b>${o} outs</b>. ${rule} ≈ ${est}% cho họ, vậy bạn có khoảng <b>${mine}%</b>.`,
+  mu:{pp:"đôi lớn vs đôi nhỏ",pover2:"đôi vs hai overcard",pover1:"đôi vs một overcard",punder:"đôi vs hai lá nhỏ hơn",dom:"bài bị dominate (chung một lá)",over:"hai overcard vs hai lá nhỏ hơn",mixed:"mỗi bên một lá cao"},
+  muLine:(name,fav)=>`Thế đối đầu: ${name}. Bên cửa trên thường có khoảng <b>${fav}%</b>.`,
+  poHowTitle:"Cách tính toán",
+  poHow:`<p><b>1. Equity cần = tiền call của bạn ÷ pot cuối.</b> Pot cuối là pot, cộng bet, cộng tiền call của bạn: bet ÷ (pot + 2 × bet).</p>
+<p class="ex">Ví dụ: pot là 100 và đối thủ bet 50. Bạn call 50 để thắng pot cuối 200: 50 ÷ 200 = 25%.</p>
+<p><b>2. Nhớ các mốc nhanh theo size bet:</b></p>
+<ul><li>1/3 pot → 20%</li><li>1/2 pot → 25%</li><li>2/3 pot → 28,6%</li><li>3/4 pot → 30%</li><li>Pot → 33%</li><li>2× pot → 40%</li></ul>
+<p><b>3. So sánh với equity của bạn.</b> Ở turn, outs × 2. Call nếu equity của bạn cao hơn, fold nếu thấp hơn. Implied odds (tiền bạn có thể thắng thêm ở các street sau) có thể biện minh cho một call hơi thiếu một chút.</p>`,
+  settings:"Cài đặt",setLang:"Ngôn ngữ",setTerms:"Giữ thuật ngữ poker bằng tiếng Anh",
   setTermsHint:"Tên bài, vị trí và hành động giữ nguyên tiếng Anh (Flush, Full house, Button, Raise…); phần còn lại dùng tiếng Việt.",
   setTermsOff:"Dùng được khi ứng dụng đặt ở ngôn ngữ khác.",setTable:"Bàn",done:"Xong",
   tabVillains:"Đối thủ",oppLbl:"Đối thủ",random:"Ngẫu nhiên",exploitLbl:"Cách chơi với họ:",statsLbl:"VPIP / PFR điển hình",
@@ -2224,7 +2549,157 @@ zht:{settings:"設定",setLang:"語言",setTerms:"撲克術語保留英文",
   cat:["高牌","一對","兩對","三條","順子","同花","葫蘆","四條","同花順"],royal:"皇家同花順",
   mods:{preflop:"翻牌前 — 開池範圍",defense:"防守 — 面對開池",equity:"手牌對手牌勝率",potodds:"底池賠率和 outs",showdown:"攤牌 — 讀公共牌"},
   overall:"總計",sub:(ok,n)=>`${n} 題答對 ${ok} 題`,subAll:(n,b)=>`${n} 題 · 最佳連對 ${b}`,
-  reset:"重設統計",confirmReset:"確認重設",empty:"打完第一手後，結果會顯示在這裡。資料只存在這台裝置上。"}
+  reset:"重設統計",confirmReset:"確認重設",empty:"打完第一手後，結果會顯示在這裡。資料只存在這台裝置上。"},
+fi:{settings:"Asetukset",setLang:"Kieli",setTerms:"Pidä pokeritermit englanniksi",
+  setTermsHint:"Käsien nimet, positiot ja toiminnot pysyvät englanniksi (Flush, Full house, Button, Raise…); kaikki muu on suomeksi.",
+  setTermsOff:"Käytettävissä, kun sovellus on jollain muulla kielellä.",setTable:"Pöytä",done:"Valmis",
+  tabVillains:"Vastustajat",oppLbl:"Vastustaja",random:"Satunnainen",exploitLbl:"Näin pelaat häntä vastaan:",statsLbl:"Tyypillinen VPIP / PFR",
+  prof:{gto:"GTO-regu",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maanikko",station:"Calling station",whale:"Whale",live:"Live 1/2 -harrastaja"},
+  pdesc:{gto:"Tasapainoinen, solver-tyylinen regu. Pelaa klassisia chartteja, joten hänellä ei ole isoa vuotoa, johon iskeä.",
+    tag:"Tiukka-aggressiivinen regu. Pelaa vähemmän käsiä kuin GTO, lähinnä pareja, broadwayta ja suited-ässiä, ja korottaa kun pelaa.",
+    nit:"Todella tiukka, tunnetaan myös nimellä rock. Avaa isot parit ja isot kortit (noin TT+ ja AQ+ alkupaikoilta), bluffaa harvoin ja 3-bettaa vain QQ+ ja AK.",
+    weak:"Tunnetaan myös nimellä TAGfish. Pelaa preflopissa yhtä tiukasti kuin nit, ei juuri koskaan bluffaa, c-bettaa alle puolet kerroista ja luovuttaa helposti turnissa ja riverillä.",
+    lag:"Löysä-aggressiivinen. Avaa kaikkiaan lähes 30 % käsistä, lisää paljon suited-käsiä ja 3-bettaa usein.",
+    maniac:"Yliaggressiivinen. Pelaa noin puolet käsistään ja korottaa useimmat, usein normaalia isommin, ja jatkaa sitten panostamista.",
+    station:"Löysä-passiivinen nettiharrastaja. Limppaa laajan rangen (parit, suited-kädet, broadwayt, connectorit), korottaa vain vahvoilla käsillä ja maksaa sitten liikaa.",
+    whale:"Löysin harrastaja. Pelaa yli puolet käsistään, lähes aina limppaamalla tai maksamalla, ja foldaa harvoin, jos osuu boardiin vähänkään.",
+    live:"Tyypillinen live 1/2 $ -pelaaja. Pelaa noin kolmanneksen käsistään mutta korottaa vain noin 6 %, limppaa loput, korottaa isosti kun korottaa eikä juuri koskaan 3-bettaa."},
+  pexp:{gto:"Pelaa perustasi: klassiset chartit. Poikkeaminen GTO-pelaajaa vastaan vain maksaa sinulle.",
+    tag:"Pysy lähellä klassisia chartteja, kunnioita hänen 3-bettejään ja vältä monimutkaisia bluffeja.",
+    nit:"Varasta hänen blindinsä, 3-bettaa hänen avauksiaan kevyesti, koska hän foldaa liikaa, ja foldaa hänen 3-betteihinsä ja isoihin postflop-panoksiinsa ilman vahvaa kättä.",
+    weak:"Varasta hänen blindejään armotta, 3-bettaa häntä kevyesti ja bluffaa turnissa ja riverillä, kun hän checkaa. Usko häntä, kun hän korottaa.",
+    lag:"Maksa laajemmin hänen avauksiaan vastaan (KTs, QJs, 77), pidä 3-bettisi enimmäkseen valuelle, älä 4-bettaa bluffina ja ansoita vahvoilla käsillä.",
+    maniac:"Tiukenna omia avauksiasi hieman, 4-bettaa laajemmin valuelle (JJ, AQo, KQs), maksa loppuun top parilla ja hyvällä kickerillä äläkä koskaan slowplayaa.",
+    station:"Isoloi hänen limppinsä korotuksella noin 4bb:hen plus 1bb per limppaaja (5bb blindeistä), panosta ohuesti valuelle, panosta isommin vahvoilla käsillä äläkä koskaan bluffaa.",
+    whale:"Isoloi vielä laajemmin, valuebettaa joka kadulla millä tahansa kelvollisella valmiilla kädellä ja kasvata panoskokoja. Bluffaaminen on rahan polttamista.",
+    live:"Korota isommin kuin netissä (noin 4bb plus 1bb per limppaaja), isoloi limppaajat vahvoilla käsillä ja pidä hänen harvoja korotuksiaan ja 3-bettejään todella vahvoina."},
+  statsLbl:"VPIP / PFR",sizeLbl:"Tavallinen avaus",limpsLbl:"limppaa, korottaa",srcLbl:"Lähteet:",
+  pfacts:{gto:["Bluffaa ja foldaa tasapainoisilla frekvensseillä"],tag:["3-bet ≈ 5–10 %","Fold to 3-bet ≈ 40–50 %","Steal ≈ 35 % (6-max)"],nit:["3-bettaa vain QQ+ ja AK"],
+    weak:["C-bet alle 50 %","Foldaa 3-beteille ilman premium-kättä"],lag:["Aggressiokerroin 3+"],maniac:["3-bettaa todella usein"],
+    station:["Limppaa ≈ 47 % käsistä","Limp-raise alle 3 %"],whale:["Todella passiivinen: aggressiokerroin ≈ 2 tai alle"],
+    live:["Limppaa ≈ 35 % alku- ja keskipaikoilta","Limpin jälkeen maksaa korotuksen ≈ 56 %"]},
+  popTitle:"Miksi anti-GTO?",
+  popText:"GTO on lähtötaso, ei vastustajasi. Mitattua dataa oikeista pelaajista on vähän, mutta se mitä on, näyttää isoja ja pysyviä poikkeamia:",
+  popFacts:[`Netin 500NL+ -regut 3-bet-poteissa: kun he ovat korottaneet flopin c-betin ja saaneet uudelleenkorotuksen, he foldaavat <b>39 %</b>, kun solver foldaa <b>27 %</b>. Hyvätkin regut ylifoldaavat. <span class="src">(Upswing Poker, kirjoittajan asiantuntijapelaajien tietokanta)</span>`,
+    `Live 1/2 $ -peleissä Las Vegasissa keskivertopelaaja on <b>35 / 6</b>: pelaa 35 % käsistä, korottaa 6 % ja limppaa noin 35 % alku- ja keskipaikoilta. <span class="src">(PokerNews, 2017, lähteenä Donkey Poker vol. 2)</span>`,
+    `Hand2Noten otoksessa löysä-passiiviset pelaajat limppaavat noin <b>47 %</b> käsistä ja limp-raisaavat alle <b>3 %</b>. <span class="src">(Hand2Note-blogi)</span>`],
+  popSrc:"Profiilien muut luvut ovat valmentajien nyrkkisääntöjä kirjoista, trackerioppaista ja blogeista (osa vuosilta 2012–2020). Pidä niitä tyypillisinä arvoina, ei mittauksina. Jokainen profiili listaa lähteensä.",
+  vpPct:(pos,w,c)=>`${pos}: avaa ${w} % käsistä (klassinen: ${c} %).`,
+  vpLimper:(a,b)=>`Korottaa ${a} % ja limppaa ${b} % käsistä millä tahansa paikalla. Oranssi: korotus. Vihreä: limppi.`,
+  vsProf:(name,pos,w,chart)=>`${name} avaa noin ${w} % käsistä paikalta ${pos}, joten puolustat <b>${chart}</b>-chartilla.`,
+  passiveNote:"Passiivinen pelaaja, joka korottaa, näyttää vahvaa kättä ja maksaa 3-bettisi: 3-bettaa vain valuelle. Isoblindistä bluffeistasi tulee calleja.",
+  limpWhy:(name,w,pos)=>`${name} limppaa noin ${w} % käsistä, tässä paikalta ${pos}, ja korottaa harvoin. Korota vahvoilla käsillä isoloidaksesi hänet ja katso halpoja floppeja käsillä, joista tulee settejä ja vetoja.`,
+  isoNote:"Isolointikoko: noin 4bb plus 1bb per limppaaja, 5bb blindeistä.",
+  dfLimp:o=>`${o} limppaa 1bb`,dfQLimp:"Fold, limppi perässä vai isolointikorotus?",dfQLimpBB:"Check vai isolointikorotus?",
+  check:"Check",limpB:"Limp",complete:"Täydennä",iso:"Isoloi",
+  actsLimp:["fold","limppi perässä","isolointikorotus"],actsLimpBB:["check","isolointikorotus"],
+  legendLimp:"Oranssi: isolointikorotus. Vihreä: limppi perässä tai check. Harmaa: fold.",
+  tagline:"Pelaa pelaajaa, älä charttia.",
+  folded:"Foldannut",epNote:"EP = alkupaikat, UTG:stä HJ:hin. IP = myöhäisempi paikka, joka ei ole blindi. Drillissä chartti valitaan sen mukaan, kuinka laajasti avaaja pelaa, joten buttonilla avaavaa nitiä vastaan puolustetaan kuin alkupaikan avausta vastaan.",allin:"All-in",showdownCtx:"River · showdown",shown:"Näyttää",raiseLbl:"Korotus",pfCtx:"Foldattu sinulle",toAct:"Vuorossa",tabDefense:"Puolustus",dfQ:"Fold, call vai 3-bet?",dfStudy:"Opiskele puolustusrangeja",dfOpen:o=>`${o} avaa 2,5bb`,
+  acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b> on <b>${a}</b> tilanteessa ${spot}.`,
+  dfSb:"Pikkublindistä tämä yksinkertaistettu strategia on 3-bet tai fold, ilman flat-callia.",
+  legend3:"Oranssi: 3-bet. Vihreä: call. Harmaa: fold.",dfPct:(a,b)=>`3-bet ${a} % · call ${b} % käsistä.`,
+  streak:"putki",best:"ennätys",tabPreflop:"Preflop",tabEquity:"Equity",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Tilastot",
+  pfQ:"Foldattu sinulle. Avauskorotus vai fold?",study:"Opiskele avausrangeja",eqQ:"Equitysi tätä kättä vastaan (all-in nyt)?",sdQ:"Kuka voittaa potin?",
+  hint:"Näppäimistö: F / R preflopissa, puolustuksessa näkyvät kirjaimet, 1–5 vaihtoehdoille, Enter seuraavaan käteen.",
+  note:n=>`${n}-max cash game, 100bb. Klassiset chartit ovat GTO-tyylinen lähtötaso julkisten solver-charttien pohjalta; vastustajaprofiilit ovat likiarvoja valmennuslähteistä.`,
+  fold:"Fold",raise:"Raise",call:"Call",correct:"Oikein",wrong:"Väärin",next:"Seuraava käsi",position:"Positio",
+  pos:{UTG:"UTG (ensimmäisenä vuorossa)",UTG1:"UTG+1",UTG2:"UTG+2",LJ:"Lojack",HJ:"Hijack",CO:"Cutoff",BTN:"Button",SB:"Pikkublindi",BB:"Isoblindi"},
+  pfFb:(code,inR,p,pc)=>`<b class="mono">${code}</b> ${inR?"kuuluu":"ei kuulu"} ${p}-avausrangeen (<span class="mono">${pc} %</span> käsistä).`,
+  legend:"Diagonaali: parit. Yläpuolella: suited (s). Alapuolella: offsuit (o).",
+  studyPct:(n,pc)=>`${n}: avauskorotus ${pc} % käsistä.`,
+  stages:["Preflop","Flop","Turn"],you:"Sinä",villain:"Vastustaja",board:"Board",
+  eqFb:(e,w,t)=>`Equitysi: <b class="mono">${e} %</b> (voitto ${w} %, jako ${t} %).`,
+  eqNow:(a,b)=>`Nykyinen käsi: sinä ${a}, vastustaja ${b}.`,
+  exact:n=>`Tarkka laskenta ${n} boardilla.`,mc:n=>`Monte Carlo -simulaatio ${n} boardilla (±1 %).`,
+  draws:["Väriveto","Avoin suoraveto","Gutshot (sisäsuoraveto)","Väri + avoin suoraveto","Kaksi overcardia","Väri + overcard","Pari → kolmoset / kaksi paria"],
+  sizes:["1/3 potti","1/2 potti","2/3 potti","3/4 potti","potti","1,5× potti","2× potti"],
+  poCtxReq:s=>`Turn · vastustaja panostaa ${s}`,poCtxCall:s=>`Turn · yksi kortti tulossa · vastustaja panostaa ${s}`,
+  pot:"Potti",bet:"Panos",outs:n=>`${n} outsia`,
+  poQReq:"Mikä on pienin equity, jolla voit maksaa?",poQCall:"Call vai fold? (ei implied oddseja)",
+  poFb:(b,f,bb,need,ratio)=>`Maksat <span class="mono">${b} $</span>, ja lopullinen potti on <span class="mono">${f} $</span>: tarvittava equity = ${bb} / ${f} = <b class="mono">${need} %</b> (kertoimet ${ratio}:1).`,
+  poDraw:(o,e,r2,ok)=>`${o} outsia 46 tuntemattomasta kortista = <b class="mono">${e} %</b> (2:n sääntö: ≈ ${r2} %). ${ok?"Riittää maksuun.":"Ei riitä: foldaa, ellei implied oddseja ole paljon."}`,
+  poFormula:"Kaava: panos ÷ (potti + 2 × panos). Yleinen virhe: panos ÷ (potti + panos).",
+  player:n=>`Pelaaja ${n}`,split:"Jako",wins:" ← voittaa",splitNote:"Identtiset parhaat viiden kortin kädet: potti jaetaan.",
+  cat:["Hai","Pari","Kaksi paria","Kolmoset","Suora","Väri","Täyskäsi","Neloset","Värisuora"],royal:"Kuningasvärisuora",
+  mods:{preflop:"Preflop — avausrangeet",defense:"Puolustus — avausta vastaan",equity:"Käsi vastaan käsi -equity",potodds:"Pot odds ja outsit",showdown:"Showdown — boardin lukeminen"},
+  overall:"Yhteensä",sub:(ok,n)=>`${ok}/${n} oikein`,subAll:(n,b)=>`${n} kysymystä · paras putki ${b}`,
+  reset:"Nollaa tilastot",confirmReset:"Vahvista nollaus",empty:"Tuloksesi näkyvät tässä ensimmäisten käsiesi jälkeen. Ne pysyvät tällä laitteella."},
+el:{settings:"Ρυθμίσεις",setLang:"Γλώσσα",setTerms:"Κράτα τους όρους πόκερ στα αγγλικά",
+  setTermsHint:"Τα ονόματα χεριών, οι θέσεις και οι κινήσεις μένουν στα αγγλικά (Flush, Full house, Button, Raise…)· όλα τα άλλα είναι στα ελληνικά.",
+  setTermsOff:"Διαθέσιμο όταν η εφαρμογή είναι σε άλλη γλώσσα.",setTable:"Τραπέζι",done:"OK",
+  tabVillains:"Αντίπαλοι",oppLbl:"Αντίπαλος",random:"Τυχαίος",exploitLbl:"Πώς να τον παίξεις:",statsLbl:"Τυπικό VPIP / PFR",
+  prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Μανιακός",station:"Calling station",whale:"Whale",live:"Ερασιτέχνης live 1/2"},
+  pdesc:{gto:"Ισορροπημένος reg, σε στυλ solver. Παίζει τα κλασικά charts, οπότε δεν έχει μεγάλο leak να εκμεταλλευτείς.",
+    tag:"Σφιχτός-επιθετικός reg. Παίζει λιγότερα χέρια από το GTO, κυρίως ζευγάρια, broadways και suited άσους, και κάνει raise όταν μπαίνει.",
+    nit:"Πολύ σφιχτός, λέγεται και rock. Ανοίγει μεγάλα ζευγάρια και μεγάλα φύλλα (περίπου TT+ και AQ+ από τις πρώτες θέσεις), σπάνια μπλοφάρει και κάνει 3-bet μόνο με QQ+ και AK.",
+    weak:"Λέγεται και TAGfish. Παίζει preflop σφιχτά σαν nit, σχεδόν ποτέ δεν μπλοφάρει, κάνει c-bet λιγότερο από τις μισές φορές και τα παρατάει εύκολα σε turn και river.",
+    lag:"Χαλαρός-επιθετικός. Ανοίγει σχεδόν το 30% των χεριών συνολικά, προσθέτει πολλά suited χέρια και κάνει συχνά 3-bet.",
+    maniac:"Υπερεπιθετικός. Παίζει περίπου τα μισά του χέρια και κάνει raise στα περισσότερα, συχνά μεγαλύτερο από το κανονικό, και μετά συνεχίζει να ποντάρει.",
+    station:"Χαλαρός-παθητικός online ερασιτέχνης. Κάνει limp με ευρύ range (ζευγάρια, suited χέρια, broadways, connectors), κάνει raise μόνο με δυνατά χέρια και μετά πληρώνει υπερβολικά.",
+    whale:"Ο πιο χαλαρός ερασιτέχνης. Παίζει πάνω από τα μισά του χέρια, σχεδόν πάντα με limp ή call, και σπάνια κάνει fold μόλις πιάσει οτιδήποτε στο board.",
+    live:"Ο τυπικός παίκτης live $1/$2. Παίζει περίπου το ένα τρίτο των χεριών του αλλά κάνει raise μόνο στο 6% περίπου, κάνει limp τα υπόλοιπα, κάνει μεγάλο raise όταν ανεβάζει και σχεδόν ποτέ 3-bet."},
+  pexp:{gto:"Παίξε τη βάση σου: τα κλασικά charts. Αν αποκλίνεις απέναντι σε παίκτη GTO, απλώς χάνεις.",
+    tag:"Μείνε κοντά στα κλασικά charts, σεβάσου τα 3-bet του και απόφυγε τις περίτεχνες μπλόφες.",
+    nit:"Κλέψε τα blinds του, κάνε light 3-bet στα opens του γιατί κάνει πολύ fold, και κάνε fold στα 3-bet του και στα μεγάλα postflop πονταρίσματά του χωρίς δυνατό χέρι.",
+    weak:"Κλέβε τα blinds του ασταμάτητα, κάνε του light 3-bet και μπλόφαρε σε turn και river όταν κάνει check. Πίστεψέ τον όταν κάνει raise.",
+    lag:"Κάνε call πιο ευρέως στα opens του (KTs, QJs, 77), κράτα τα 3-bet σου κυρίως για value, μην κάνεις 4-bet μπλόφα και στήσε παγίδες με δυνατά χέρια.",
+    maniac:"Σφίξε λίγο τα δικά σου opens, κάνε 4-bet πιο ευρέως για value (JJ, AQo, KQs), πλήρωνε ως το τέλος με top pair και καλό kicker και μην κάνεις ποτέ slowplay.",
+    station:"Απομόνωσέ τον στα limp του με raise στα 4bb περίπου συν 1bb ανά limper (5bb από τα blinds), κάνε λεπτά value bets, πόνταρε μεγαλύτερα με δυνατά χέρια και μη μπλοφάρεις ποτέ.",
+    whale:"Απομόνωσέ τον ακόμα πιο ευρέως, κάνε value bet σε κάθε street με οποιοδήποτε αξιοπρεπές έτοιμο χέρι και μεγάλωσε τα πονταρίσματα. Η μπλόφα εδώ είναι σαν να καις λεφτά.",
+    live:"Κάνε μεγαλύτερο raise απ' ό,τι online (περίπου 4bb συν 1bb ανά limper), απομόνωσε τους limpers με δυνατά χέρια και θεώρησε τα σπάνια raise και 3-bet του πολύ δυνατά."},
+  statsLbl:"VPIP / PFR",sizeLbl:"Συνηθισμένο open",limpsLbl:"limp, raise",srcLbl:"Πηγές:",
+  pfacts:{gto:["Μπλοφάρει και κάνει fold σε ισορροπημένες συχνότητες"],tag:["3-bet ≈ 5–10%","Fold to 3-bet ≈ 40–50%","Steal ≈ 35% (6-max)"],nit:["3-bet μόνο με QQ+ και AK"],
+    weak:["C-bet κάτω από 50%","Fold στα 3-bet χωρίς premium χέρι"],lag:["Συντελεστής επιθετικότητας 3+"],maniac:["Πολύ συχνά 3-bet"],
+    station:["Limp ≈ 47% των χεριών","Limp-raise κάτω από 3%"],whale:["Πολύ παθητικός: συντελεστής επιθετικότητας ≈ 2 ή λιγότερο"],
+    live:["Limp ≈ 35% από πρώτες και μεσαίες θέσεις","Μετά από limp, κάνει call σε raise ≈ 56%"]},
+  popTitle:"Γιατί anti-GTO;",
+  popText:"Το GTO είναι η βάση, όχι ο αντίπαλός σου. Μετρημένα δεδομένα για πραγματικούς παίκτες είναι σπάνια, αλλά όσα υπάρχουν δείχνουν μεγάλες, σταθερές αποκλίσεις:",
+  popFacts:[`Online regs 500NL+, σε 3-bet pots: αφού κάνουν raise σε c-bet στο flop και δεχτούν re-raise, κάνουν fold στο <b>39%</b>, ενώ ένας solver στο <b>27%</b>. Ακόμα και οι καλοί regs κάνουν υπερβολικά fold. <span class="src">(Upswing Poker, βάση δεδομένων του συγγραφέα με έμπειρους παίκτες)</span>`,
+    `Στο live $1/$2 στο Λας Βέγκας, ο μέσος παίκτης είναι <b>35 / 6</b>: παίζει το 35% των χεριών, κάνει raise στο 6% και limp περίπου στο 35% από πρώτες και μεσαίες θέσεις. <span class="src">(PokerNews, 2017, από το Donkey Poker vol. 2)</span>`,
+    `Στο δείγμα του Hand2Note, οι χαλαροί-παθητικοί παίκτες κάνουν limp περίπου στο <b>47%</b> των χεριών και limp-raise σε λιγότερο από <b>3%</b>. <span class="src">(blog του Hand2Note)</span>`],
+  popSrc:"Οι υπόλοιποι αριθμοί στα προφίλ είναι πρακτικοί κανόνες coaching από βιβλία, οδηγούς trackers και blogs (κάποιοι από το 2012 ως το 2020). Θεώρησέ τους τυπικές τιμές, όχι μετρήσεις. Κάθε προφίλ αναφέρει τις πηγές του.",
+  vpPct:(pos,w,c)=>`${pos}: ανοίγει το ${w}% των χεριών (κλασικό: ${c}%).`,
+  vpLimper:(a,b)=>`Κάνει raise στο ${a}% και limp στο ${b}% των χεριών, από οποιαδήποτε θέση. Πορτοκαλί: raise. Πράσινο: limp.`,
+  vsProf:(name,pos,w,chart)=>`${name}: ανοίγει περίπου το ${w}% των χεριών από ${pos}, οπότε αμύνεσαι με το chart <b>${chart}</b>.`,
+  passiveNote:"Ένας παθητικός παίκτης που κάνει raise δείχνει δυνατό χέρι και θα πληρώσει το 3-bet σου: κάνε 3-bet μόνο για value. Από το big blind οι μπλόφες σου γίνονται calls.",
+  limpWhy:(name,w,pos)=>`${name}: κάνει limp περίπου στο ${w}% των χεριών, εδώ από ${pos}, και σπάνια κάνει raise. Κάνε raise με δυνατά χέρια για να τον απομονώσεις και δες φτηνά flops με χέρια που φέρνουν set και draws.`,
+  isoNote:"Μέγεθος απομόνωσης: περίπου 4bb συν 1bb ανά limper, 5bb από τα blinds.",
+  dfLimp:o=>`${o} κάνει limp 1bb`,dfQLimp:"Fold, limp από πίσω ή raise απομόνωσης;",dfQLimpBB:"Check ή raise απομόνωσης;",
+  check:"Check",limpB:"Limp",complete:"Συμπλήρωσε",iso:"Απομόνωσε",
+  actsLimp:["fold","limp από πίσω","raise απομόνωσης"],actsLimpBB:["check","raise απομόνωσης"],
+  legendLimp:"Πορτοκαλί: raise απομόνωσης. Πράσινο: limp από πίσω ή check. Γκρι: fold.",
+  tagline:"Παίξε τον παίκτη, όχι το chart.",
+  folded:"Fold",epNote:"EP = πρώτες θέσεις, από UTG ως HJ. IP = πιο μετά θέση που δεν είναι blind. Στο drill το chart επιλέγεται με βάση το πόσο ευρέως παίζει αυτός που ανοίγει, οπότε απέναντι σε nit στο button αμύνεσαι σαν σε open από πρώτη θέση.",allin:"All-in",showdownCtx:"River · showdown",shown:"Δείχνει",raiseLbl:"Raise",pfCtx:"Fold μέχρι εσένα",toAct:"Σειρά του",tabDefense:"Άμυνα",dfQ:"Fold, call ή 3-bet;",dfStudy:"Μελέτησε τα ranges άμυνας",dfOpen:o=>`${o} ανοίγει 2,5bb`,
+  acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b>: <b>${a}</b> σε ${spot}.`,
+  dfSb:"Από το small blind αυτή η απλοποιημένη στρατηγική είναι 3-bet ή fold, χωρίς flat call.",
+  legend3:"Πορτοκαλί: 3-bet. Πράσινο: call. Γκρι: fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% των χεριών.`,
+  streak:"σερί",best:"ρεκόρ",tabPreflop:"Preflop",tabEquity:"Equity",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Στατιστικά",
+  pfQ:"Fold μέχρι εσένα. Open-raise ή fold;",study:"Μελέτησε τα ranges ανοίγματος",eqQ:"Το equity σου απέναντι σε αυτό το χέρι (all-in τώρα);",sdQ:"Ποιος κερδίζει το pot;",
+  hint:"Πληκτρολόγιο: F / R στο preflop, τα γράμματα που φαίνονται στην άμυνα, 1–5 για επιλογές, Enter για το επόμενο χέρι.",
+  note:n=>`Cash game ${n}-max, 100bb. Τα κλασικά charts είναι μια βάση τύπου GTO εμπνευσμένη από δημόσια solver charts· τα προφίλ αντιπάλων είναι προσεγγίσεις από πηγές coaching.`,
+  fold:"Fold",raise:"Raise",call:"Call",correct:"Σωστό",wrong:"Λάθος",next:"Επόμενο χέρι",position:"Θέση",
+  pos:{UTG:"UTG (παίζει πρώτος)",UTG1:"UTG+1",UTG2:"UTG+2",LJ:"Lojack",HJ:"Hijack",CO:"Cutoff",BTN:"Button",SB:"Small blind",BB:"Big blind"},
+  pfFb:(code,inR,p,pc)=>`<b class="mono">${code}</b> ${inR?"είναι":"δεν είναι"} στο range ανοίγματος από ${p} (<span class="mono">${pc}%</span> των χεριών).`,
+  legend:"Διαγώνιος: ζευγάρια. Πάνω: suited (s). Κάτω: offsuit (o).",
+  studyPct:(n,pc)=>`${n}: open-raise στο ${pc}% των χεριών.`,
+  stages:["Preflop","Flop","Turn"],you:"Εσύ",villain:"Αντίπαλος",board:"Board",
+  eqFb:(e,w,t)=>`Το equity σου: <b class="mono">${e}%</b> (νίκη ${w}%, μοιρασιά ${t}%).`,
+  eqNow:(a,b)=>`Τρέχον χέρι: εσύ ${a}, αντίπαλος ${b}.`,
+  exact:n=>`Ακριβής υπολογισμός σε ${n} boards.`,mc:n=>`Προσομοίωση Monte Carlo σε ${n} boards (±1%).`,
+  draws:["Τράβηγμα χρώματος","Ανοιχτό τράβηγμα κέντας","Gutshot (εσωτερική κέντα)","Χρώμα + ανοιχτή κέντα","Δύο overcards","Χρώμα + overcard","Ζευγάρι → τρία ίδια / δύο ζευγάρια"],
+  sizes:["1/3 pot","1/2 pot","2/3 pot","3/4 pot","pot","1,5× pot","2× pot"],
+  poCtxReq:s=>`Turn · ο αντίπαλος ποντάρει ${s}`,poCtxCall:s=>`Turn · έρχεται ένα φύλλο · ο αντίπαλος ποντάρει ${s}`,
+  pot:"Pot",bet:"Ποντάρισμα",outs:n=>`${n} outs`,
+  poQReq:"Ποιο ελάχιστο equity χρειάζεσαι για call;",poQCall:"Call ή fold; (χωρίς implied odds)",
+  poFb:(b,f,bb,need,ratio)=>`Πληρώνεις <span class="mono">${b} $</span> για τελικό pot <span class="mono">${f} $</span>: απαιτούμενο equity = ${bb} / ${f} = <b class="mono">${need}%</b> (odds ${ratio}:1).`,
+  poDraw:(o,e,r2,ok)=>`${o} outs από 46 άγνωστα φύλλα = <b class="mono">${e}%</b> (κανόνας του 2: ≈ ${r2}%). ${ok?"Αρκεί για call.":"Δεν αρκεί: fold, εκτός αν έχεις μεγάλα implied odds."}`,
+  poFormula:"Τύπος: ποντάρισμα ÷ (pot + 2 × ποντάρισμα). Συχνό λάθος: ποντάρισμα ÷ (pot + ποντάρισμα).",
+  player:n=>`Παίκτης ${n}`,split:"Μοιρασιά",wins:" ← κερδίζει",splitNote:"Ίδια καλύτερα χέρια πέντε φύλλων: το pot μοιράζεται.",
+  cat:["Ψηλό φύλλο","Ζευγάρι","Δύο ζευγάρια","Τρία ίδια","Κέντα","Χρώμα","Φουλ","Καρέ","Κέντα χρώμα"],royal:"Ρουαγιάλ κέντα χρώμα",
+  mods:{preflop:"Preflop — ranges ανοίγματος",defense:"Άμυνα — απέναντι σε open",equity:"Equity χεριού απέναντι σε χέρι",potodds:"Pot odds και outs",showdown:"Showdown — διάβασμα του board"},
+  overall:"Συνολικά",sub:(ok,n)=>`${ok} σωστές από ${n}`,subAll:(n,b)=>`${n} ερωτήσεις · καλύτερο σερί ${b}`,
+  reset:"Μηδένισε τα στατιστικά",confirmReset:"Επιβεβαίωση μηδενισμού",empty:"Τα αποτελέσματά σου θα εμφανιστούν εδώ μετά τα πρώτα σου χέρια. Μένουν σε αυτή τη συσκευή."}
 };
 for(const l in T)for(const k in T.en)if(!(k in T[l]))T[l][k]=T.en[k];
 const LKEY="holdem-drill-lang";
