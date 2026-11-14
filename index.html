@@ -38,6 +38,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand{font-family:var(--f-display);font-weight:800;font-size:30px;letter-spacing:.01em;line-height:1;text-transform:uppercase}
 .brand span{color:var(--brass)}
+.tagline{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:.02em}
 .right{display:flex;align-items:center;gap:12px}
 .streak{font-family:var(--f-mono);font-size:13px;color:var(--muted);display:flex;gap:6px;font-variant-numeric:tabular-nums}
 .streak b{color:var(--ink)}
@@ -92,7 +93,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .card.md{width:34px;height:47px;border-radius:5px} .card.md b{font-size:20px} .card.md i{font-size:14px;margin-top:1px}
 .card.md.ghost{border-width:1px}
 .pseat.hero .pbox{border-color:var(--brass);background:var(--brass-soft)}
-.pseat.raise .pbox{border-color:var(--tb)} .pseat.raise .pbox small{color:var(--tb);font-weight:700}
+.pseat.raise .pbox,.pseat.limp .pbox{border-color:var(--tb)} .pseat.limp .pbox small{color:var(--tb);font-weight:700} .pseat.raise .pbox small{color:var(--tb);font-weight:700}
 .mini{display:flex;gap:2px;min-height:24px;align-items:flex-end}
 .mini span:not(.card){width:17px;height:24px;border-radius:3px;background:repeating-linear-gradient(45deg,var(--back-a) 0 3px,var(--back-b) 3px 6px);border:1.5px solid var(--card-bg)}
 .bet{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-mono);font-size:12px;color:var(--on-felt);display:flex;align-items:center;gap:4px;z-index:1;font-variant-numeric:tabular-nums}
@@ -135,6 +136,10 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .bar .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-right:2px}
 .villains{display:flex;flex-direction:column;gap:12px}
 .villains .verdict{color:var(--ink)}
+.intro{background:var(--brass-soft);border-color:var(--brass)}
+.intro .verdict{color:var(--brass)}
+.facts{display:flex;gap:6px;flex-wrap:wrap}
+.facts span{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--muted)}
 .stats{display:flex;flex-direction:column;gap:10px}
 .srow{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
 .srow h3{margin:0;font-size:15px}
@@ -152,7 +157,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 
 <div class="wrap">
   <header class="top">
-    <div class="brand">Hold'em <span>Drill</span></div>
+    <div><div class="brand">Hold'em <span>Drill</span></div><div class="tagline" data-t="tagline"></div></div>
     <div class="right">
       <div class="streak" aria-live="polite"><span data-t="streak"></span> <b id="streak">0</b> · <span data-t="best"></span> <b id="best">0</b></div>
       <div class="lang" id="size" role="group" aria-label="Table size"><button data-size="6" aria-pressed="true">6-max</button><button data-size="9" aria-pressed="false">9-max</button></div>
@@ -164,10 +169,10 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" data-view="preflop" data-t="tabPreflop"></button>
     <button class="tab" role="tab" data-view="defense" data-t="tabDefense"></button>
+    <button class="tab" role="tab" data-view="villains" data-t="tabVillains"></button>
     <button class="tab" role="tab" data-view="equity" data-t="tabEquity"></button>
     <button class="tab" role="tab" data-view="potodds" data-t="tabPotodds"></button>
     <button class="tab" role="tab" data-view="showdown" data-t="tabShowdown"></button>
-    <button class="tab" role="tab" data-view="villains" data-t="tabVillains"></button>
     <button class="tab" role="tab" data-view="stats" data-t="tabStats"></button>
   </nav>
 
@@ -187,7 +192,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
   <section id="v-defense" hidden>
     <div class="bar" id="df-prof"></div>
     <div class="ring" id="df-table"></div>
-    <p class="q" data-t="dfQ"></p>
+    <p class="q" id="df-q"></p>
     <div class="answers" id="df-ans"></div>
     <div class="fb" id="df-fb" hidden></div>
     <details class="study">
@@ -222,6 +227,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 
   <section id="v-villains" hidden>
     <div class="villains">
+      <div class="fb intro" id="vp-intro"></div>
       <div class="bar" id="vp-prof"></div>
       <div class="fb" id="vp-card"></div>
       <div class="bar" id="vp-pos"></div>
@@ -244,30 +250,42 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 /* ---------- i18n ---------- */
 const T={
 en:{tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
-  prof:{classical:"Classical",nit:"Nit",tag:"TAG",lag:"LAG",maniac:"Maniac",fish:"Fish"},
-  pdesc:{classical:"Balanced, solver-inspired ranges. Learn these first: every other profile is measured against them.",
-    nit:"Very tight. Opens about half of the classical range and rarely bluffs.",
-    tag:"Tight-aggressive regular. A little tighter than classical, with few preflop leaks.",
-    lag:"Loose-aggressive. Opens about a third more hands than classical and keeps the pressure on.",
-    maniac:"Opens almost anything and keeps betting.",
-    fish:"Loose-passive recreational player. Limps a lot and only raises the tighter range shown here, then calls too much."},
-  pexp:{classical:"This is your own default strategy in the Preflop and Defense drills.",
-    nit:"Steal their blinds often, defend less against their opens, and fold to their 3-bets without a premium hand.",
-    tag:"Stay close to the classical charts and avoid fancy bluffs.",
-    lag:"Defend wider against their opens and 3-bet them more often for value.",
-    maniac:"Call down lighter, 3-bet strong hands for value and let them bluff. Don't try to bluff them.",
-    fish:"3-bet for value only, isolate their limps, bet thin for value and don't bluff."},
+  prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",lag:"LAG",maniac:"Maniac",station:"Calling station"},
+  pdesc:{gto:"A balanced, solver-style regular. Plays the classical charts, so there is no big leak to attack.",
+    tag:"Tight-aggressive regular. Plays fewer hands than GTO, mostly pairs, broadways and suited aces, and raises when they play.",
+    nit:"Very tight, also called a rock. Opens big pairs and big cards (about TT+ and AQ+ from early seats), rarely bluffs and 3-bets only QQ+ and AK.",
+    lag:"Loose-aggressive. Opens about 30% of hands or more, adds many suited hands and 3-bets often.",
+    maniac:"Hyper-aggressive. Raises close to half of their hands or more, often bigger than standard, and keeps betting after the flop.",
+    station:"Loose-passive recreational player. Limps a wide range (pairs, suited aces, broadways, connectors), raises only strong hands, then calls down too much."},
+  pexp:{gto:"Play your baseline: the classical charts. Deviating against a GTO player only costs you.",
+    tag:"Stay close to the classical charts, respect their 3-bets and avoid fancy bluffs.",
+    nit:"Steal their blinds, 3-bet their opens light because they fold too much, and fold to their 3-bets and big postflop bets without a strong hand.",
+    lag:"Call wider against their opens (KTs, QJs, 77), keep your 3-bets mostly for value, don't 4-bet bluff and trap with strong hands.",
+    maniac:"Tighten your own opens a little, 4-bet wider for value (JJ, AQo, KQs), call down with top pair good kicker and never slowplay.",
+    station:"Isolate their limps with a raise to about 4bb plus 1bb per limper (5bb from the blinds), bet thin for value, bet bigger with strong hands and never bluff."},
+  statsLbl:"VPIP / PFR (approx., sources vary)",sizeLbl:"Usual open",limpsLbl:"limps, raises",
+  popTitle:"Why anti-GTO?",
+  popText:"GTO is the baseline, not your opponent. Coaches who study low-stakes pools report that most players fold too often to 3-bets in position, defend their blinds wider than GTO, and rarely bluff with 3-bets or on the river. Most of your profit comes from spotting who you play and adjusting.",
+  popSrc:"Profiles are approximations from coaching sources (DeucesCracked, SplitSuit, PokerListings, Phil Galfond). Real players vary.",
   vpPct:(pos,w,c)=>`${pos}: opens ${w}% of hands (classical: ${c}%).`,
+  vpStation:(a,b)=>`Raises ${a}% and limps ${b}% of hands, from any seat. Orange: raise. Green: limp.`,
   vsProf:(name,pos,w,chart)=>`${name} opens about ${w}% of hands from ${pos}, so you defend with the <b>${chart}</b> chart.`,
-  fishNote:"Against a fish, 3-bet bluffs are removed: they call too much. From the big blind those hands become calls.",
+  stationNote:"A calling station that raises shows a strong hand and will call your 3-bet: 3-bet for value only. From the big blind your bluffs become calls.",
+  limpWhy:pos=>`A calling station limps about 40% of hands, here from ${pos}, and rarely raises. Raise strong hands to isolate them and see cheap flops with hands that make sets and draws.`,
+  isoNote:"Isolation size: about 4bb plus 1bb per limper, 5bb from the blinds.",
+  dfLimp:o=>`${o} limps 1bb`,dfQLimp:"Fold, limp behind or raise to isolate?",dfQLimpBB:"Check or raise to isolate?",
+  check:"Check",limpB:"Limp",complete:"Complete",iso:"Isolate",
+  actsLimp:["fold","limp behind","isolation raise"],actsLimpBB:["check","isolation raise"],
+  legendLimp:"Orange: raise to isolate. Green: limp behind or check. Grey: fold.",
+  tagline:"Play the player, not the chart.",
   folded:"Folded",epNote:"EP = early positions, from UTG to HJ. IP = a later seat that is not a blind. In the drill the chart is picked from how wide the opener plays, so a nit on the button is defended like an early-position open.",allin:"All-in",showdownCtx:"River · showdown",shown:"Shows",raiseLbl:"Raise",pfCtx:"Folded to you",toAct:"To act",tabDefense:"Defense",dfQ:"Fold, call or 3-bet?",dfStudy:"Study the defense ranges",dfOpen:o=>`${o} opens 2.5bb`,
   acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b> is a <b>${a}</b> in ${spot}.`,
   dfSb:"From the small blind this simplified strategy is 3-bet or fold, with no flat calls.",
   legend3:"Orange: 3-bet. Green: call. Grey: fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% of hands.`,
   streak:"streak",best:"best",tabPreflop:"Preflop",tabEquity:"Equity",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
   pfQ:"Folded to you. Open-raise or fold?",study:"Study the opening ranges",eqQ:"Your equity against this hand (all-in now)?",sdQ:"Who wins the pot?",
-  hint:"Keyboard: F / R on preflop, F / C / 3 on defense, 1–5 for choices, Enter for the next hand.",
-  note:n=>`${n}-max cash game, 100bb, opens to 2.5bb. Simplified ranges inspired by public GTO charts.`,
+  hint:"Keyboard: F / R on preflop, the letters shown on defense, 1–5 for choices, Enter for the next hand.",
+  note:n=>`${n}-max cash game, 100bb. Classical charts are a GTO-style baseline inspired by public solver charts; opponent profiles are approximations from coaching sources.`,
   fold:"Fold",raise:"Raise",call:"Call",correct:"Correct",wrong:"Wrong",next:"Next hand",position:"Position",
   pos:{UTG:"UTG (first to act)",UTG1:"UTG+1",UTG2:"UTG+2",LJ:"Lojack",HJ:"Hijack",CO:"Cutoff",BTN:"Button",SB:"Small blind",BB:"Big blind"},
   pfFb:(code,inR,p,pc)=>`<b class="mono">${code}</b> is ${inR?"":"not "}in the ${p} opening range (<span class="mono">${pc}%</span> of hands).`,
@@ -291,30 +309,42 @@ en:{tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",exploitLbl:"How to
   overall:"Overall",sub:(ok,n)=>`${ok} right out of ${n}`,subAll:(n,b)=>`${n} questions · best streak ${b}`,
   reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device."},
 fr:{tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
-  prof:{classical:"Classique",nit:"Nit",tag:"TAG",lag:"LAG",maniac:"Maniaque",fish:"Fish"},
-  pdesc:{classical:"Ranges équilibrées, inspirées des solveurs. À apprendre en premier : tous les autres profils se mesurent par rapport à elles.",
-    nit:"Très serré. Ouvre environ la moitié de la range classique et bluffe rarement.",
-    tag:"Régulier serré-agressif. Un peu plus serré que le classique, peu de fuites préflop.",
-    lag:"Large-agressif. Ouvre environ un tiers de mains de plus que le classique et met de la pression.",
-    maniac:"Ouvre presque tout et continue de miser.",
-    fish:"Joueur récréatif large-passif. Limpe beaucoup et ne relance que la range plus serrée montrée ici, puis paie trop."},
-  pexp:{classical:"C'est ta stratégie par défaut dans les drills Préflop et Défense.",
-    nit:"Vole ses blinds souvent, défends moins contre ses opens et fold à ses 3-bets sans main premium.",
-    tag:"Reste proche des charts classiques et évite les bluffs compliqués.",
-    lag:"Défends plus large contre ses opens et 3-bet-le plus souvent pour la value.",
-    maniac:"Paie plus léger, 3-bet tes bonnes mains pour la value et laisse-le bluffer. N'essaie pas de le bluffer.",
-    fish:"3-bet pour la value seulement, isole ses limps, mise fin pour la value et ne bluffe pas."},
+  prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",lag:"LAG",maniac:"Maniaque",station:"Calling station"},
+  pdesc:{gto:"Régulier équilibré, style solveur. Joue les charts classiques : aucune grosse fuite à attaquer.",
+    tag:"Régulier serré-agressif. Joue moins de mains que GTO, surtout des paires, des broadways et des as suited, et relance quand il joue.",
+    nit:"Très serré, aussi appelé rock. Ouvre les grosses paires et les grosses cartes (environ TT+ et AQ+ en début de parole), bluffe rarement et ne 3-bet que QQ+ et AK.",
+    lag:"Large-agressif. Ouvre environ 30 % des mains ou plus, ajoute beaucoup de mains suited et 3-bet souvent.",
+    maniac:"Hyper-agressif. Relance près de la moitié de ses mains ou plus, souvent plus gros que la normale, et continue de miser après le flop.",
+    station:"Joueur récréatif large-passif. Limpe une large range (paires, as suited, broadways, connecteurs), ne relance que ses grosses mains, puis paie trop."},
+  pexp:{gto:"Joue ta base : les charts classiques. Dévier contre un joueur GTO ne fait que te coûter.",
+    tag:"Reste proche des charts classiques, respecte ses 3-bets et évite les bluffs compliqués.",
+    nit:"Vole ses blinds, 3-bet ses opens léger car il fold trop, et fold à ses 3-bets et à ses grosses mises postflop sans main forte.",
+    lag:"Paie plus large contre ses opens (KTs, QJs, 77), garde tes 3-bets surtout pour la value, ne 4-bet pas en bluff et piège avec tes mains fortes.",
+    maniac:"Resserre un peu tes opens, 4-bet plus large pour la value (JJ, AQo, KQs), paie avec top paire bon kicker et ne slowplay jamais.",
+    station:"Isole ses limps avec une relance à environ 4bb plus 1bb par limper (5bb des blinds), mise fin pour la value, mise plus gros avec tes mains fortes et ne bluffe jamais."},
+  statsLbl:"VPIP / PFR (approx., selon les sources)",sizeLbl:"Open habituel",limpsLbl:"limpe, relance",
+  popTitle:"Pourquoi anti-GTO?",
+  popText:"GTO est la référence, pas ton adversaire. Les coachs qui étudient les petites limites rapportent que la plupart des joueurs fold trop face aux 3-bets en position, défendent leurs blinds plus large que GTO et bluffent rarement en 3-bet ou à la river. L'essentiel de tes gains vient de repérer contre qui tu joues et de t'ajuster.",
+  popSrc:"Les profils sont des approximations tirées de sources de coaching (DeucesCracked, SplitSuit, PokerListings, Phil Galfond). Les vrais joueurs varient.",
   vpPct:(pos,w,c)=>`${pos} : ouvre ${w}% des mains (classique : ${c}%).`,
+  vpStation:(a,b)=>`Relance ${a}% et limpe ${b}% des mains, de n'importe quel siège. Orange : relance. Vert : limp.`,
   vsProf:(name,pos,w,chart)=>`${name} ouvre environ ${w}% des mains en ${pos}, donc tu défends avec la chart <b>${chart}</b>.`,
-  fishNote:"Contre un fish, les 3-bets bluff sont retirés : il paie trop. De la big blind, ces mains deviennent des calls.",
+  stationNote:"Un calling station qui relance montre une main forte et paiera ton 3-bet : 3-bet pour la value seulement. De la big blind, tes bluffs deviennent des calls.",
+  limpWhy:pos=>`Un calling station limpe environ 40 % des mains, ici en ${pos}, et relance rarement. Relance tes mains fortes pour l'isoler et vois des flops pas chers avec les mains qui font des brelans et des tirages.`,
+  isoNote:"Taille d'isolation : environ 4bb plus 1bb par limper, 5bb des blinds.",
+  dfLimp:o=>`${o} limpe 1bb`,dfQLimp:"Fold, limp derrière ou relance d'isolation?",dfQLimpBB:"Check ou relance d'isolation?",
+  check:"Check",limpB:"Limp",complete:"Compléter",iso:"Isoler",
+  actsLimp:["fold","limp derrière","relance d'isolation"],actsLimpBB:["check","relance d'isolation"],
+  legendLimp:"Orange : relance d'isolation. Vert : limp derrière ou check. Gris : fold.",
+  tagline:"Joue le joueur, pas la chart.",
   folded:"Couché",epNote:"EP = positions de début, de UTG à HJ. IP = un siège plus tardif qui n'est pas une blind. Dans le drill, la chart dépend de la largeur de la range de l'ouvreur : un nit au bouton se défend comme un open de début de parole.",allin:"All-in",showdownCtx:"River · abattage",shown:"Montre",raiseLbl:"Relance",pfCtx:"Fold jusqu'à toi",toAct:"À parler",tabDefense:"Défense",dfQ:"Fold, call ou 3-bet?",dfStudy:"Étudier les ranges de défense",dfOpen:o=>`${o} relance 2,5bb`,
   acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b> est un <b>${a}</b> en ${spot}.`,
   dfSb:"De la small blind, cette stratégie simplifiée joue 3-bet ou fold, sans call.",
   legend3:"Orange : 3-bet. Vert : call. Gris : fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% des mains.`,
   streak:"série",best:"record",tabPreflop:"Préflop",tabEquity:"Équité",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
   pfQ:"Tout le monde a fold jusqu'à toi. Open-raise ou fold?",study:"Étudier les ranges d'ouverture",eqQ:"Ton équité contre cette main (all-in maintenant)?",sdQ:"Qui gagne le pot?",
-  hint:"Clavier : F / R au préflop, F / C / 3 en défense, 1–5 pour les choix, Entrée pour la suivante.",
-  note:n=>`Cash game ${n}-max, 100bb, open à 2,5bb. Ranges simplifiées inspirées des charts GTO publiques.`,
+  hint:"Clavier : F / R au préflop, les lettres affichées en défense, 1–5 pour les choix, Entrée pour la suivante.",
+  note:n=>`Cash game ${n}-max, 100bb. Les charts classiques sont une base de style GTO inspirée des charts solveur publiques ; les profils adverses sont des approximations tirées de sources de coaching.`,
   fold:"Fold",raise:"Raise",call:"Call",correct:"Correct",wrong:"Raté",next:"Main suivante",position:"Position",
   pos:{UTG:"UTG (premier de parole)",UTG1:"UTG+1",UTG2:"UTG+2",LJ:"Lojack",HJ:"Hijack",CO:"Cutoff",BTN:"Bouton",SB:"Small blind",BB:"Big blind"},
   pfFb:(code,inR,p,pc)=>`<b class="mono">${code}</b> ${inR?"fait partie":"ne fait pas partie"} de la range d'open ${p} (<span class="mono">${pc}%</span> des mains).`,
@@ -471,15 +501,16 @@ function tableView(o){
 }
 function paintRing(id,o){const el=$(id);el.className="ring n"+ORDER().length;el.innerHTML=tableView(o)}
 /* preflop situations: everyone before the hero folded, the opener (if any) raised */
-function actsFor(hero,opener){const ord=ORDER(),hi=ord.indexOf(hero),oi=opener?ord.indexOf(opener):-1,acts={};
+function actsFor(hero,opener,oSt,oBet){const ord=ORDER(),hi=ord.indexOf(hero),oi=opener?ord.indexOf(opener):-1,acts={};
   ord.forEach((p,i)=>{const blind=BLIND[p]||0;
     if(i===hi)acts[p]={st:"hero",bet:blind};
-    else if(i===oi)acts[p]={st:"raise",bet:2.5};
+    else if(i===oi)acts[p]={st:oSt||"raise",bet:oBet||2.5};
     else if(i<hi)acts[p]={st:"fold",bet:blind};
     else acts[p]={st:"wait",bet:blind}});
   return acts}
-function preflopRing(id,hero,cards,code,opener,action,tag){
-  const seats=actsFor(hero,opener);if(opener&&tag)seats[opener].sub=`${tag} · ${bb(2.5)}`;let pot=0;for(const p in seats)pot+=seats[p].bet||0;
+function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet){
+  const seats=actsFor(hero,opener,oSt,oBet);
+  if(opener){const a=seats[opener];a.sub=oSt==="limp"?`${tag?tag+" · ":""}Limp`:tag?`${tag} · ${bb(a.bet)}`:undefined}let pot=0;for(const p in seats)pot+=seats[p].bet||0;
   paintRing(id,{bottom:hero,bottomCards:cards,bottomLabel:`${t().you} · ${lbl(hero)}`,bottomSub:code,seats,
     center:`<div class="ctx">${t().pos[hero]}</div><div class="potv">${t().pot} ${bb(pot)}</div><div class="cact">${action}</div>`});
 }
@@ -511,28 +542,46 @@ function paintStudy(){
 $("study-pos").addEventListener("click",e=>{const b=e.target.closest("[data-pos]");if(b){studyPos=b.dataset.pos;paintStudy()}});
 
 /* ---------- Opponent profiles ----------
-   Classical = the charts above. Other profiles take the same seat but play a wider or tighter share of hands:
-   hands are ranked by the tightest classical range that contains them, then by Chen score. */
-const PROFILES=["classical","nit","tag","lag","maniac","fish"];
-const PMULT={classical:1,nit:.55,tag:.85,lag:1.35,maniac:1.9,fish:.8};
-const PSTATS={classical:"24 / 20",nit:"12 / 9",tag:"21 / 17",lag:"30 / 25",maniac:"50 / 40",fish:"45 / 8"};
+   GTO reg = the classical charts. Other profiles keep their own share of hands per seat (6-max widths below,
+   9-max early seats scaled like the classical ones) and their own range SHAPE:
+   - nit: pairs and big cards first (TT+/AQ+ early), few suited connectors
+   - tag / lag / maniac: classical order (tightest classical range first), then Chen score
+   - station: fixed limp and raise ranges, whatever the seat
+   Widths and stats are approximations from coaching sources, not measured data. */
+const PROFILES=["gto","tag","nit","lag","maniac","station"];
+const PW={tag:{UTG:15,HJ:19,CO:27,BTN:42,SB:33},nit:{UTG:8,HJ:9.5,CO:12,BTN:16,SB:12},
+  lag:{UTG:22,HJ:27,CO:38,BTN:58,SB:50},maniac:{UTG:38,HJ:45,CO:55,BTN:75,SB:70}};
+const PSTATS={gto:"≈ 23 / 19",tag:"18–25 / 15–21",nit:"8–18 / 6–15",lag:"26–35 / 22–30",maniac:"44–65 / 31–53",station:"35–45 / 5–12"};
+const PSIZE={gto:2.5,tag:2.5,nit:3,lag:2.5,maniac:4,station:4};
+const PTIERS={nit:["QQ+,AK","JJ,TT,AQ","99,88,AJs,KQs,AJo","77,66,ATs,KJs,QJs,KQo,ATo","55-22,A9s,KTs,QTs,JTs,KJo","A8s-A2s,T9s,QJo,K9s"]};
+const STATION_RAISE=expand("99+,AJs+,KQs,AQo+");
+const STATION_LIMP=(()=>{const l=expand("22+,A2s+,K5s+,Q7s+,J7s+,T7s+,96s+,85s+,74s+,64s+,53s+,43s,A2o+,KTo+,QTo+,JTo,T9o,98o,87o,76o,65o");for(const c of STATION_RAISE)l.delete(c);return l})();
 const TIERS=["UTG9","UTG1","UTG2","UTG","HJ","CO","SB","BTN"];
 function chen(code){const v=[1,1.5,2,2.5,3,3.5,4,4.5,5,6,7,8,10],a=R.indexOf(code[0]),b=R.indexOf(code[1]);let s=v[a];
   if(a===b)return Math.max(5,s*2);
   if(code[2]==="s")s+=2;const gap=a-b-1;s-=gap<3?gap:gap===3?4:5;if(gap<=1&&a<10)s+=1;return Math.ceil(s)}
-let RANK=null;
-function ranked(){if(RANK)return RANK;const all=[];
-  for(let a=12;a>=0;a--)for(let b=a;b>=0;b--){if(a===b)all.push(R[a]+R[a]);else{all.push(R[a]+R[b]+"s");all.push(R[a]+R[b]+"o")}}
-  const tier=c=>{const i=TIERS.findIndex(k=>RANGES[k].has(c));return i<0?TIERS.length:i};
-  RANK=all.map(c=>[c,tier(c),chen(c)]).sort((x,y)=>x[1]-y[1]||y[2]-x[2]||R.indexOf(y[0][0])-R.indexOf(x[0][0])).map(x=>x[0]);return RANK}
+const ALL169=(()=>{const all=[];for(let a=12;a>=0;a--)for(let b=a;b>=0;b--){if(a===b)all.push(R[a]+R[a]);else{all.push(R[a]+R[b]+"s");all.push(R[a]+R[b]+"o")}}return all})();
+const RANKS={};
+function ranked(prof){if(RANKS[prof])return RANKS[prof];
+  const sets=PTIERS[prof]?PTIERS[prof].map(expand):TIERS.map(k=>RANGES[k]);
+  const tier=c=>{const i=sets.findIndex(x=>x.has(c));return i<0?sets.length:i};
+  return RANKS[prof]=ALL169.map(c=>[c,tier(c),chen(c)]).sort((x,y)=>x[1]-y[1]||y[2]-x[2]||R.indexOf(y[0][0])-R.indexOf(x[0][0])).map(x=>x[0])}
+function profWidth(prof,pos){const w=PW[prof];
+  if(size===9&&["UTG","UTG1","UTG2"].includes(pos))return w.UTG*pct(rangeFor(pos))/pct(RANGES.UTG);
+  return w[pos==="LJ"?"UTG":pos]}
 const PCACHE={};
-function openRange(prof,pos){if(prof==="classical")return rangeFor(pos);const k=prof+size+pos;
-  if(!PCACHE[k]){const W=Math.min(90,pct(rangeFor(pos))*PMULT[prof]),set=new Set();let n=0;
-    for(const c of ranked()){if(n>=W/100*1326)break;set.add(c);n+=combos(c)}PCACHE[k]=set}
+function openRange(prof,pos){if(prof==="gto")return rangeFor(pos);if(prof==="station")return STATION_RAISE;
+  const k=prof+size+pos;
+  if(!PCACHE[k]){const W=profWidth(prof,pos),set=new Set();let n=0;
+    for(const c of ranked(prof)){if(n>=W/100*1326)break;set.add(c);n+=combos(c)}PCACHE[k]=set}
   return PCACHE[k]}
 
 /* ---------- Defense: facing an open ---------- */
 const DEF_SRC={
+  /* facing a calling-station limp: tb = raise to isolate, call = limp behind / complete / check */
+  LimpIP:{tb:"77+,ATs+,KTs+,QTs+,JTs,AJo+,KQo",call:"66-22,A9s-A2s,T9s,98s,87s,76s,65s,54s"},
+  LimpSB:{tb:"88+,ATs+,KJs+,AJo+,KQo",call:"77-22,A9s-A2s,KTs,QTs,JTs,T9s,98s,87s,76s,65s"},
+  LimpBB:{tb:"88+,ATs+,KJs+,QJs,AJo+,KQo",call:""},
   IPvUTG9:{tb:"QQ+,AKs,AKo",call:"JJ-66,AQs-AJs,KQs,JTs,AQo"},
   IPvEP:{tb:"QQ+,AK,A5s,A4s",call:"JJ-55,AQs-ATs,KQs,KJs,QJs,JTs,T9s,98s,AQo"},
   IPvCO:{tb:"TT+,AQ+,A5s-A3s,K9s,Q9s,J9s",call:"99-22,AJs-A6s,KQs-KTs,QJs,QTs,JTs,T9s,98s,87s,76s,65s,AJo,KQo"},
@@ -545,9 +594,10 @@ const DEF_SRC={
   BBvBTN:{tb:"99+,ATs+,AJo+,KJs+,A5s-A2s,Q9s,T8s,97s",call:"88-22,A9s-A6s,KTs-K2s,QJs-Q4s,JTs-J6s,T9s-T6s,98s-96s,87s-85s,76s-74s,65s-63s,54s-53s,43s,ATo-A2o,KQo-K7o,QJo-Q8o,JTo-J8o,T9o,T8o,98o,87o,76o"},
   BBvSB:{tb:"88+,ATs+,AJo+,KTs+,KQo,QTs+,A5s-A2s,J9s,T9s",call:"77-22,A9s-A6s,K9s-K2s,Q9s-Q2s,J8s-J4s,T8s-T6s,98s-95s,87s-85s,76s-74s,65s-63s,54s-53s,43s,ATo-A2o,KJo-K5o,QJo-Q8o,JTo-J8o,T9o-T8o,98o,87o,76o"}
 };
-const DEF_LABEL={IPvUTG9:"IP vs tight UTG",IPvEP:"IP vs EP",IPvCO:"BTN vs CO",SBvUTG9:"SB vs tight UTG",SBvEP:"SB vs EP",SBvLate:"SB vs CO/BTN",
+const DEF_LABEL={LimpIP:"IP vs limp",LimpSB:"SB vs limp",LimpBB:"BB vs limp",IPvUTG9:"IP vs tight UTG",IPvEP:"IP vs EP",IPvCO:"BTN vs CO",SBvUTG9:"SB vs tight UTG",SBvEP:"SB vs EP",SBvLate:"SB vs CO/BTN",
   BBvUTG9:"BB vs tight UTG",BBvEP:"BB vs EP",BBvCO:"BB vs CO",BBvBTN:"BB vs BTN",BBvSB:"BB vs SB"};
 const DEF={};for(const k in DEF_SRC){const tb=expand(DEF_SRC[k].tb),call=expand(DEF_SRC[k].call);for(const c of tb)call.delete(c);DEF[k]={tb,call}}
+for(const c of ALL169)if(!DEF.LimpBB.tb.has(c))DEF.LimpBB.call.add(c);
 const VALUE=expand("TT+,AQ+,AJs,KQs");
 /* The chart depends on how wide the opener plays (W, % of hands), not only on the seat. */
 function band(W){const w=k=>pct(RANGES[k]);
@@ -556,30 +606,42 @@ function defKey(o,h,W){const b=band(W);
   if(h==="SB")return b==="U9"?"SBvUTG9":b==="EP"?"SBvEP":"SBvLate";
   if(h==="BB"){if(o==="SB"&&(b==="CO"||b==="BTN"))return "BBvSB";return {U9:"BBvUTG9",EP:"BBvEP",CO:"BBvCO",BTN:"BBvBTN"}[b]}
   return b==="U9"?"IPvUTG9":b==="EP"?"IPvEP":"IPvCO"}
-function chartFor(key,prof,hero){const sp=DEF[key];if(prof!=="fish")return sp;
+function chartFor(key,prof,hero){const sp=DEF[key];if(prof!=="station"||key.startsWith("Limp"))return sp;
   const tb=new Set(),call=new Set(sp.call);for(const c of sp.tb){if(VALUE.has(c))tb.add(c);else if(hero==="BB")call.add(c)}return {tb,call}}
 function spots(){const ord=ORDER(),n=ord.length,out=[];for(let i=0;i<n-1;i++)for(let j=i+1;j<n;j++)out.push([ord[i],ord[j]]);return out}
 function grid3(sp,cur){let h="";for(let i=0;i<13;i++)for(let j=0;j<13;j++){const a=12-i,b=12-j;
   const code=i===j?R[a]+R[a]:j>i?R[a]+R[b]+"s":R[b]+R[a]+"o";
   h+=`<div class="${sp.tb.has(code)?"tb":sp.call.has(code)?"in":""}${code===cur?" cur":""}">${code}</div>`}return h}
 const DPKEY="holdem-drill-opp";
-let dProf="classical";try{const v=localStorage.getItem(DPKEY);if(v&&(v==="random"||PROFILES.includes(v)))dProf=v}catch(e){}
+let dProf="gto";try{let v=localStorage.getItem(DPKEY);v=({classical:"gto",fish:"station"})[v]||v;if(v&&(v==="random"||PROFILES.includes(v)))dProf=v}catch(e){}
 function paintDProf(){$("df-prof").innerHTML=`<span class="lbl">${t().oppLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===dProf}" data-prof="${k}">${k==="random"?t().random:t().prof[k]}</button>`).join("")}
 $("df-prof").addEventListener("click",e=>{const b=e.target.closest("[data-prof]");if(!b||b.dataset.prof===dProf)return;
   dProf=b.dataset.prof;try{localStorage.setItem(DPKEY,dProf)}catch(err){}paintDProf();newDefense()});
 let df;
 function newDefense(){
   const prof=dProf==="random"?PROFILES[rnd(PROFILES.length)]:dProf;
-  const all=spots(),[o,hero]=all[rnd(all.length)],W=pct(openRange(prof,o)),key=defKey(o,hero,W),sp=chartFor(key,prof,hero);let h,code;
+  const all=spots(),[o,hero]=all[rnd(all.length)];
+  const limp=prof==="station"&&Math.random()<.8;
+  const W=limp?pct(STATION_LIMP):pct(openRange(prof,o));
+  const key=limp?(hero==="BB"?"LimpBB":hero==="SB"?"LimpSB":"LimpIP"):defKey(o,hero,W),sp=chartFor(key,prof,hero);let h,code;
   for(let k=0;k<12;k++){h=deal(2);code=handCode(h[0],h[1]);if(sp.tb.has(code)||sp.call.has(code)||Math.random()>.7)break}
-  df={size,prof,o,hero,W,key,h,code,correct:sp.tb.has(code)?2:sp.call.has(code)?1:0,chosen:null};paintDefense();
+  const bbLimp=limp&&hero==="BB";
+  const correct=bbLimp?(sp.tb.has(code)?1:0):sp.tb.has(code)?2:sp.call.has(code)?1:0;
+  df={size,prof,o,hero,W,key,limp,h,code,correct,chosen:null};paintDefense();
 }
+function dfLabels(){if(!df.limp)return {labels:[t().fold,t().call,"3-bet"],keys:["F","C","3"],acts:t().acts,q:t().dfQ};
+  if(df.hero==="BB")return {labels:[t().check,t().iso],keys:["C","R"],acts:t().actsLimpBB,q:t().dfQLimpBB};
+  return {labels:[t().fold,df.hero==="SB"?t().complete:t().limpB,t().iso],keys:["F","C","R"],acts:t().actsLimp,q:t().dfQLimp}}
 function paintDefense(){
-  const pn=t().prof[df.prof],tag=df.prof==="classical"?"":pn;
-  preflopRing("df-table",df.hero,df.h,df.code,df.o,t().dfOpen(lbl(df.o))+(tag?` (${tag})`:""),tag);
-  paintAnswers($("df-ans"),[t().fold,t().call,"3-bet"],df,["F","C","3"]);
+  const pn=t().prof[df.prof],tag=df.prof==="gto"?"":df.prof==="station"?"Station":pn,L=dfLabels();
+  const action=(df.limp?t().dfLimp(lbl(df.o)):t().dfOpen(lbl(df.o)).replace("2.5bb",bb(PSIZE[df.prof])).replace("2,5bb",bb(PSIZE[df.prof])))+(tag?` (${tag})`:"");
+  preflopRing("df-table",df.hero,df.h,df.code,df.o,action,tag,df.limp?"limp":"raise",df.limp?1:PSIZE[df.prof]);
+  $("df-q").textContent=L.q;
+  paintAnswers($("df-ans"),L.labels,df,L.keys);
   const sp=chartFor(df.key,df.prof,df.hero);
-  paintFb($("df-fb"),df,()=>`<p>${t().dfFb(df.code,t().acts[df.correct],lbl(df.hero)+" vs "+lbl(df.o))}</p><p class="muted">${t().vsProf(pn,lbl(df.o),Math.round(df.W),DEF_LABEL[df.key])}</p>${df.prof==="fish"?`<p class="muted">${t().fishNote}</p>`:""}${df.hero==="SB"?`<p class="muted">${t().dfSb}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(sp,df.code)}</div></div><p class="muted">${t().legend3}</p>`);
+  const why=df.limp?`<p class="muted">${t().limpWhy(lbl(df.o))}</p><p class="muted">${t().isoNote}</p>`
+    :`<p class="muted">${t().vsProf(pn,lbl(df.o),Math.round(df.W),DEF_LABEL[df.key])}</p>${df.prof==="station"?`<p class="muted">${t().stationNote}</p>`:""}${df.hero==="SB"?`<p class="muted">${t().dfSb}</p>`:""}`;
+  paintFb($("df-fb"),df,()=>`<p>${t().dfFb(df.code,L.acts[df.correct],lbl(df.hero)+" vs "+lbl(df.o))}</p>${why}<div class="grid-wrap"><div class="grid">${grid3(sp,df.code)}</div></div><p class="muted">${df.limp?t().legendLimp:t().legend3}</p>`);
 }
 $("df-ans").addEventListener("click",e=>{const b=e.target.closest(".ans");if(b)answer("defense",df,+b.dataset.i,paintDefense)});
 let dStudy="BBvBTN";
@@ -594,9 +656,13 @@ $("dstudy-spot").addEventListener("click",e=>{const b=e.target.closest("[data-sp
 let vProf="nit",vPos="BTN";
 function paintVillains(){
   if(!OPENERS().includes(vPos))vPos="BTN";
+  $("vp-intro").innerHTML=`<div class="verdict">${t().popTitle}</div><p>${t().popText}</p><p class="muted">${t().popSrc}</p>`;
   $("vp-prof").innerHTML=PROFILES.map(k=>`<button class="pill" aria-pressed="${k===vProf}" data-vprof="${k}">${t().prof[k]}</button>`).join("");
-  $("vp-card").innerHTML=`<div class="verdict">${t().prof[vProf]}</div><p class="muted">${t().statsLbl} ≈ <span class="mono">${PSTATS[vProf]}</span></p><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p>`;
+  const sz=vProf==="station"?`${t().limpsLbl} ${bb(PSIZE.station)}`:bb(PSIZE[vProf]);
+  $("vp-card").innerHTML=`<div class="verdict">${t().prof[vProf]}</div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span></div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p>`;
+  $("vp-pos").hidden=vProf==="station";
   $("vp-pos").innerHTML=OPENERS().map(p=>`<button class="pill" aria-pressed="${p===vPos}" data-vpos="${p}">${lbl(p)}</button>`).join("");
+  if(vProf==="station"){$("vp-grid").innerHTML=grid3({tb:STATION_RAISE,call:STATION_LIMP},"");$("vp-pct").textContent=t().vpStation(pct(STATION_RAISE),pct(STATION_LIMP));return}
   const set=openRange(vProf,vPos);
   $("vp-grid").innerHTML=gridHTML(set,"");
   $("vp-pct").textContent=t().vpPct(t().pos[vPos],pct(set),pct(rangeFor(vPos)));
@@ -735,7 +801,7 @@ document.addEventListener("keydown",e=>{
   if(!INIT[current])return;const st=STATE[current]();if(!st)return;
   if((k==="enter"||k===" ")&&st.chosen!=null){e.preventDefault();INIT[current]();return}
   if(current==="preflop"){if(k==="f")ANS.preflop(0);if(k==="r")ANS.preflop(1);return}
-  if(current==="defense"){const m={f:0,c:1,r:2,"1":0,"2":1,"3":2}[k];if(m!=null)ANS.defense(m);return}
+  if(current==="defense"){const ks=dfLabels().keys.map(x=>x.toLowerCase());let m=ks.indexOf(k);if(m<0&&k==="r")m=ks.indexOf("3");if(m<0){const d=parseInt(k,10);if(d>=1&&d<=ks.length)m=d-1}if(m>=0)ANS.defense(m);return}
   const n=parseInt(k,10);const max=$(({equity:"eq",potodds:"po",showdown:"sd"})[current]+"-ans").children.length;
   if(n>=1&&n<=max)ANS[current](n-1);
 });
