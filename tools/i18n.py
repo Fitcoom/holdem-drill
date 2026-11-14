@@ -103,13 +103,28 @@ def entries(s, start, end):
 
 
 def keys(s, code, bl):
-    return {k for k, _, _ in entries(s, *bl[code])}
+    """Top-level keys, plus 'key.sub' for keys whose value is an object (e.g. prof.omc)."""
+    out = set()
+    for k, a, b in entries(s, *bl[code]):
+        out.add(k)
+        if s[a:b].lstrip().startswith("{"):
+            out |= {f"{k}.{q}" for q, _, _ in entries(s, a, b)}
+    return out
 
 
 def missing(s):
+    """Per language, the top-level keys to (re)translate. A key counts as missing when it is
+    absent or when one of its sub-keys is absent; the whole object is then re-translated and
+    inserted last, so it overrides the older, incomplete one."""
     bl = blocks(s)
     en = keys(s, "en", bl)
-    return bl, {c: sorted(en - keys(s, c, bl)) for c in bl if c != "en"}
+    res = {}
+    for c in bl:
+        if c == "en":
+            continue
+        gap = en - keys(s, c, bl)
+        res[c] = sorted({k.split(".")[0] for k in gap})
+    return bl, res
 
 
 def cmd_check():

@@ -74,6 +74,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .sheet{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;width:100%;max-width:420px;max-height:100%;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:18px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .sheet h2{margin:0;font-family:var(--f-display);font-weight:800;font-size:26px;text-transform:uppercase;letter-spacing:.02em}
 .field{display:flex;flex-direction:column;gap:8px}
+.field small.muted{color:var(--muted);font-size:13px}
 .field .t{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
 .field select{font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
 .check{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
@@ -172,7 +173,12 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .how .body .ex{color:var(--muted);font-size:13px}
 .study summary{cursor:pointer;font-weight:600;padding:10px 0}
 .study .bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.pill{border:1.5px solid var(--line);background:none;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600}
+.pill{border:1.5px solid var(--line);background:none;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.pill .av{margin-left:-7px}
+svg.av{flex:none;border-radius:50%;display:block}
+.mini svg.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
+.vhead{display:flex;gap:14px;align-items:center}
+.vhead svg.av{box-shadow:0 0 0 3px var(--brass)}
 .pill[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .study .pct{font-size:13px;color:var(--muted);margin:8px 0 12px}
 
@@ -328,6 +334,11 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
         <span><b data-t="setTerms"></b><small id="set-terms-hint"></small></span>
       </label>
       <div class="field">
+        <span class="t" data-t="modeLbl"></span>
+        <div class="lang" id="mode" role="group" aria-label="Mode"><button data-mode="classic" data-t="modeClassic"></button><button data-mode="pers" data-t="modePers"></button></div>
+        <small class="muted" data-t="modeHint"></small>
+      </div>
+      <div class="field">
         <span class="t" data-t="setTable"></span>
         <div class="lang" id="size" role="group" aria-label="Table size"><button data-size="6" aria-pressed="true">6-max</button><button data-size="9" aria-pressed="false">9-max</button></div>
       </div>
@@ -352,7 +363,8 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 "use strict";
 /* ---------- i18n ---------- */
 const T={
-en:{limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
+en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Classic: GTO-style charts only, no opponent profiles. Personalities: opponents with real-player tendencies to exploit.",
+  limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
   limpPopTitle:"Wrong: never limp",
   limpPopText:"Open-limping is one of the biggest mistakes players make. You can't win the pot right away, you give the blinds a cheap flop, and anyone behind can raise you off your hand. Raise or fold.",
   pfActs:["fold","limp","raise"],
@@ -364,7 +376,8 @@ en:{limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
     lag:"Aggressive players behind 3-bet a lot: open a little tighter.",maniac:"A maniac behind raises almost anything: open tighter, and you can limp AA or KK to re-raise when they attack.",
     station:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
     whale:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
-    live:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops."},
+    live:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
+    omc:"An OMC behind only plays strong hands: open wider to steal his blinds, and fold to his rare raises."},
   sbNote:"From the small blind, only the big blind is left: completing (limping) medium hands is a standard strategy, while strong hands still raise.",
   eqHowTitle:"How to estimate equity",
   eqHow:`<p><b>1. Count your outs.</b> Outs are the cards that put you ahead: a flush draw has 9, an open-ended straight draw 8, a gutshot 4, two overcards about 6.</p>
@@ -387,7 +400,7 @@ en:{limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
   tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
-  prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec"},
+  prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec",omc:"OMC"},
   pdesc:{gto:"A balanced, solver-style regular. Plays the classical charts, so there is no big leak to attack.",
     tag:"Tight-aggressive regular. Plays fewer hands than GTO, mostly pairs, broadways and suited aces, and raises when they play.",
     nit:"Very tight, also called a rock. Opens big pairs and big cards (about TT+ and AQ+ from early seats), rarely bluffs and 3-bets only QQ+ and AK.",
@@ -396,7 +409,8 @@ en:{limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
     maniac:"Hyper-aggressive. Plays about half of their hands and raises most of them, often bigger than standard, then keeps betting.",
     station:"Loose-passive online recreational player. Limps a wide range (pairs, suited hands, broadways, connectors), raises only strong hands, then calls down too much.",
     whale:"The loosest recreational player. Plays more than half of their hands, almost always by limping or calling, and rarely folds once they have any piece of the board.",
-    live:"The typical live $1/$2 player. Plays about a third of their hands but raises only about 6%, limps the rest, raises big when they do raise and almost never 3-bets."},
+    live:"The typical live $1/$2 player. Plays about a third of their hands but raises only about 6%, limps the rest, raises big when they do raise and almost never 3-bets.",
+    omc:"Old Man Coffee: the older live regular nursing a coffee. Very tight and passive: limps pairs and big cards hoping for a set, raises only QQ+ and AK, never bluffs. When he stays in the pot, he has it."},
   pexp:{gto:"Play your baseline: the classical charts. Deviating against a GTO player only costs you.",
     tag:"Stay close to the classical charts, respect their 3-bets and avoid fancy bluffs.",
     nit:"Steal their blinds, 3-bet their opens light because they fold too much, and fold to their 3-bets and big postflop bets without a strong hand.",
@@ -405,12 +419,14 @@ en:{limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
     maniac:"Tighten your own opens a little, 4-bet wider for value (JJ, AQo, KQs), call down with top pair good kicker and never slowplay.",
     station:"Isolate their limps with a raise to about 4bb plus 1bb per limper (5bb from the blinds), bet thin for value, bet bigger with strong hands and never bluff.",
     whale:"Isolate even wider, value-bet every street with any decent made hand and size up. Bluffing is lighting money on fire.",
-    live:"Raise bigger than online (about 4bb plus 1bb per limper), isolate limpers with strong hands, and treat their rare raises and 3-bets as very strong."},
+    live:"Raise bigger than online (about 4bb plus 1bb per limper), isolate limpers with strong hands, and treat their rare raises and 3-bets as very strong.",
+    omc:"Steal his blinds and attack his limps when he folds too much. When he raises, bets big or calls twice, fold everything but a very strong hand: he is almost never bluffing."},
   statsLbl:"VPIP / PFR",sizeLbl:"Usual open",limpsLbl:"limps, raises",srcLbl:"Sources:",
   pfacts:{gto:["Bluffs and folds at balanced frequencies"],tag:["3-bet ≈ 5–10%","Fold to 3-bet ≈ 40–50%","Steal ≈ 35% (6-max)"],nit:["3-bets only QQ+ and AK"],
     weak:["C-bet under 50%","Folds to 3-bets without a premium"],lag:["Aggression factor 3+"],maniac:["3-bets very often"],
     station:["Limps ≈ 47% of hands","Limp-raises under 3%"],whale:["Very passive: aggression factor ≈ 2 or less"],
-    live:["Limps ≈ 35% from early and middle seats","After limping, calls a raise ≈ 56%"]},
+    live:["Limps ≈ 35% from early and middle seats","After limping, calls a raise ≈ 56%"],
+    omc:["Live archetype, no measured data","Raises only QQ+ and AK"]},
   popTitle:"Why anti-GTO?",
   popText:"GTO is the baseline, not your opponent. Measured data on real players is rare, but what exists shows big, steady deviations:",
   popFacts:[`Online 500NL+ regulars, in 3-bet pots: after raising a flop c-bet and getting re-raised, they fold <b>39%</b> where a solver folds <b>27%</b>. Even good regulars over-fold. <span class="src">(Upswing Poker, author's database of expert players)</span>`,
@@ -458,7 +474,8 @@ en:{limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
   mods:{preflop:"Preflop — opening ranges",defense:"Defense — facing an open",equity:"Hand vs hand equity",potodds:"Pot odds and outs",showdown:"Showdown — reading the board"},
   overall:"Overall",sub:(ok,n)=>`${ok} right out of ${n}`,subAll:(n,b)=>`${n} questions · best streak ${b}`,
   reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device."},
-fr:{limpBtn:"Call (limp)",gotIt:"Compris",behindLbl:"Joueurs derrière",
+fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"Classique : seulement les charts de style GTO, sans profils adverses. Personnalités : des adversaires avec les tendances de vrais joueurs à exploiter.",
+  limpBtn:"Call (limp)",gotIt:"Compris",behindLbl:"Joueurs derrière",
   limpPopTitle:"Raté : ne limpe jamais",
   limpPopText:"Limper en premier est une des plus grosses erreurs des joueurs. Tu ne peux pas gagner le pot tout de suite, tu offres un flop pas cher aux blinds et n'importe qui derrière peut te relancer pour te faire lâcher ta main. Relance ou fold.",
   pfActs:["fold","limp","relance"],
@@ -470,7 +487,8 @@ fr:{limpBtn:"Call (limp)",gotIt:"Compris",behindLbl:"Joueurs derrière",
     lag:"Les joueurs agressifs derrière 3-bet beaucoup : ouvre un peu plus serré.",maniac:"Un maniaque derrière relance presque tout : ouvre plus serré, et tu peux limper AA ou KK pour sur-relancer quand il attaque.",
     station:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
     whale:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
-    live:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers."},
+    live:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
+    omc:"Un OMC derrière ne joue que des mains fortes : ouvre plus large pour voler ses blinds, et fold face à ses rares relances."},
   sbNote:"De la small blind, il ne reste que la big blind : compléter (limper) les mains moyennes est une stratégie standard, et les mains fortes relancent toujours.",
   eqHowTitle:"Comment estimer ton équité",
   eqHow:`<p><b>1. Compte tes outs.</b> Les outs sont les cartes qui te font passer devant : un tirage couleur en a 9, une quinte ouverte 8, un gutshot 4, deux overcards environ 6.</p>
@@ -493,7 +511,7 @@ fr:{limpBtn:"Call (limp)",gotIt:"Compris",behindLbl:"Joueurs derrière",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
   tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
-  prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2"},
+  prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2",omc:"OMC"},
   pdesc:{gto:"Régulier équilibré, style solveur. Joue les charts classiques : aucune grosse fuite à attaquer.",
     tag:"Régulier serré-agressif. Joue moins de mains que GTO, surtout des paires, des broadways et des as suited, et relance quand il joue.",
     nit:"Très serré, aussi appelé rock. Ouvre les grosses paires et les grosses cartes (environ TT+ et AQ+ en début de parole), bluffe rarement et ne 3-bet que QQ+ et AK.",
@@ -502,7 +520,8 @@ fr:{limpBtn:"Call (limp)",gotIt:"Compris",behindLbl:"Joueurs derrière",
     maniac:"Hyper-agressif. Joue environ la moitié de ses mains et relance la plupart, souvent plus gros que la normale, puis continue de miser.",
     station:"Récréatif en ligne large-passif. Limpe une large range (paires, mains suited, broadways, connecteurs), ne relance que ses grosses mains, puis paie trop.",
     whale:"Le récréatif le plus large. Joue plus de la moitié de ses mains, presque toujours en limp ou en call, et fold rarement dès qu'il touche le board.",
-    live:"Le joueur typique du live 1/2 $. Joue environ un tiers de ses mains mais n'en relance qu'environ 6 %, limpe le reste, relance gros quand il relance et ne 3-bet presque jamais."},
+    live:"Le joueur typique du live 1/2 $. Joue environ un tiers de ses mains mais n'en relance qu'environ 6 %, limpe le reste, relance gros quand il relance et ne 3-bet presque jamais.",
+    omc:"Old Man Coffee : le vieil habitué du live qui sirote son café. Très serré et passif : limpe les paires et les grosses cartes en espérant un brelan, ne relance que QQ+ et AK, ne bluffe jamais. S'il reste dans le coup, il a la main."},
   pexp:{gto:"Joue ta base : les charts classiques. Dévier contre un joueur GTO ne fait que te coûter.",
     tag:"Reste proche des charts classiques, respecte ses 3-bets et évite les bluffs compliqués.",
     nit:"Vole ses blinds, 3-bet ses opens léger car il fold trop, et fold à ses 3-bets et à ses grosses mises postflop sans main forte.",
@@ -511,12 +530,14 @@ fr:{limpBtn:"Call (limp)",gotIt:"Compris",behindLbl:"Joueurs derrière",
     maniac:"Resserre un peu tes opens, 4-bet plus large pour la value (JJ, AQo, KQs), paie avec top paire bon kicker et ne slowplay jamais.",
     station:"Isole ses limps avec une relance à environ 4bb plus 1bb par limper (5bb des blinds), mise fin pour la value, mise plus gros avec tes mains fortes et ne bluffe jamais.",
     whale:"Isole encore plus large, mise pour la value à chaque street avec toute main correcte et augmente tes tailles. Le bluffer, c'est brûler de l'argent.",
-    live:"Relance plus gros qu'en ligne (environ 4bb plus 1bb par limper), isole les limpers avec tes mains fortes et considère ses rares relances et 3-bets comme très forts."},
+    live:"Relance plus gros qu'en ligne (environ 4bb plus 1bb par limper), isole les limpers avec tes mains fortes et considère ses rares relances et 3-bets comme très forts.",
+    omc:"Vole ses blinds et attaque ses limps quand il fold trop. Quand il relance, mise gros ou paie deux fois, fold tout sauf une très grosse main : il ne bluffe presque jamais."},
   statsLbl:"VPIP / PFR",sizeLbl:"Open habituel",limpsLbl:"limpe, relance",srcLbl:"Sources :",
   pfacts:{gto:["Bluffe et fold à des fréquences équilibrées"],tag:["3-bet ≈ 5–10 %","Fold to 3-bet ≈ 40–50 %","Steal ≈ 35 % (6-max)"],nit:["Ne 3-bet que QQ+ et AK"],
     weak:["C-bet sous 50 %","Fold aux 3-bets sans main premium"],lag:["Facteur d'agression 3+"],maniac:["3-bet très souvent"],
     station:["Limpe ≈ 47 % des mains","Limp-relance moins de 3 %"],whale:["Très passif : facteur d'agression ≈ 2 ou moins"],
-    live:["Limpe ≈ 35 % en début et milieu de parole","Après un limp, paie une relance ≈ 56 %"]},
+    live:["Limpe ≈ 35 % en début et milieu de parole","Après un limp, paie une relance ≈ 56 %"],
+    omc:["Archétype live, aucune donnée mesurée","Ne relance que QQ+ et AK"]},
   popTitle:"Pourquoi anti-GTO?",
   popText:"GTO est la référence, pas ton adversaire. Les données mesurées sur de vrais joueurs sont rares, mais celles qui existent montrent des écarts nets et constants :",
   popFacts:[`Régs en ligne 500NL+, dans les pots 3-bet : après avoir relancé un c-bet au flop et s'être fait sur-relancer, ils fold <b>39 %</b> là où un solveur fold <b>27 %</b>. Même les bons régs sur-foldent. <span class="src">(Upswing Poker, base de joueurs experts de l'auteur)</span>`,
@@ -3290,7 +3311,7 @@ el:{eqHowTitle:"Πώς να υπολογίσεις το equity",
   hint:"Πληκτρολόγιο: F / C / R στο preflop, τα γράμματα που φαίνονται στην άμυνα, 1–5 για επιλογές, Enter για το επόμενο χέρι."
 }
 };
-for(const l in T)for(const k in T.en)if(!(k in T[l]))T[l][k]=T.en[k];
+for(const l in T)for(const k in T.en){const e=T.en[k];if(!(k in T[l]))T[l][k]=e;else if(e&&typeof e==="object"&&!Array.isArray(e))for(const q in e)if(!(q in T[l][k]))T[l][k][q]=e[q]}
 const LKEY="holdem-drill-lang";
 let lang="en";try{const l=localStorage.getItem(LKEY);if(l&&T[l])lang=l}catch(e){}
 /* "Keep poker terms in English": the chosen language, with poker vocabulary taken from English. */
@@ -3424,7 +3445,7 @@ function tableView(o){
     }else{
       const [x,y]=seatXY(k,n);
       const sub=a.sub!=null?a.sub:a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:bet?bb(bet):t().toAct;
-      const cards=a.cards?cardsHTML(a.cards,"sm"):a.st==="fold"?"":"<span></span><span></span>";
+      const cards=a.cards?cardsHTML(a.cards,"sm"):a.av?av(a.av,26):a.st==="fold"?"":"<span></span><span></span>";
       h+=`<div class="pseat ${a.st}${win}" style="left:${x}%;top:${y}%"><div class="mini">${cards}</div><div class="pbox">${lbl(pos)}<small>${sub}</small></div></div>`;
       if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;
     }
@@ -3442,13 +3463,69 @@ function actsFor(hero,opener,oSt,oBet){const ord=ORDER(),hi=ord.indexOf(hero),oi
     else if(i<hi)acts[p]={st:"fold",bet:blind};
     else acts[p]={st:"wait",bet:blind}});
   return acts}
-function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag){
+function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag,prof){
   const seats=actsFor(hero,opener,oSt,oBet);
   if(behindTag)for(const p in seats)if(seats[p].st==="wait")seats[p].sub=behindTag;
+  if(prof&&pers()){if(opener)seats[opener].av=prof;else for(const p in seats)if(seats[p].st==="wait")seats[p].av=prof}
   if(opener){const a=seats[opener];a.sub=oSt==="limp"?`${tag?tag+" · ":""}Limp`:tag?`${tag} · ${bb(a.bet)}`:undefined}let pot=0;for(const p in seats)pot+=seats[p].bet||0;
   paintRing(id,{bottom:hero,bottomCards:cards,bottomLabel:`${t().you} · ${lbl(hero)}`,bottomSub:code,seats,
     center:`<div class="ctx">${t().pos[hero]}</div><div class="potv">${t().pot} ${bb(pot)}</div><div class="cact">${action}</div>`});
 }
+
+/* ---------- Personality avatars (original SVG characters, 64×64) ---------- */
+const AVC={gto:"#3d6fb6",tag:"#2f7a5c",nit:"#8a8f98",weak:"#9fb4c7",lag:"#b4532d",maniac:"#c0392b",station:"#d4a017",whale:"#1f6f8b",live:"#8e5b3a",omc:"#4b5d67"};
+const avBody=c=>`<path d="M8 66C9 50 20 45 32 45S55 50 56 66Z" fill="${c}"/>`;
+const avHead=(sk,r=12.5)=>`<rect x="28" y="37" width="8" height="9" rx="2" fill="${sk}"/><circle cx="${32-r}" cy="29" r="2.6" fill="${sk}"/><circle cx="${32+r}" cy="29" r="2.6" fill="${sk}"/><circle cx="32" cy="28" r="${r}" fill="${sk}"/>`;
+const avEyes='<circle cx="27.5" cy="28" r="1.5" fill="#1d1d1f"/><circle cx="36.5" cy="28" r="1.5" fill="#1d1d1f"/>';
+const avLine=(d,c="#5a2e1a",w=1.6)=>`<path d="${d}" stroke="${c}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+const AVP={
+  gto:'<path d="M17 42C15 22 22 13 32 13S49 22 47 42Z" fill="#3a3f48"/>'+avBody("#2b2f36")+avHead("#f1c27d")
+    +'<path d="M20 25C20 17 26 15 32 15S44 17 44 25C40 21 26 20 20 25Z" fill="#2d2017"/>'+avEyes+avLine("M28.5 34.5H35.5")
+    +avLine("M18.5 28C18.5 17 24 12 32 12S45.5 17 45.5 28","#111",2.6)+'<rect x="15.5" y="24.5" width="5" height="9" rx="2" fill="#111"/><rect x="43.5" y="24.5" width="5" height="9" rx="2" fill="#111"/>',
+  tag:avBody("#1e3b2f")+'<path d="M26 45L32 51L38 45" fill="#e8f0ea"/>'+avHead("#c68642")
+    +'<path d="M19.5 25C19.5 16 25 14 32 14S44.5 16 44.5 25Z" fill="#14532d"/><path d="M30 23.5H50Q51 26.5 47 26.5H30Z" fill="#0f3d22"/>'
+    +'<rect x="23.5" y="25.5" width="7.5" height="5" rx="1.5" fill="#111"/><rect x="33" y="25.5" width="7.5" height="5" rx="1.5" fill="#111"/>'+avLine("M31 27.5H33","#111",1.4)+avLine("M28 34Q33 36 36.5 33"),
+  nit:avBody("#b9a37e")+'<path d="M27 45L32 54L37 45" fill="#e8e1d0"/><circle cx="32" cy="57" r="1.1" fill="#6b5a3e"/><circle cx="32" cy="61.5" r="1.1" fill="#6b5a3e"/>'+avHead("#ffdbac")
+    +'<path d="M19.5 31C19 24 21 21 22.5 20V31Z" fill="#d6d6d6"/><path d="M44.5 31C45 24 43 21 41.5 20V31Z" fill="#d6d6d6"/>'+avLine("M26 21.5H30M34 21.5H38","#d4ae8c",1)
+    +avEyes+'<circle cx="27.5" cy="28" r="3.3" fill="none" stroke="#333" stroke-width="1.2"/><circle cx="36.5" cy="28" r="3.3" fill="none" stroke="#333" stroke-width="1.2"/>'+avLine("M30.8 28H33.2","#333",1.2)
+    +'<path d="M27 33Q32 31 37 33Q32 34.6 27 33Z" fill="#d6d6d6"/>'+avLine("M29 37Q32 35.4 35 37"),
+  weak:avBody("#6d8299")+avHead("#ffdbac")
+    +'<path d="M19.5 26C18 16 25 13 32 14C39 13 46 17 44.5 26C42 22 40 20 37 21C35 19 30 20 28 19C25 21 22 22 19.5 26Z" fill="#a0785a"/>'
+    +avLine("M25 24.5L29.5 23.2M34.5 23.2L39 24.5","#5a3d2b",1.4)+avEyes+avLine("M27.5 34.5Q29.75 33 32 34.5T36.5 34.5")
+    +'<path d="M45 17Q47.6 21.5 47.6 23A2.6 2.6 0 0 1 42.4 23Q42.4 21.5 45 17Z" fill="#7fd0ff"/>',
+  lag:avBody("#1b1b1d")+'<path d="M24 45L32 57L40 45" fill="#7c2d12"/>'+avLine("M24 45L29 52M40 45L35 52","#3a3a3d",1.5)+avHead("#e0ac69")
+    +'<path d="M19.5 27C18 15 26 11 34 12C41 12 46 16 44.5 26C43 21 40 19 36 19C32 17 25 19 19.5 27Z" fill="#1a1110"/><path d="M27 13.5C32 8 43 9.5 41.5 15C38 13 33 13 27 13.5Z" fill="#1a1110"/>'
+    +avLine("M25 24.5L30 24M34 23L39 21.8","#1a1110",1.5)+avEyes+avLine("M28 34Q33 36 37 32.5")
+    +'<g fill="#5b4636" opacity=".55"><circle cx="26.5" cy="36.5" r=".55"/><circle cx="29" cy="38" r=".55"/><circle cx="32" cy="38.6" r=".55"/><circle cx="35" cy="38" r=".55"/><circle cx="37.5" cy="36.5" r=".55"/></g>',
+  maniac:avBody("#7d3c98")+avLine("M14 56L20 52L26 57L32 52L38 57L44 52L50 56","#f4d03f",2)+avHead("#f1c27d")
+    +'<path d="M18 28L13 17L22 20.5L20.5 10L28 16.5L32 6L36 16.5L43.5 10L42 20.5L51 17L46 28Z" fill="#e67e22"/>'
+    +avLine("M24.5 23L30 25M34 25L39.5 23","#7a3b10",1.6)+'<circle cx="27.5" cy="28.5" r="3" fill="#fff"/><circle cx="36.5" cy="28.5" r="3" fill="#fff"/><circle cx="28.2" cy="28.8" r="1.4" fill="#1d1d1f"/><circle cx="35.8" cy="28.2" r="1.4" fill="#1d1d1f"/>'
+    +'<path d="M25.5 32.5Q32 41 38.5 32.5Z" fill="#5a1a1a"/>'+avLine("M26.5 33.2H37.5","#fff",1.4),
+  station:avBody("#1aa39a")+'<g fill="#fff3b0"><circle cx="19" cy="55" r="2.2"/><circle cx="45" cy="53" r="2.2"/><circle cx="37" cy="61" r="2.2"/><circle cx="25" cy="62" r="1.7"/><circle cx="52" cy="62" r="1.7"/></g><path d="M26 45L32 51L38 45" fill="#f06292"/>'+avHead("#c68642")
+    +'<path d="M20 24C20 16 25 14.5 32 14.5S44 16 44 24C40 20 25 20 20 24Z" fill="#4a2c17"/><rect x="23.5" y="18" width="7" height="4" rx="1.6" fill="#222"/><rect x="33.5" y="18" width="7" height="4" rx="1.6" fill="#222"/>'+avLine("M30.5 19.5H33.5","#222",1.2)
+    +avLine("M25.5 28.5Q27.5 26.8 29.5 28.5M34.5 28.5Q36.5 26.8 38.5 28.5","#1d1d1f",1.5)+'<path d="M26.5 32.5Q32 39 37.5 32.5Z" fill="#7a2e1a"/>',
+  whale:avBody("#1c1c2e")+'<path d="M27 45L32 54L37 45Z" fill="#fff"/><path d="M28.5 47L32 48.6L35.5 47V50.4L32 48.6L28.5 50.4Z" fill="#c0392b"/>'+avLine("M23 50Q32 59 41 50","#f1c40f",1.4)+avHead("#ffdbac",13.5)
+    +'<rect x="22.5" y="3" width="19" height="12.5" rx="1" fill="#111"/><rect x="22.5" y="11.5" width="19" height="2.2" fill="#c0392b"/><rect x="17" y="14.5" width="30" height="3" rx="1.5" fill="#111"/>'
+    +avEyes+'<circle cx="36.5" cy="28" r="3.4" fill="none" stroke="#f1c40f" stroke-width="1.2"/>'+avLine("M39.8 29Q41.5 34 40.5 38.5","#f1c40f",.8)
+    +'<path d="M24.5 33Q28.5 30.2 32 33Q35.5 30.2 39.5 33Q36 35.2 32 33.8Q28 35.2 24.5 33Z" fill="#6b4226"/>'+avLine("M29 37Q32 38.6 35 37"),
+  omc:avBody("#2c3e50")+'<path d="M26 45L32 50L38 45" fill="#ecf0f1"/>'+avHead("#f5cba7")
+    +'<path d="M19.6 31C19 25 20.5 22 22 21V31Z" fill="#ecf0f1"/><path d="M44.4 31C45 25 43.5 22 42 21V31Z" fill="#ecf0f1"/>'
+    +'<path d="M19 23.5C19 15 25 13 32 13S45 15.5 45 22.5Z" fill="#7f8c8d"/><path d="M18.5 23Q32 19.5 47.5 21.8Q47 25.2 41.5 24.8Q32 23.6 18.5 25.6Z" fill="#5d6d7e"/>'
+    +avLine("M24.8 25H29.8M34.2 25H39.2","#ecf0f1",2)+avEyes
+    +'<path d="M26.8 33.2Q32 30.6 37.2 33.2Q32 35.2 26.8 33.2Z" fill="#ecf0f1"/>'+avLine("M29.6 36.8H34.4")
+    +'<rect x="38" y="48.5" width="11" height="12" rx="2" fill="#f4f6f7"/><path d="M49 51.5Q53.5 51.5 53.5 55T49 58.5" stroke="#f4f6f7" stroke-width="2" fill="none"/><rect x="39" y="50" width="9" height="2.4" fill="#6e4b2a"/>'
+    +avLine("M41 46.5Q39.8 44 41.8 41.8M45.4 46.5Q44.2 44 46.2 41.8","#ecf0f1",1.2),
+  live:avBody("#b03a2e")+'<g stroke="#7b241c" stroke-width="1.7"><path d="M20 50V66M28 46V66M36 46V66M44 50V66"/><path d="M12 56H52M10 62H54" stroke-width="1.2"/></g>'+avHead("#e0ac69")
+    +'<path d="M20.5 30Q21 42.5 32 42.5Q43 42.5 43.5 30Q40 36.5 32 36.5Q24 36.5 20.5 30Z" fill="#6e4b2a"/>'
+    +'<path d="M19.5 25C19.5 15 25 13 32 13S44.5 15 44.5 25Z" fill="#2e86c1"/><path d="M22 24.5C22 16.5 26 14.2 32 14.2S42 16.5 42 24.5Z" fill="#f4f6f7"/><path d="M15.5 24.2H38Q38 27.6 34 27.6H18Z" fill="#2e86c1"/>'
+    +'<circle cx="32" cy="19.5" r="2.4" fill="#e74c3c"/>'+avEyes+avLine("M28 34Q32 36.8 36 34","#3b2414")
+};
+function av(prof,size){const c=AVC[prof];if(!c)return "";
+  return `<svg class="av" viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true"><defs><clipPath id="avc-${prof}"><circle cx="32" cy="32" r="32"/></clipPath></defs><g clip-path="url(#avc-${prof})"><rect width="64" height="64" fill="${c}"/>${AVP[prof]}</g></svg>`}
+/* ---------- Mode: Classic (GTO-style charts only) or Personalities ---------- */
+const MKEY="holdem-drill-mode";
+let mode="pers";try{if(localStorage.getItem(MKEY)==="classic")mode="classic"}catch(e){}
+const pers=()=>mode==="pers";
 
 /* ---------- Preflop: folded to you, fold / limp / raise ----------
    Classical play is raise or fold; open-limping is a leak, except from the small blind where completing
@@ -3463,21 +3540,21 @@ function topShare(W){const set=new Set();let n=0;for(const c of ranked("tag")){i
 function heroPlan(pos,prof){
   let raise=new Set(pos==="SB"?SB_RAISE:rangeFor(pos)),limp=new Set(pos==="SB"?SB_LIMP:[]),trap=new Set();
   const late=["CO","BTN","SB"].includes(pos);
-  if(prof==="nit"||prof==="weak"){for(const c of topShare(Math.min(90,pct(raise)*(late?1.4:1.2))))raise.add(c)}
+  if(prof==="nit"||prof==="weak"||prof==="omc"){for(const c of topShare(Math.min(90,pct(raise)*(late?1.4:1.2))))raise.add(c)}
   if(prof==="lag"||prof==="maniac"){const keep=topShare(pct(raise)*(prof==="maniac"?.8:.88));for(const c of [...raise])if(!keep.has(c))raise.delete(c)}
   if(prof==="maniac")for(const c of TRAP)trap.add(c);
-  if(LIMPERS[prof]&&late)for(const c of SPEC)if(!raise.has(c))limp.add(c);
+  if(LIMPERS[prof]&&prof!=="omc"&&late)for(const c of SPEC)if(!raise.has(c))limp.add(c);
   for(const c of raise)limp.delete(c);
   return {raise,limp,trap}}
 const PFKEY="holdem-drill-pfopp";
 let pfProf="gto";try{pfProf=localStorage.getItem(PFKEY)||"gto"}catch(e){}
-function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}">${k==="random"?t().random:t().prof[k]}</button>`).join("")}
+function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}">${k==="random"?t().random:av(k,22)+t().prof[k]}</button>`).join("")}
 $("pf-prof").addEventListener("click",e=>{const b=e.target.closest("[data-pfprof]");if(!b||b.dataset.pfprof===pfProf)return;
   pfProf=b.dataset.pfprof;try{localStorage.setItem(PFKEY,pfProf)}catch(err){}paintPfProf();newPreflop()});
 let pf;
 function newPreflop(){
   if(pfProf!=="random"&&!PROFILES.includes(pfProf))pfProf="gto";
-  const prof=pfProf==="random"?PROFILES[rnd(PROFILES.length)]:pfProf;
+  const prof=!pers()?"gto":pfProf==="random"?PROFILES[rnd(PROFILES.length)]:pfProf;
   const ops=OPENERS(),pos=ops[rnd(ops.length)],plan=heroPlan(pos,prof);let h,code;
   for(let k=0;k<12;k++){h=deal(2);code=handCode(h[0],h[1]);
     const inAny=RANGES.BTN.has(code)||RANGES.SB.has(code)||plan.limp.has(code);
@@ -3488,7 +3565,7 @@ function newPreflop(){
 }
 function paintPreflop(){
   const tag=pf.prof==="gto"?"":({station:"Station",live:"Live rec"})[pf.prof]||t().prof[pf.prof];
-  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx,"",null,null,tag);
+  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx,"",null,null,tag,pf.prof);
   paintAnswers($("pf-ans"),[t().fold,t().limpBtn,t().raise],pf,["F","C","R"]);
   const plan=heroPlan(pf.pos,pf.prof);
   paintFb($("pf-fb"),pf,()=>{const tb=new Set(plan.raise);for(const c of plan.trap)tb.delete(c);const gp={tb,call:new Set([...plan.limp,...plan.trap])}
@@ -3516,11 +3593,11 @@ $("study-pos").addEventListener("click",e=>{const b=e.target.closest("[data-pos]
    Limping profiles (calling station, whale, live 1/2 rec) play fixed limp and raise ranges from any seat,
    sized to their sourced VPIP / PFR (station ≈ 49/6, whale ≈ 63/9, live ≈ 35/6).
    Numbers are typical values from coaching sources; the measured ones are listed in the Opponents intro. */
-const PROFILES=["gto","tag","nit","weak","lag","maniac","station","whale","live"];
+const PROFILES=["gto","tag","nit","weak","lag","maniac","station","whale","live","omc"];
 const PW={tag:{UTG:15,HJ:19,CO:27,BTN:42,SB:33},nit:{UTG:8,HJ:9.5,CO:12,BTN:16,SB:12},weak:{UTG:7,HJ:8,CO:10,BTN:13,SB:9},
   lag:{UTG:20,HJ:25,CO:35,BTN:55,SB:45},maniac:{UTG:38,HJ:45,CO:55,BTN:75,SB:70}};
-const PSTATS={gto:"≈ 23 / 19",tag:"17–24 / 13–20",nit:"10–15 / 8–12",weak:"< 15 / ≈ VPIP",lag:"26–29 / 23–24",maniac:"≈ 53 / 39",station:"40+ / 5–10",whale:"55+ / ≤ 9",live:"≈ 35 / 6"};
-const PSIZE={gto:2.5,tag:2.5,nit:3,weak:2.5,lag:2.5,maniac:4,station:4,whale:4,live:4};
+const PSTATS={gto:"≈ 23 / 19",tag:"17–24 / 13–20",nit:"10–15 / 8–12",weak:"< 15 / ≈ VPIP",lag:"26–29 / 23–24",maniac:"≈ 53 / 39",station:"40+ / 5–10",whale:"55+ / ≤ 9",live:"≈ 35 / 6",omc:"≈ 10–14 / 2–5"};
+const PSIZE={gto:2.5,tag:2.5,nit:3,weak:2.5,lag:2.5,maniac:4,station:4,whale:4,live:4,omc:4};
 const PSRC={
   gto:[["Upswing: 3-bet pots in position","https://upswingpoker.com/in-position-raising-3-bet-pots-part-ii/"]],
   tag:[["PokerCoaching: poker stats","https://pokercoaching.com/blog/poker-stats/"],["Upswing: HUD stats","https://upswingpoker.com/poker-hud-stats/"],["CardPlayer 2012, citing Small Stakes No-Limit Hold'em","https://www.cardplayer.com/?p=1036052"]],
@@ -3530,12 +3607,14 @@ const PSRC={
   maniac:[["CardPlayer 2012, citing Small Stakes No-Limit Hold'em","https://www.cardplayer.com/?p=1036052"],["Hand2Note: player types","https://hand2note.com/Blog/Features/exploiting-different-types-of-opponents-in-poker"]],
   station:[["Hand2Note: loose-passive players","https://hand2note.com/Blog/Features/exploiting-loose-passive-players"],["Hand2Note: player types","https://hand2note.com/Blog/Features/exploiting-different-types-of-opponents-in-poker"]],
   whale:[["PokerTracker forum, one user's rule of thumb","https://www.pokertracker.com/forums/viewtopic.php?f=61&t=101871"],["Hand2Note: preflop stats and profiling","https://hand2note.com/Blog/Features/key-preflop-stats-player-profiling-and-basic-adjustments"]],
+  omc:[["PokerNews: where the term Old Man Coffee came from","https://www.pokernews.com/strategy/where-did-the-term-old-man-coffee-come-from-52735.htm"],["PokerListings: OMC","https://www.pokerlistings.com/poker-terms/omc"]],
   live:[["PokerNews: preflop raising in live $1/$2","https://www.pokernews.com/strategy/preflop-raising-in-live-1-2-no-limit-hold-em-cash-games-29209.htm"]]};
 const NIT_TIERS=["QQ+,AK","JJ,TT,AQ","99,88,AJs,KQs,AJo","77,66,ATs,KJs,QJs,KQo,ATo","55-22,A9s,KTs,QTs,JTs,KJo","A8s-A2s,T9s,QJo,K9s"];
 const PTIERS={nit:NIT_TIERS,weak:NIT_TIERS};
 const LIMPERS={
   station:{raise:"99+,AJs+,KQs,AQo+",limp:"22+,A2s+,K2s+,Q5s+,J6s+,T6s+,95s+,85s+,74s+,63s+,53s+,43s,A2o+,K8o+,Q9o+,J9o+,T8o+,97o+,87o,76o,65o"},
   whale:{raise:"88+,ATs+,KJs+,AJo+,KQo",limp:"22+,A2s+,K2s+,Q2s+,J4s+,T5s+,95s+,84s+,74s+,63s+,52s+,42s+,32s,A2o+,K5o+,Q7o+,J7o+,T7o+,97o+,86o+,75o+,64o+,54o"},
+  omc:{raise:"QQ+,AK",limp:"22-JJ,AQs,AJs,ATs,KQs,KJs,QJs,AQo,AJo,KQo"},
   live:{raise:"99+,AJs+,KQs,AQo+",limp:"22+,A2s+,K5s+,Q8s+,J8s+,T7s+,96s+,85s+,74s+,64s+,53s+,43s,A8o+,K9o+,Q9o+,J9o+,T9o,98o"}};
 for(const k in LIMPERS){const r=expand(LIMPERS[k].raise),l=expand(LIMPERS[k].limp);for(const c of r)l.delete(c);LIMPERS[k]={raise:r,limp:l,pLimp:pct(l)/(pct(l)+pct(r))}}
 const TIERS=["UTG9","UTG1","UTG2","UTG","HJ","CO","SB","BTN"];
@@ -3596,12 +3675,12 @@ function grid3(sp,cur){let h="";for(let i=0;i<13;i++)for(let j=0;j<13;j++){const
   h+=`<div class="${sp.tb.has(code)?"tb":sp.call.has(code)?"in":""}${code===cur?" cur":""}">${code}</div>`}return h}
 const DPKEY="holdem-drill-opp";
 let dProf="gto";try{let v=localStorage.getItem(DPKEY);v=({classical:"gto",fish:"station"})[v]||v;if(v&&(v==="random"||PROFILES.includes(v)))dProf=v}catch(e){}
-function paintDProf(){$("df-prof").innerHTML=`<span class="lbl">${t().oppLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===dProf}" data-prof="${k}">${k==="random"?t().random:t().prof[k]}</button>`).join("")}
+function paintDProf(){$("df-prof").innerHTML=`<span class="lbl">${t().oppLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===dProf}" data-prof="${k}">${k==="random"?t().random:av(k,22)+t().prof[k]}</button>`).join("")}
 $("df-prof").addEventListener("click",e=>{const b=e.target.closest("[data-prof]");if(!b||b.dataset.prof===dProf)return;
   dProf=b.dataset.prof;try{localStorage.setItem(DPKEY,dProf)}catch(err){}paintDProf();newDefense()});
 let df;
 function newDefense(){
-  const prof=dProf==="random"?PROFILES[rnd(PROFILES.length)]:dProf;
+  const prof=!pers()?"gto":dProf==="random"?PROFILES[rnd(PROFILES.length)]:dProf;
   const all=spots(),[o,hero]=all[rnd(all.length)];
   const limp=!!LIMPERS[prof]&&Math.random()<LIMPERS[prof].pLimp;
   const W=limp?pct(LIMPERS[prof].limp):pct(openRange(prof,o));
@@ -3617,7 +3696,7 @@ function dfLabels(){if(!df.limp)return {labels:[t().fold,t().call,"3-bet"],keys:
 function paintDefense(){
   const pn=t().prof[df.prof],tag=df.prof==="gto"?"":({station:"Station",live:"Live rec"})[df.prof]||pn,L=dfLabels();
   const action=(df.limp?t().dfLimp(lbl(df.o)):t().dfOpen(lbl(df.o)).replace("2.5bb",bb(PSIZE[df.prof])).replace("2,5bb",bb(PSIZE[df.prof])))+(tag?` (${tag})`:"");
-  preflopRing("df-table",df.hero,df.h,df.code,df.o,action,tag,df.limp?"limp":"raise",df.limp?1:PSIZE[df.prof]);
+  preflopRing("df-table",df.hero,df.h,df.code,df.o,action,tag,df.limp?"limp":"raise",df.limp?1:PSIZE[df.prof],null,df.prof);
   $("df-q").textContent=L.q;
   paintAnswers($("df-ans"),L.labels,df,L.keys);
   const sp=chartFor(df.key,df.prof,df.hero);
@@ -3639,9 +3718,9 @@ let vProf="nit",vPos="BTN";
 function paintVillains(){
   if(!OPENERS().includes(vPos))vPos="BTN";
   $("vp-intro").innerHTML=`<div class="verdict">${t().popTitle}</div><p>${t().popText}</p><ul class="poplist">${t().popFacts.map(f=>`<li>${f}</li>`).join("")}</ul><p class="muted">${t().popSrc}</p>`;
-  $("vp-prof").innerHTML=PROFILES.map(k=>`<button class="pill" aria-pressed="${k===vProf}" data-vprof="${k}">${t().prof[k]}</button>`).join("");
+  $("vp-prof").innerHTML=PROFILES.map(k=>`<button class="pill" aria-pressed="${k===vProf}" data-vprof="${k}">${av(k,22)}${t().prof[k]}</button>`).join("");
   const sz=LIMPERS[vProf]?`${t().limpsLbl} ${bb(PSIZE[vProf])}`:bb(PSIZE[vProf]);
-  $("vp-card").innerHTML=`<div class="verdict">${t().prof[vProf]}</div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span>${t().pfacts[vProf].map(f=>`<span>${f}</span>`).join("")}</div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p><p class="src">${t().srcLbl} ${PSRC[vProf].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(" · ")}</p>`;
+  $("vp-card").innerHTML=`<div class="vhead">${av(vProf,72)}<div class="verdict">${t().prof[vProf]}</div></div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span>${t().pfacts[vProf].map(f=>`<span>${f}</span>`).join("")}</div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p><p class="src">${t().srcLbl} ${PSRC[vProf].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(" · ")}</p>`;
   $("vp-pos").hidden=!!LIMPERS[vProf];
   $("vp-pos").innerHTML=OPENERS().map(p=>`<button class="pill" aria-pressed="${p===vPos}" data-vpos="${p}">${lbl(p)}</button>`).join("");
   if(LIMPERS[vProf]){const L=LIMPERS[vProf];$("vp-grid").innerHTML=grid3({tb:L.raise,call:L.limp},"");$("vp-pct").textContent=t().vpLimper(pct(L.raise),pct(L.limp));return}
@@ -3792,8 +3871,18 @@ const INIT={preflop:newPreflop,defense:newDefense,equity:newEquity,potodds:newPo
 const STATE={preflop:()=>pf,defense:()=>df,equity:()=>eq,potodds:()=>po,showdown:()=>sd};
 const ANS={preflop:i=>answerPreflop(i),defense:i=>answer("defense",df,i,paintDefense),equity:i=>answer("equity",eq,i,paintEquity),potodds:i=>answer("potodds",po,i,paintPotOdds),showdown:i=>answer("showdown",sd,i,paintShowdown)};
 let current="preflop";const started={};
+function paintMode(){
+  document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===mode));
+  $("pf-prof").hidden=$("df-prof").hidden=!pers();
+  document.querySelector('.tab[data-view="villains"]').hidden=!pers();
+}
+$("mode").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b||b.dataset.mode===mode)return;
+  mode=b.dataset.mode;try{localStorage.setItem(MKEY,mode)}catch(err){}paintMode();
+  if(!pers()&&current==="villains")location.hash="preflop";
+  for(const k of ["preflop","defense"])if(started[k])INIT[k]()});
 function show(v){
   if(v==="equite")v="equity";
+  if(v==="villains"&&!pers())v="preflop";
   if(!VIEWS.includes(v))v="preflop";current=v;resetArmed=false;
   for(const x of VIEWS)$("v-"+x).hidden=x!==v;
   document.querySelectorAll(".tab").forEach(tb=>tb.setAttribute("aria-selected",tb.dataset.view===v));
@@ -3816,7 +3905,7 @@ document.addEventListener("keydown",e=>{
   const n=parseInt(k,10);const max=$(({equity:"eq",potodds:"po",showdown:"sd"})[current]+"-ans").children.length;
   if(n>=1&&n<=max)ANS[current](n-1);
 });
-paintStreak();paintSize();applyLang();show(location.hash.slice(1)||"preflop");
+paintStreak();paintSize();paintMode();applyLang();show(location.hash.slice(1)||"preflop");
 })();
 </script>
 
