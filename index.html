@@ -62,6 +62,9 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .check small{display:block;color:var(--muted);font-size:13px;line-height:1.4}
 .check.off{opacity:.5;cursor:default}
 .sheet .next{align-self:flex-end}
+#pf-ans{grid-template-columns:repeat(3,1fr)} #pf-ans .ans{padding-inline:6px}
+.sheet p{margin:0;line-height:1.55}
+#limp-pop .sheet{border-color:var(--bad)}
 .field .lang{align-self:flex-start} .field .lang button{padding:6px 14px;font-size:13px}
 .tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
 .tabs::-webkit-scrollbar{display:none}
@@ -197,6 +200,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
   </nav>
 
   <section id="v-preflop" hidden>
+    <div class="bar" id="pf-prof"></div>
     <div class="ring" id="pf-table"></div>
     <p class="q" data-t="pfQ"></p>
     <div class="answers" id="pf-ans"></div>
@@ -309,6 +313,14 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
     </div>
   </div>
 
+  <div class="modal" id="limp-pop" hidden>
+    <div class="sheet" role="alertdialog" aria-modal="true" aria-labelledby="limp-title">
+      <h2 id="limp-title" class="verdict ko" data-t="limpPopTitle"></h2>
+      <p data-t="limpPopText"></p>
+      <button class="next" id="limp-ok" data-t="gotIt"></button>
+    </div>
+  </div>
+
   <p class="hint" data-t="hint"></p>
   <p class="note" data-t="note"></p>
 </div>
@@ -318,7 +330,21 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 "use strict";
 /* ---------- i18n ---------- */
 const T={
-en:{eqHowTitle:"How to estimate equity",
+en:{limpBtn:"Call (limp)",gotIt:"Got it",behindLbl:"Players behind",
+  limpPopTitle:"Wrong: never limp",
+  limpPopText:"Open-limping is one of the biggest mistakes players make. You can't win the pot right away, you give the blinds a cheap flop, and anyone behind can raise you off your hand. Raise or fold.",
+  pfActs:["fold","limp","raise"],
+  pfFb2:(code,act,pos)=>`<b class="mono">${code}</b> from ${pos}: the best play is to <b>${act}</b>.`,
+  pfAlt:act=>`Raising is fine too: you only lose the trap.`,
+  legendPf:"Green: raise. Orange: limp. Grey: fold.",
+  pfNote:{gto:"Against balanced players behind, play the classical chart: raise or fold.",tag:"Solid players behind: play the classical chart.",
+    nit:"Nits behind fold too much: open wider to steal the blinds.",weak:"Weak-tight players behind fold too much: open wider to steal the blinds.",
+    lag:"Aggressive players behind 3-bet a lot: open a little tighter.",maniac:"A maniac behind raises almost anything: open tighter, and you can limp AA or KK to re-raise when they attack.",
+    station:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
+    whale:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
+    live:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops."},
+  sbNote:"From the small blind, only the big blind is left: completing (limping) medium hands is a standard strategy, while strong hands still raise.",
+  eqHowTitle:"How to estimate equity",
   eqHow:`<p><b>1. Count your outs.</b> Outs are the cards that put you ahead: a flush draw has 9, an open-ended straight draw 8, a gutshot 4, two overcards about 6.</p>
 <p><b>2. Rule of 4 and 2.</b> On the flop, with two cards to come: outs × 4. On the turn, with one card to come: outs × 2. With more than 8 outs on the flop, subtract the extra outs: 15 outs ≈ 15 × 4 − 7 = 53%.</p>
 <p><b>3. If you are ahead,</b> count your opponent's outs and take the rest: they have 9 outs on the flop ≈ 36%, so you have about 64%.</p>
@@ -385,8 +411,8 @@ en:{eqHowTitle:"How to estimate equity",
   dfSb:"From the small blind this simplified strategy is 3-bet or fold, with no flat calls.",
   legend3:"Orange: 3-bet. Green: call. Grey: fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% of hands.`,
   streak:"streak",best:"best",tabPreflop:"Preflop",tabEquity:"Equity",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
-  pfQ:"Folded to you. Open-raise or fold?",study:"Study the opening ranges",eqQ:"Your equity against this hand (all-in now)?",sdQ:"Who wins the pot?",
-  hint:"Keyboard: F / R on preflop, the letters shown on defense, 1–5 for choices, Enter for the next hand.",
+  pfQ:"Folded to you. What do you do?",study:"Study the opening ranges",eqQ:"Your equity against this hand (all-in now)?",sdQ:"Who wins the pot?",
+  hint:"Keyboard: F / C / R on preflop, the letters shown on defense, 1–5 for choices, Enter for the next hand.",
   note:n=>`${n}-max cash game, 100bb. Classical charts are a GTO-style baseline inspired by public solver charts; opponent profiles are approximations from coaching sources.`,
   fold:"Fold",raise:"Raise",call:"Call",correct:"Correct",wrong:"Wrong",next:"Next hand",position:"Position",
   pos:{UTG:"UTG (first to act)",UTG1:"UTG+1",UTG2:"UTG+2",LJ:"Lojack",HJ:"Hijack",CO:"Cutoff",BTN:"Button",SB:"Small blind",BB:"Big blind"},
@@ -410,7 +436,21 @@ en:{eqHowTitle:"How to estimate equity",
   mods:{preflop:"Preflop — opening ranges",defense:"Defense — facing an open",equity:"Hand vs hand equity",potodds:"Pot odds and outs",showdown:"Showdown — reading the board"},
   overall:"Overall",sub:(ok,n)=>`${ok} right out of ${n}`,subAll:(n,b)=>`${n} questions · best streak ${b}`,
   reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device."},
-fr:{eqHowTitle:"Comment estimer ton équité",
+fr:{limpBtn:"Call (limp)",gotIt:"Compris",behindLbl:"Joueurs derrière",
+  limpPopTitle:"Raté : ne limpe jamais",
+  limpPopText:"Limper en premier est une des plus grosses erreurs des joueurs. Tu ne peux pas gagner le pot tout de suite, tu offres un flop pas cher aux blinds et n'importe qui derrière peut te relancer pour te faire lâcher ta main. Relance ou fold.",
+  pfActs:["fold","limp","relance"],
+  pfFb2:(code,act,pos)=>`<b class="mono">${code}</b> en ${pos} : le meilleur choix est <b>${act}</b>.`,
+  pfAlt:act=>`Relancer est correct aussi : tu perds seulement le piège.`,
+  legendPf:"Vert : relance. Orange : limp. Gris : fold.",
+  pfNote:{gto:"Contre des joueurs équilibrés derrière, joue la chart classique : relance ou fold.",tag:"Joueurs solides derrière : joue la chart classique.",
+    nit:"Les nits derrière foldent trop : ouvre plus large pour voler les blinds.",weak:"Les joueurs weak-tight derrière foldent trop : ouvre plus large pour voler les blinds.",
+    lag:"Les joueurs agressifs derrière 3-bet beaucoup : ouvre un peu plus serré.",maniac:"Un maniaque derrière relance presque tout : ouvre plus serré, et tu peux limper AA ou KK pour sur-relancer quand il attaque.",
+    station:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
+    whale:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
+    live:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers."},
+  sbNote:"De la small blind, il ne reste que la big blind : compléter (limper) les mains moyennes est une stratégie standard, et les mains fortes relancent toujours.",
+  eqHowTitle:"Comment estimer ton équité",
   eqHow:`<p><b>1. Compte tes outs.</b> Les outs sont les cartes qui te font passer devant : un tirage couleur en a 9, une quinte ouverte 8, un gutshot 4, deux overcards environ 6.</p>
 <p><b>2. Règle du 4 et du 2.</b> Au flop, avec deux cartes à venir : outs × 4. Au turn, avec une carte à venir : outs × 2. Avec plus de 8 outs au flop, retire les outs en trop : 15 outs ≈ 15 × 4 − 7 = 53 %.</p>
 <p><b>3. Si tu es devant,</b> compte les outs de ton adversaire et prends le reste : il a 9 outs au flop ≈ 36 %, donc tu as environ 64 %.</p>
@@ -477,8 +517,8 @@ fr:{eqHowTitle:"Comment estimer ton équité",
   dfSb:"De la small blind, cette stratégie simplifiée joue 3-bet ou fold, sans call.",
   legend3:"Orange : 3-bet. Vert : call. Gris : fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% des mains.`,
   streak:"série",best:"record",tabPreflop:"Préflop",tabEquity:"Équité",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
-  pfQ:"Tout le monde a fold jusqu'à toi. Open-raise ou fold?",study:"Étudier les ranges d'ouverture",eqQ:"Ton équité contre cette main (all-in maintenant)?",sdQ:"Qui gagne le pot?",
-  hint:"Clavier : F / R au préflop, les lettres affichées en défense, 1–5 pour les choix, Entrée pour la suivante.",
+  pfQ:"Tout le monde a fold jusqu'à toi. Que fais-tu?",study:"Étudier les ranges d'ouverture",eqQ:"Ton équité contre cette main (all-in maintenant)?",sdQ:"Qui gagne le pot?",
+  hint:"Clavier : F / C / R au préflop, les lettres affichées en défense, 1–5 pour les choix, Entrée pour la suivante.",
   note:n=>`Cash game ${n}-max, 100bb. Les charts classiques sont une base de style GTO inspirée des charts solveur publiques ; les profils adverses sont des approximations tirées de sources de coaching.`,
   fold:"Fold",raise:"Raise",call:"Call",correct:"Correct",wrong:"Raté",next:"Main suivante",position:"Position",
   pos:{UTG:"UTG (premier de parole)",UTG1:"UTG+1",UTG2:"UTG+2",LJ:"Lojack",HJ:"Hijack",CO:"Cutoff",BTN:"Bouton",SB:"Small blind",BB:"Big blind"},
@@ -2915,10 +2955,11 @@ function paintStreak(){$("streak").textContent=S.streak;$("best").textContent=S.
 function verdict(ok,txt){return `<div class="verdict ${ok?"ok":"ko"}">${ok?t().correct:t().wrong}</div>${txt}<button class="next" data-next>${t().next}</button>`}
 function paintAnswers(box,labels,st,keys){
   box.innerHTML=labels.map((l,i)=>`<button class="ans" data-i="${i}">${l}<kbd>${keys?keys[i]:i+1}</kbd></button>`).join("");
-  if(st.chosen!=null){const bs=box.querySelectorAll(".ans");bs.forEach(b=>b.disabled=true);bs[st.correct].classList.add("ok");if(st.chosen!==st.correct)bs[st.chosen].classList.add("ko")}
+  if(st.chosen!=null){const bs=box.querySelectorAll(".ans");bs.forEach(b=>b.disabled=true);bs[st.correct].classList.add("ok");bs[st.chosen].classList.add(good(st,st.chosen)?"ok":"ko")}
 }
-function paintFb(el,st,txt){if(st.chosen==null){el.hidden=true;return}el.innerHTML=verdict(st.chosen===st.correct,txt());el.hidden=false}
-function answer(mod,st,i,paint){if(!st||st.chosen!=null)return;st.chosen=i;record(mod,i===st.correct);paint()}
+const good=(st,i)=>i===st.correct||i===st.alt;
+function paintFb(el,st,txt){if(st.chosen==null){el.hidden=true;return}el.innerHTML=verdict(good(st,st.chosen),txt());el.hidden=false}
+function answer(mod,st,i,paint){if(!st||st.chosen!=null)return;st.chosen=i;record(mod,good(st,i));paint()}
 
 /* ---------- full table view ----------
    The bottom seat is always the player we look from; the others follow clockwise in order of play.
@@ -2954,31 +2995,64 @@ function actsFor(hero,opener,oSt,oBet){const ord=ORDER(),hi=ord.indexOf(hero),oi
     else if(i<hi)acts[p]={st:"fold",bet:blind};
     else acts[p]={st:"wait",bet:blind}});
   return acts}
-function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet){
+function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag){
   const seats=actsFor(hero,opener,oSt,oBet);
+  if(behindTag)for(const p in seats)if(seats[p].st==="wait")seats[p].sub=behindTag;
   if(opener){const a=seats[opener];a.sub=oSt==="limp"?`${tag?tag+" · ":""}Limp`:tag?`${tag} · ${bb(a.bet)}`:undefined}let pot=0;for(const p in seats)pot+=seats[p].bet||0;
   paintRing(id,{bottom:hero,bottomCards:cards,bottomLabel:`${t().you} · ${lbl(hero)}`,bottomSub:code,seats,
     center:`<div class="ctx">${t().pos[hero]}</div><div class="potv">${t().pot} ${bb(pot)}</div><div class="cact">${action}</div>`});
 }
 
-/* ---------- Preflop ---------- */
+/* ---------- Preflop: folded to you, fold / limp / raise ----------
+   Classical play is raise or fold; open-limping is a leak, except from the small blind where completing
+   medium hands against the big blind is standard. The "players behind" profile shifts the right answer:
+   nits fold too much (open wider), aggressive players 3-bet a lot (open tighter, limp-trap AA/KK vs a maniac),
+   passive players rarely raise (speculative hands can limp from late position). */
+const SB_RAISE=expand("66+,A7s+,A5s-A2s,K9s+,Q9s+,J9s+,T9s,ATo+,KTo+,QJo");
+const SB_LIMP=(()=>{const l=expand(RANGE_SRC.SB+",K2s+,Q2s+,J4s+,T6s+,96s+,85s+,74s+,63s+,53s+,43s,A2o+,K5o+,Q8o+,J8o+,T8o+,97o+,87o,76o,65o");for(const c of SB_RAISE)l.delete(c);return l})();
+const SPEC=expand("22-66,A2s-A9s,K2s-K9s,Q9s,J9s,T9s,T8s,98s,97s,87s,86s,76s,75s,65s,64s,54s,53s,43s");
+const TRAP=expand("KK+");
+function topShare(W){const set=new Set();let n=0;for(const c of ranked("tag")){if(n>=W/100*1326)break;set.add(c);n+=combos(c)}return set}
+function heroPlan(pos,prof){
+  let raise=new Set(pos==="SB"?SB_RAISE:rangeFor(pos)),limp=new Set(pos==="SB"?SB_LIMP:[]),trap=new Set();
+  const late=["CO","BTN","SB"].includes(pos);
+  if(prof==="nit"||prof==="weak"){for(const c of topShare(Math.min(90,pct(raise)*(late?1.4:1.2))))raise.add(c)}
+  if(prof==="lag"||prof==="maniac"){const keep=topShare(pct(raise)*(prof==="maniac"?.8:.88));for(const c of [...raise])if(!keep.has(c))raise.delete(c)}
+  if(prof==="maniac")for(const c of TRAP)trap.add(c);
+  if(LIMPERS[prof]&&late)for(const c of SPEC)if(!raise.has(c))limp.add(c);
+  for(const c of raise)limp.delete(c);
+  return {raise,limp,trap}}
+const PFKEY="holdem-drill-pfopp";
+let pfProf="gto";try{pfProf=localStorage.getItem(PFKEY)||"gto"}catch(e){}
+function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}">${k==="random"?t().random:t().prof[k]}</button>`).join("")}
+$("pf-prof").addEventListener("click",e=>{const b=e.target.closest("[data-pfprof]");if(!b||b.dataset.pfprof===pfProf)return;
+  pfProf=b.dataset.pfprof;try{localStorage.setItem(PFKEY,pfProf)}catch(err){}paintPfProf();newPreflop()});
 let pf;
 function newPreflop(){
-  const ops=OPENERS(),pos=ops[rnd(ops.length)];let h,code;
+  if(pfProf!=="random"&&!PROFILES.includes(pfProf))pfProf="gto";
+  const prof=pfProf==="random"?PROFILES[rnd(PROFILES.length)]:pfProf;
+  const ops=OPENERS(),pos=ops[rnd(ops.length)],plan=heroPlan(pos,prof);let h,code;
   for(let k=0;k<12;k++){h=deal(2);code=handCode(h[0],h[1]);
-    const inAny=RANGES.BTN.has(code)||RANGES.SB.has(code);
-    const obvious=rangeFor(ops[0]).has(code)&&pos!==ops[0];
+    const inAny=RANGES.BTN.has(code)||RANGES.SB.has(code)||plan.limp.has(code);
+    const obvious=rangeFor(ops[0]).has(code)&&pos!==ops[0]&&!plan.trap.has(code);
     if(!(inAny?obvious&&Math.random()<.5:Math.random()<.7))break}
-  const raise=rangeFor(pos).has(code);
-  pf={size,pos,h,code,raise,correct:raise?1:0,chosen:null};paintPreflop();
+  const correct=plan.trap.has(code)?1:plan.raise.has(code)?2:plan.limp.has(code)?1:0;
+  pf={size,pos,prof,h,code,correct,alt:plan.trap.has(code)?2:undefined,chosen:null};paintPreflop();
 }
 function paintPreflop(){
-  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx);
-  paintAnswers($("pf-ans"),[t().fold,t().raise],pf,["F","R"]);
-  const set=rangeFor(pf.pos);
-  paintFb($("pf-fb"),pf,()=>`<p>${t().pfFb(pf.code,pf.raise,lbl(pf.pos),pct(set))}</p><div class="grid-wrap"><div class="grid">${gridHTML(set,pf.code)}</div></div><p class="muted">${t().legend}</p>`);
+  const tag=pf.prof==="gto"?"":({station:"Station",live:"Live rec"})[pf.prof]||t().prof[pf.prof];
+  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx,"",null,null,tag);
+  paintAnswers($("pf-ans"),[t().fold,t().limpBtn,t().raise],pf,["F","C","R"]);
+  const plan=heroPlan(pf.pos,pf.prof);
+  paintFb($("pf-fb"),pf,()=>{const gp={tb:plan.limp,call:plan.raise};for(const c of plan.trap){gp.tb=new Set(gp.tb);gp.tb.add(c)}
+    return `<p>${t().pfFb2(pf.code,t().pfActs[pf.correct],lbl(pf.pos))}</p>${pf.alt!=null?`<p class="muted">${t().pfAlt()}</p>`:""}<p class="muted">${t().pfNote[pf.prof]}</p>${pf.pos==="SB"?`<p class="muted">${t().sbNote}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(gp,pf.code)}</div></div><p class="muted">${t().legendPf}</p>`});
 }
-$("pf-ans").addEventListener("click",e=>{const b=e.target.closest(".ans");if(b)answer("preflop",pf,+b.dataset.i,paintPreflop)});
+function answerPreflop(i){if(!pf||pf.chosen!=null)return;answer("preflop",pf,i,paintPreflop);
+  if(i===1&&!good(pf,1)&&pf.pos!=="SB"){$("limp-pop").hidden=false;$("limp-ok").focus()}}
+function closeLimpPop(){$("limp-pop").hidden=true}
+$("limp-ok").addEventListener("click",closeLimpPop);
+$("limp-pop").addEventListener("click",e=>{if(e.target.id==="limp-pop")closeLimpPop()});
+$("pf-ans").addEventListener("click",e=>{const b=e.target.closest(".ans");if(b)answerPreflop(+b.dataset.i)});
 let studyPos="CO";
 function paintStudy(){
   $("study-pos").innerHTML=OPENERS().map(p=>`<button class="pill" aria-pressed="${p===studyPos}" data-pos="${p}">${lbl(p)}</button>`).join("");
@@ -3249,7 +3323,7 @@ function applyLang(){
   $("set-terms-row").classList.toggle("off",lang==="en");$("set-terms-hint").textContent=lang==="en"?t().setTermsOff:t().setTermsHint;
   $("open-settings").setAttribute("aria-label",t().settings);$("open-settings").title=t().settings;
   for(const k in PAINT)PAINT[k]();
-  paintStudy();paintDStudy();paintDProf();if(current==="stats")paintStats();if(current==="villains")paintVillains();
+  paintStudy();paintDStudy();paintDProf();paintPfProf();if(current==="stats")paintStats();if(current==="villains")paintVillains();
 }
 $("set-lang").addEventListener("change",e=>{if(!T[e.target.value])return;lang=e.target.value;try{localStorage.setItem(LKEY,lang)}catch(err){}applyLang()});
 $("set-terms").addEventListener("change",e=>{keepTerms=e.target.checked;try{localStorage.setItem(TKEY,keepTerms?"1":"0")}catch(err){}applyLang()});
@@ -3269,7 +3343,7 @@ $("size").addEventListener("click",e=>{const b=e.target.closest("[data-size]");i
 const VIEWS=["preflop","defense","equity","potodds","showdown","villains","stats"];
 const INIT={preflop:newPreflop,defense:newDefense,equity:newEquity,potodds:newPotOdds,showdown:newShowdown};
 const STATE={preflop:()=>pf,defense:()=>df,equity:()=>eq,potodds:()=>po,showdown:()=>sd};
-const ANS={preflop:i=>answer("preflop",pf,i,paintPreflop),defense:i=>answer("defense",df,i,paintDefense),equity:i=>answer("equity",eq,i,paintEquity),potodds:i=>answer("potodds",po,i,paintPotOdds),showdown:i=>answer("showdown",sd,i,paintShowdown)};
+const ANS={preflop:i=>answerPreflop(i),defense:i=>answer("defense",df,i,paintDefense),equity:i=>answer("equity",eq,i,paintEquity),potodds:i=>answer("potodds",po,i,paintPotOdds),showdown:i=>answer("showdown",sd,i,paintShowdown)};
 let current="preflop";const started={};
 function show(v){
   if(v==="equite")v="equity";
@@ -3286,10 +3360,11 @@ window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
 document.addEventListener("click",e=>{if(e.target.closest("[data-next]")&&INIT[current]){INIT[current]();window.scrollTo({top:0,behavior:"smooth"})}});
 document.addEventListener("keydown",e=>{
   if(!$("settings").hidden){if(e.key==="Escape")closeSettings();return}
+  if(!$("limp-pop").hidden){if(e.key==="Escape"||e.key==="Enter"){e.preventDefault();closeLimpPop()}return}
   if(e.ctrlKey||e.metaKey||e.altKey||e.target.tagName==="SELECT")return;const k=e.key.toLowerCase();
   if(!INIT[current])return;const st=STATE[current]();if(!st)return;
   if((k==="enter"||k===" ")&&st.chosen!=null){e.preventDefault();INIT[current]();return}
-  if(current==="preflop"){if(k==="f")ANS.preflop(0);if(k==="r")ANS.preflop(1);return}
+  if(current==="preflop"){const m={f:0,c:1,r:2,"1":0,"2":1,"3":2}[k];if(m!=null)ANS.preflop(m);return}
   if(current==="defense"){const ks=dfLabels().keys.map(x=>x.toLowerCase());let m=ks.indexOf(k);if(m<0&&k==="r")m=ks.indexOf("3");if(m<0){const d=parseInt(k,10);if(d>=1&&d<=ks.length)m=d-1}if(m>=0)ANS.defense(m);return}
   const n=parseInt(k,10);const max=$(({equity:"eq",potodds:"po",showdown:"sd"})[current]+"-ans").children.length;
   if(n>=1&&n<=max)ANS[current](n-1);
