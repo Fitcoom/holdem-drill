@@ -9,7 +9,7 @@
   --felt:#1e5a44; --felt-2:#174a37; --on-felt:#eaf3ee; --brass:#a87a22; --brass-soft:#f3e6c8;
   --good:#1c7a45; --good-soft:#dcefe3; --bad:#b23838; --bad-soft:#f6dede;
   --card-bg:#fbfbf8; --card-edge:#c9cfc9; --s:#16181a; --h:#c62828; --d:#1d5cc0; --c:#1f8040;
-  --in:#2f7a5c; --in-ink:#ffffff; --out:#e4e9e5; --out-ink:#7b8a82;
+  --in:#2f7a5c; --in-ink:#ffffff; --out:#e4e9e5; --out-ink:#7b8a82; --tb:#b4532d;
   --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -18,13 +18,13 @@
   --bg:#0e1512; --surface:#16201b; --ink:#e5ece8; --muted:#93a39a; --line:#2a3832;
   --felt:#1b4d3a; --felt-2:#143c2d; --on-felt:#e3efe8; --brass:#d8a748; --brass-soft:#3a2f17;
   --good:#52c486; --good-soft:#173826; --bad:#e46d6d; --bad-soft:#3d1d1d;
-  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068;
+  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068; --tb:#c8653c;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1512; --surface:#16201b; --ink:#e5ece8; --muted:#93a39a; --line:#2a3832;
   --felt:#1b4d3a; --felt-2:#143c2d; --on-felt:#e3efe8; --brass:#d8a748; --brass-soft:#3a2f17;
   --good:#52c486; --good-soft:#173826; --bad:#e46d6d; --bad-soft:#3d1d1d;
-  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068;
+  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068; --tb:#c8653c;
   color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -93,6 +93,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .grid{display:grid;grid-template-columns:repeat(13,minmax(22px,1fr));gap:2px;min-width:300px;font-family:var(--f-mono);font-size:10px}
 .grid div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:3px;background:var(--out);color:var(--out-ink);letter-spacing:-.03em}
 .grid div.in{background:var(--in);color:var(--in-ink)}
+.grid div.tb{background:var(--tb);color:var(--in-ink)}
 .grid div.cur{outline:3px solid var(--brass);outline-offset:-1px;position:relative;z-index:1;font-weight:700}
 
 .study{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 16px}
@@ -129,6 +130,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
   </header>
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" data-view="preflop" data-t="tabPreflop"></button>
+    <button class="tab" role="tab" data-view="defense" data-t="tabDefense"></button>
     <button class="tab" role="tab" data-view="equity" data-t="tabEquity"></button>
     <button class="tab" role="tab" data-view="potodds" data-t="tabPotodds"></button>
     <button class="tab" role="tab" data-view="showdown" data-t="tabShowdown"></button>
@@ -145,6 +147,19 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
       <div class="bar" id="study-pos"></div>
       <div class="grid-wrap"><div class="grid" id="study-grid"></div></div>
       <p class="pct" id="study-pct"></p>
+    </details>
+  </section>
+
+  <section id="v-defense" hidden>
+    <div class="table" id="df-table"></div>
+    <p class="q" data-t="dfQ"></p>
+    <div class="answers" id="df-ans"></div>
+    <div class="fb" id="df-fb" hidden></div>
+    <details class="study">
+      <summary data-t="dfStudy"></summary>
+      <div class="bar" id="dstudy-spot"></div>
+      <div class="grid-wrap"><div class="grid" id="dstudy-grid"></div></div>
+      <p class="pct" id="dstudy-pct"></p>
     </details>
   </section>
 
@@ -182,12 +197,16 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 "use strict";
 /* ---------- i18n ---------- */
 const T={
-en:{streak:"streak",best:"best",tabPreflop:"Preflop",tabEquity:"Equity",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
+en:{tabDefense:"Defense",dfQ:"Fold, call or 3-bet?",dfStudy:"Study the defense ranges",dfOpen:o=>`${o} opens 2.5bb`,
+  acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b> is a <b>${a}</b> in ${spot}.`,
+  dfSb:"From the small blind this simplified strategy is 3-bet or fold, with no flat calls.",
+  legend3:"Orange: 3-bet. Green: call. Grey: fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% of hands.`,
+  streak:"streak",best:"best",tabPreflop:"Preflop",tabEquity:"Equity",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
   pfQ:"Folded to you. Open-raise or fold?",study:"Study the opening ranges",eqQ:"Your equity against this hand (all-in now)?",sdQ:"Who wins the pot?",
-  hint:"Keyboard: F / R on preflop, 1–5 for choices, Enter for the next hand.",
-  note:"6-max cash game, 100bb. Simplified ranges inspired by public GTO charts.",
+  hint:"Keyboard: F / R on preflop, F / C / 3 on defense, 1–5 for choices, Enter for the next hand.",
+  note:"6-max cash game, 100bb, opens to 2.5bb. Simplified ranges inspired by public GTO charts.",
   fold:"Fold",raise:"Raise",call:"Call",correct:"Correct",wrong:"Wrong",next:"Next hand",position:"Position",
-  pos:{UTG:"UTG (first to act)",HJ:"Hijack",CO:"Cutoff",BTN:"Button",SB:"Small blind"},
+  pos:{UTG:"UTG (first to act)",HJ:"Hijack",CO:"Cutoff",BTN:"Button",SB:"Small blind",BB:"Big blind"},
   pfFb:(code,inR,p,pc)=>`<b class="mono">${code}</b> is ${inR?"":"not "}in the ${p} opening range (<span class="mono">${pc}%</span> of hands).`,
   legend:"Diagonal: pairs. Above: suited (s). Below: offsuit (o).",
   studyPct:(n,pc)=>`${n}: open-raise ${pc}% of hands.`,
@@ -205,15 +224,19 @@ en:{streak:"streak",best:"best",tabPreflop:"Preflop",tabEquity:"Equity",tabPotod
   poFormula:"Formula: bet ÷ (pot + 2 × bet). Common mistake: bet ÷ (pot + bet).",
   player:n=>`Player ${n}`,split:"Split",wins:" ← wins",splitNote:"Identical best five-card hands: the pot is split.",
   cat:["High card","Pair","Two pair","Three of a kind","Straight","Flush","Full house","Four of a kind","Straight flush"],royal:"Royal flush",
-  mods:{preflop:"Preflop — opening ranges",equity:"Hand vs hand equity",potodds:"Pot odds and outs",showdown:"Showdown — reading the board"},
+  mods:{preflop:"Preflop — opening ranges",defense:"Defense — facing an open",equity:"Hand vs hand equity",potodds:"Pot odds and outs",showdown:"Showdown — reading the board"},
   overall:"Overall",sub:(ok,n)=>`${ok} right out of ${n}`,subAll:(n,b)=>`${n} questions · best streak ${b}`,
   reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device."},
-fr:{streak:"série",best:"record",tabPreflop:"Préflop",tabEquity:"Équité",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
+fr:{tabDefense:"Défense",dfQ:"Fold, call ou 3-bet?",dfStudy:"Étudier les ranges de défense",dfOpen:o=>`${o} relance 2,5bb`,
+  acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b> est un <b>${a}</b> en ${spot}.`,
+  dfSb:"De la small blind, cette stratégie simplifiée joue 3-bet ou fold, sans call.",
+  legend3:"Orange : 3-bet. Vert : call. Gris : fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% des mains.`,
+  streak:"série",best:"record",tabPreflop:"Préflop",tabEquity:"Équité",tabPotodds:"Pot odds",tabShowdown:"Showdown",tabStats:"Stats",
   pfQ:"Tout le monde a fold jusqu'à toi. Open-raise ou fold?",study:"Étudier les ranges d'ouverture",eqQ:"Ton équité contre cette main (all-in maintenant)?",sdQ:"Qui gagne le pot?",
-  hint:"Clavier : F / R au préflop, 1–5 pour les choix, Entrée pour la suivante.",
-  note:"Cash game 6-max, 100bb. Ranges simplifiées inspirées des charts GTO publiques.",
+  hint:"Clavier : F / R au préflop, F / C / 3 en défense, 1–5 pour les choix, Entrée pour la suivante.",
+  note:"Cash game 6-max, 100bb, open à 2,5bb. Ranges simplifiées inspirées des charts GTO publiques.",
   fold:"Fold",raise:"Raise",call:"Call",correct:"Correct",wrong:"Raté",next:"Main suivante",position:"Position",
-  pos:{UTG:"UTG (premier de parole)",HJ:"Hijack",CO:"Cutoff",BTN:"Bouton",SB:"Small blind"},
+  pos:{UTG:"UTG (premier de parole)",HJ:"Hijack",CO:"Cutoff",BTN:"Bouton",SB:"Small blind",BB:"Big blind"},
   pfFb:(code,inR,p,pc)=>`<b class="mono">${code}</b> ${inR?"fait partie":"ne fait pas partie"} de la range d'open ${p} (<span class="mono">${pc}%</span> des mains).`,
   legend:"Diagonale : paires. Au-dessus : suited (s). En dessous : offsuit (o).",
   studyPct:(n,pc)=>`${n} : ${pc}% des mains en open-raise.`,
@@ -231,7 +254,7 @@ fr:{streak:"série",best:"record",tabPreflop:"Préflop",tabEquity:"Équité",tab
   poFormula:"Formule : mise ÷ (pot + 2 × mise). Erreur fréquente : mise ÷ (pot + mise).",
   player:n=>`Joueur ${n}`,split:"Partage",wins:" ← gagne",splitNote:"Mains identiques sur 5 cartes : le pot est partagé.",
   cat:["Carte haute","Paire","Deux paires","Brelan","Quinte","Couleur","Full","Carré","Quinte flush"],royal:"Quinte flush royale",
-  mods:{preflop:"Préflop — ranges d'ouverture",equity:"Équité main contre main",potodds:"Pot odds et outs",showdown:"Showdown — lecture du board"},
+  mods:{preflop:"Préflop — ranges d'ouverture",defense:"Défense — face à une relance",equity:"Équité main contre main",potodds:"Pot odds et outs",showdown:"Showdown — lecture du board"},
   overall:"Global",sub:(ok,n)=>`${ok} bonnes sur ${n}`,subAll:(n,b)=>`${n} questions · meilleure série ${b}`,
   reset:"Remettre les stats à zéro",confirmReset:"Confirmer la remise à zéro",empty:"Tes résultats apparaîtront ici après tes premières mains. Ils restent sur cet appareil."}
 };
@@ -294,10 +317,18 @@ const RANGE_SRC={
   BTN:"22+,A2s+,K2s+,Q3s+,J5s+,T6s+,96s+,85s+,74s+,64s+,53s+,43s,A2o+,K8o+,Q9o+,J8o+,T8o+,98o,87o",
   SB:"22+,A2s+,K2s+,Q5s+,J7s+,T7s+,96s+,86s+,75s+,64s+,54s,A2o+,K9o+,Q9o+,J9o+,T9o"
 };
-function expand(src){const set=new Set();for(let tok of src.split(",")){tok=tok.trim();const plus=tok.endsWith("+");if(plus)tok=tok.slice(0,-1);
+/* Notation: "22+", "A2s+", "JJ-55", "A5s-A2s", "AK" (= AKs + AKo), "AQ+" */
+function expand(src){const set=new Set();
+  const add=(hi,lo,ty)=>{if(ty)set.add(R[hi]+R[lo]+ty);else{set.add(R[hi]+R[lo]+"s");set.add(R[hi]+R[lo]+"o")}};
+  for(let tok of src.split(",")){tok=tok.trim();if(!tok)continue;
+  if(tok.includes("-")){const [x,y]=tok.split("-"),a=R.indexOf(x[0]),b=R.indexOf(x[1]);
+    if(a===b){const c=R.indexOf(y[0]);for(let r=Math.min(a,c);r<=Math.max(a,c);r++)set.add(R[r]+R[r])}
+    else{const hi=Math.max(a,b),k1=Math.min(a,b),k2=R.indexOf(y[1]);for(let l=Math.min(k1,k2);l<=Math.max(k1,k2);l++)add(hi,l,x[2])}
+    continue}
+  const plus=tok.endsWith("+");if(plus)tok=tok.slice(0,-1);
   const a=R.indexOf(tok[0]),b=R.indexOf(tok[1]);
   if(a===b){if(plus)for(let r=a;r<13;r++)set.add(R[r]+R[r]);else set.add(tok)}
-  else{const hi=Math.max(a,b),lo=Math.min(a,b),ty=tok[2];if(plus)for(let l=lo;l<hi;l++)set.add(R[hi]+R[l]+ty);else set.add(R[hi]+R[lo]+ty)}}
+  else{const hi=Math.max(a,b),lo=Math.min(a,b),ty=tok[2];if(plus)for(let l=lo;l<hi;l++)add(hi,l,ty);else add(hi,lo,ty)}}
   return set}
 const RANGES={};for(const p of POS)RANGES[p]=expand(RANGE_SRC[p]);
 const combos=code=>code.length===2?6:code[2]==="s"?4:12;
@@ -308,7 +339,7 @@ function gridHTML(set,cur){let h="";for(let i=0;i<13;i++)for(let j=0;j<13;j++){c
 
 /* ---------- stats ---------- */
 const KEY="holdem-drill-v1";
-const blank=()=>({m:{preflop:[0,0],equity:[0,0],potodds:[0,0],showdown:[0,0]},streak:0,best:0});
+const blank=()=>({m:{preflop:[0,0],defense:[0,0],equity:[0,0],potodds:[0,0],showdown:[0,0]},streak:0,best:0});
 let S=blank();
 try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(o&&o.m){if(o.m.equite&&!o.m.equity){o.m.equity=o.m.equite;delete o.m.equite}S=Object.assign(S,o);S.m=Object.assign(blank().m,o.m)}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -349,6 +380,49 @@ function paintStudy(){
   $("study-pct").textContent=t().studyPct(t().pos[studyPos],pct(RANGES[studyPos]));
 }
 $("study-pos").addEventListener("click",e=>{const b=e.target.closest("[data-pos]");if(b){studyPos=b.dataset.pos;paintStudy()}});
+
+/* ---------- Defense: facing an open ---------- */
+const ORDER=["UTG","HJ","CO","BTN","SB","BB"];
+const DEF_SRC={
+  IPvEP:{tb:"QQ+,AK,A5s,A4s",call:"JJ-55,AQs-ATs,KQs,KJs,QJs,JTs,T9s,98s,AQo"},
+  IPvCO:{tb:"TT+,AQ+,A5s-A3s,K9s,Q9s,J9s",call:"99-22,AJs-A6s,KQs-KTs,QJs,QTs,JTs,T9s,98s,87s,76s,65s,AJo,KQo"},
+  SBvEP:{tb:"QQ+,AK,AQs,A5s,A4s",call:""},
+  SBvLate:{tb:"88+,ATs+,AJo+,KJs+,KQo,QJs,A5s-A2s,K9s,T9s,98s",call:""},
+  BBvEP:{tb:"QQ+,AK,A5s",call:"JJ-22,AQs-A2s,KQs-K9s,QJs-Q9s,JTs,J9s,T9s,T8s,98s,97s,87s,76s,65s,54s,AQo-ATo,KQo,KJo,QJo"},
+  BBvCO:{tb:"TT+,AJs+,AQo+,A5s-A3s,KQs",call:"99-22,ATs-A2s,KJs-K6s,QJs-Q8s,JTs-J8s,T9s-T7s,98s,97s,87s,86s,76s,75s,65s,64s,54s,AJo-A8o,KJo-KTo,QJo,QTo,JTo"},
+  BBvBTN:{tb:"99+,ATs+,AJo+,KJs+,A5s-A2s,Q9s,T8s,97s",call:"88-22,A9s-A6s,KTs-K2s,QJs-Q4s,JTs-J6s,T9s-T6s,98s-96s,87s-85s,76s-74s,65s-63s,54s-53s,43s,ATo-A2o,KQo-K7o,QJo-Q8o,JTo-J8o,T9o,T8o,98o,87o,76o"},
+  BBvSB:{tb:"88+,ATs+,AJo+,KTs+,KQo,QTs+,A5s-A2s,J9s,T9s",call:"77-22,A9s-A6s,K9s-K2s,Q9s-Q2s,J8s-J4s,T8s-T6s,98s-95s,87s-85s,76s-74s,65s-63s,54s-53s,43s,ATo-A2o,KJo-K5o,QJo-Q8o,JTo-J8o,T9o-T8o,98o,87o,76o"}
+};
+const DEF_LABEL={IPvEP:"IP vs UTG/HJ",IPvCO:"BTN vs CO",SBvEP:"SB vs UTG/HJ",SBvLate:"SB vs CO/BTN",BBvEP:"BB vs UTG/HJ",BBvCO:"BB vs CO",BBvBTN:"BB vs BTN",BBvSB:"BB vs SB"};
+const DEF={};for(const k in DEF_SRC){const tb=expand(DEF_SRC[k].tb),call=expand(DEF_SRC[k].call);for(const c of tb)call.delete(c);DEF[k]={tb,call}}
+function spotKey(o,h){const ep=o==="UTG"||o==="HJ";
+  if(h==="SB")return ep?"SBvEP":"SBvLate";
+  if(h==="BB")return ep?"BBvEP":o==="CO"?"BBvCO":o==="BTN"?"BBvBTN":"BBvSB";
+  return ep?"IPvEP":"IPvCO"}
+const SPOTS=[];for(let i=0;i<5;i++)for(let j=i+1;j<6;j++)SPOTS.push([ORDER[i],ORDER[j]]);
+function grid3(sp,cur){let h="";for(let i=0;i<13;i++)for(let j=0;j<13;j++){const a=12-i,b=12-j;
+  const code=i===j?R[a]+R[a]:j>i?R[a]+R[b]+"s":R[b]+R[a]+"o";
+  h+=`<div class="${sp.tb.has(code)?"tb":sp.call.has(code)?"in":""}${code===cur?" cur":""}">${code}</div>`}return h}
+let df;
+function newDefense(){
+  const [o,hero]=SPOTS[rnd(SPOTS.length)],key=spotKey(o,hero),sp=DEF[key];let h,code;
+  for(let k=0;k<12;k++){h=deal(2);code=handCode(h[0],h[1]);if(sp.tb.has(code)||sp.call.has(code)||Math.random()>.7)break}
+  df={o,hero,key,h,code,correct:sp.tb.has(code)?2:sp.call.has(code)?1:0,chosen:null};paintDefense();
+}
+function paintDefense(){
+  $("df-table").innerHTML=`<div class="ctx">${t().position}</div><div class="big">${t().pos[df.hero]}</div><div class="row">${cardsHTML(df.h,true)}</div><div class="row"><span class="chip"><i></i>${t().dfOpen(df.o)}</span><span class="chip mono">${df.code}</span></div>`;
+  paintAnswers($("df-ans"),[t().fold,t().call,"3-bet"],df,["F","C","3"]);
+  const sp=DEF[df.key];
+  paintFb($("df-fb"),df,()=>`<p>${t().dfFb(df.code,t().acts[df.correct],df.hero+" vs "+df.o)}</p>${df.hero==="SB"?`<p class="muted">${t().dfSb}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(sp,df.code)}</div></div><p class="muted">${t().legend3}</p>`);
+}
+$("df-ans").addEventListener("click",e=>{const b=e.target.closest(".ans");if(b)answer("defense",df,+b.dataset.i,paintDefense)});
+let dStudy="BBvBTN";
+function paintDStudy(){
+  $("dstudy-spot").innerHTML=Object.keys(DEF).map(k=>`<button class="pill" aria-pressed="${k===dStudy}" data-spot="${k}">${DEF_LABEL[k]}</button>`).join("");
+  $("dstudy-grid").innerHTML=grid3(DEF[dStudy],"");
+  $("dstudy-pct").textContent=t().dfPct(pct(DEF[dStudy].tb),pct(DEF[dStudy].call))+" "+t().legend3;
+}
+$("dstudy-spot").addEventListener("click",e=>{const b=e.target.closest("[data-spot]");if(b){dStudy=b.dataset.spot;paintDStudy()}});
 
 /* ---------- Equity ---------- */
 const BUCKETS=["0–20 %","20–40 %","40–60 %","60–80 %","80–100 %"];
@@ -432,22 +506,22 @@ function paintStats(){
 }
 
 /* ---------- language ---------- */
-const PAINT={preflop:()=>pf&&paintPreflop(),equity:()=>eq&&paintEquity(),potodds:()=>po&&paintPotOdds(),showdown:()=>sd&&paintShowdown()};
+const PAINT={preflop:()=>pf&&paintPreflop(),defense:()=>df&&paintDefense(),equity:()=>eq&&paintEquity(),potodds:()=>po&&paintPotOdds(),showdown:()=>sd&&paintShowdown()};
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-t]").forEach(el=>el.textContent=t()[el.dataset.t]);
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
   for(const k in PAINT)PAINT[k]();
-  paintStudy();if(current==="stats")paintStats();
+  paintStudy();paintDStudy();if(current==="stats")paintStats();
 }
 document.querySelector(".lang").addEventListener("click",e=>{const b=e.target.closest("[data-lang]");if(!b||b.dataset.lang===lang)return;
   lang=b.dataset.lang;try{localStorage.setItem(LKEY,lang)}catch(err){}applyLang()});
 
 /* ---------- navigation ---------- */
-const VIEWS=["preflop","equity","potodds","showdown","stats"];
-const INIT={preflop:newPreflop,equity:newEquity,potodds:newPotOdds,showdown:newShowdown};
-const STATE={preflop:()=>pf,equity:()=>eq,potodds:()=>po,showdown:()=>sd};
-const ANS={preflop:i=>answer("preflop",pf,i,paintPreflop),equity:i=>answer("equity",eq,i,paintEquity),potodds:i=>answer("potodds",po,i,paintPotOdds),showdown:i=>answer("showdown",sd,i,paintShowdown)};
+const VIEWS=["preflop","defense","equity","potodds","showdown","stats"];
+const INIT={preflop:newPreflop,defense:newDefense,equity:newEquity,potodds:newPotOdds,showdown:newShowdown};
+const STATE={preflop:()=>pf,defense:()=>df,equity:()=>eq,potodds:()=>po,showdown:()=>sd};
+const ANS={preflop:i=>answer("preflop",pf,i,paintPreflop),defense:i=>answer("defense",df,i,paintDefense),equity:i=>answer("equity",eq,i,paintEquity),potodds:i=>answer("potodds",po,i,paintPotOdds),showdown:i=>answer("showdown",sd,i,paintShowdown)};
 let current="preflop";const started={};
 function show(v){
   if(v==="equite")v="equity";
@@ -466,6 +540,7 @@ document.addEventListener("keydown",e=>{
   if(!INIT[current])return;const st=STATE[current]();if(!st)return;
   if((k==="enter"||k===" ")&&st.chosen!=null){e.preventDefault();INIT[current]();return}
   if(current==="preflop"){if(k==="f")ANS.preflop(0);if(k==="r")ANS.preflop(1);return}
+  if(current==="defense"){const m={f:0,c:1,r:2,"1":0,"2":1,"3":2}[k];if(m!=null)ANS.defense(m);return}
   const n=parseInt(k,10);const max=$(({equity:"eq",potodds:"po",showdown:"sd"})[current]+"-ans").children.length;
   if(n>=1&&n<=max)ANS[current](n-1);
 });

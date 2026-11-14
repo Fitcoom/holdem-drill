@@ -1,6 +1,6 @@
 # Hold'em Drill
 
-Texas Hold'em 6-max poker trainer (EN/FR): preflop opening ranges, hand-vs-hand equity, pot odds and outs, showdown reading.
+Texas Hold'em 6-max poker trainer (EN/FR): preflop opening ranges, defense vs opens (fold / call / 3-bet), hand-vs-hand equity, pot odds and outs, showdown reading.
 
 **Play / install:** https://fitcoom.github.io/holdem-drill/
 
