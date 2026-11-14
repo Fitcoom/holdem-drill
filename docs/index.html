@@ -29,7 +29,7 @@ img{max-width:100%}
   --felt:#1e5a44; --felt-2:#174a37; --on-felt:#eaf3ee; --brass:#a87a22; --brass-soft:#f3e6c8;
   --good:#1c7a45; --good-soft:#dcefe3; --bad:#b23838; --bad-soft:#f6dede;
   --card-bg:#fbfbf8; --card-edge:#c9cfc9; --s:#16181a; --h:#c62828; --d:#1d5cc0; --c:#1f8040;
-  --in:#2f7a5c; --in-ink:#ffffff; --out:#e4e9e5; --out-ink:#7b8a82; --tb:#b4532d;
+  --in:#2f7a5c; --in-ink:#ffffff; --out:#e4e9e5; --out-ink:#7b8a82; --tb:#b4532d; --rail:#5a3a24; --rail-edge:#3b2516; --back-a:#a33232; --back-b:#842626;
   --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -38,13 +38,13 @@ img{max-width:100%}
   --bg:#0e1512; --surface:#16201b; --ink:#e5ece8; --muted:#93a39a; --line:#2a3832;
   --felt:#1b4d3a; --felt-2:#143c2d; --on-felt:#e3efe8; --brass:#d8a748; --brass-soft:#3a2f17;
   --good:#52c486; --good-soft:#173826; --bad:#e46d6d; --bad-soft:#3d1d1d;
-  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068; --tb:#c8653c;
+  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068; --tb:#c8653c; --rail:#3d281a; --rail-edge:#24170e; --back-a:#9a3030; --back-b:#7a2323;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1512; --surface:#16201b; --ink:#e5ece8; --muted:#93a39a; --line:#2a3832;
   --felt:#1b4d3a; --felt-2:#143c2d; --on-felt:#e3efe8; --brass:#d8a748; --brass-soft:#3a2f17;
   --good:#52c486; --good-soft:#173826; --bad:#e46d6d; --bad-soft:#3d1d1d;
-  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068; --tb:#c8653c;
+  --card-bg:#f1f2ee; --card-edge:#9aa39d; --in:#2f8a66; --in-ink:#ffffff; --out:#1d2924; --out-ink:#5f7068; --tb:#c8653c; --rail:#3d281a; --rail-edge:#24170e; --back-a:#9a3030; --back-b:#7a2323;
   color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -91,6 +91,27 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .card.ghost{background:transparent;border:1.5px dashed rgba(255,255,255,.3);box-shadow:none}
 .seat.win .row .card{outline:3px solid var(--brass);outline-offset:1px}
 
+/* full 6-max table: hero always sits bottom-centre, the others follow clockwise in order of play */
+.ring{position:relative;height:340px;width:100%;max-width:560px;margin:0 auto}
+.oval{position:absolute;inset:8% 5% 17% 5%;border-radius:50%;background:radial-gradient(110% 90% at 50% 35%,var(--felt) 0%,var(--felt-2) 100%);
+  box-shadow:0 0 0 10px var(--rail),0 0 0 12px var(--rail-edge),inset 0 0 28px rgba(0,0,0,.35)}
+.center{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);text-align:center;color:var(--on-felt);display:flex;flex-direction:column;gap:2px;width:52%}
+.center .ctx{font-size:11px}
+.potv{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.cact{font-size:12px;opacity:.9}
+.pseat{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;z-index:2}
+.pseat.hero{transform:translateX(-50%);left:50%;bottom:0}
+.pbox{background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:2px 9px;font-size:12px;font-weight:700;line-height:1.25;text-align:center;min-width:56px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.pbox small{display:block;font-weight:500;color:var(--muted);font-size:11px;white-space:nowrap}
+.pseat.fold{opacity:.42}
+.pseat.hero .pbox{border-color:var(--brass);background:var(--brass-soft)}
+.pseat.raise .pbox{border-color:var(--tb)} .pseat.raise .pbox small{color:var(--tb);font-weight:700}
+.mini{display:flex;gap:2px;height:24px}
+.mini span{width:17px;height:24px;border-radius:3px;background:repeating-linear-gradient(45deg,var(--back-a) 0 3px,var(--back-b) 3px 6px);border:1.5px solid var(--card-bg)}
+.bet{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-mono);font-size:12px;color:var(--on-felt);display:flex;align-items:center;gap:4px;z-index:1;font-variant-numeric:tabular-nums}
+.bet i{width:11px;height:11px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px rgba(255,255,255,.35) inset}
+.dbtn{position:absolute;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:var(--card-bg);color:var(--s);font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.4);z-index:1}
+@media (max-width:420px){.ring{height:310px}.pbox{min-width:48px;padding:2px 6px}.potv{font-size:22px}}
 .q{font-weight:600;font-size:16px;text-align:center}
 .answers{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
 .ans{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 10px;font-weight:600;font-size:16px;
@@ -160,7 +181,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
   </nav>
 
   <section id="v-preflop" hidden>
-    <div class="table" id="pf-table"></div>
+    <div class="ring" id="pf-table"></div>
     <p class="q" data-t="pfQ"></p>
     <div class="answers" id="pf-ans"></div>
     <div class="fb" id="pf-fb" hidden></div>
@@ -173,7 +194,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
   </section>
 
   <section id="v-defense" hidden>
-    <div class="table" id="df-table"></div>
+    <div class="ring" id="df-table"></div>
     <p class="q" data-t="dfQ"></p>
     <div class="answers" id="df-ans"></div>
     <div class="fb" id="df-fb" hidden></div>
@@ -219,7 +240,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 "use strict";
 /* ---------- i18n ---------- */
 const T={
-en:{tabDefense:"Defense",dfQ:"Fold, call or 3-bet?",dfStudy:"Study the defense ranges",dfOpen:o=>`${o} opens 2.5bb`,
+en:{folded:"Folded",raiseLbl:"Raise",pfCtx:"Folded to you",toAct:"To act",tabDefense:"Defense",dfQ:"Fold, call or 3-bet?",dfStudy:"Study the defense ranges",dfOpen:o=>`${o} opens 2.5bb`,
   acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b> is a <b>${a}</b> in ${spot}.`,
   dfSb:"From the small blind this simplified strategy is 3-bet or fold, with no flat calls.",
   legend3:"Orange: 3-bet. Green: call. Grey: fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% of hands.`,
@@ -249,7 +270,7 @@ en:{tabDefense:"Defense",dfQ:"Fold, call or 3-bet?",dfStudy:"Study the defense r
   mods:{preflop:"Preflop — opening ranges",defense:"Defense — facing an open",equity:"Hand vs hand equity",potodds:"Pot odds and outs",showdown:"Showdown — reading the board"},
   overall:"Overall",sub:(ok,n)=>`${ok} right out of ${n}`,subAll:(n,b)=>`${n} questions · best streak ${b}`,
   reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device."},
-fr:{tabDefense:"Défense",dfQ:"Fold, call ou 3-bet?",dfStudy:"Étudier les ranges de défense",dfOpen:o=>`${o} relance 2,5bb`,
+fr:{folded:"Couché",raiseLbl:"Relance",pfCtx:"Fold jusqu'à toi",toAct:"À parler",tabDefense:"Défense",dfQ:"Fold, call ou 3-bet?",dfStudy:"Étudier les ranges de défense",dfOpen:o=>`${o} relance 2,5bb`,
   acts:["fold","call","3-bet"],dfFb:(code,a,spot)=>`<b class="mono">${code}</b> est un <b>${a}</b> en ${spot}.`,
   dfSb:"De la small blind, cette stratégie simplifiée joue 3-bet ou fold, sans call.",
   legend3:"Orange : 3-bet. Vert : call. Gris : fold.",dfPct:(a,b)=>`3-bet ${a}% · call ${b}% des mains.`,
@@ -377,6 +398,36 @@ function paintAnswers(box,labels,st,keys){
 function paintFb(el,st,txt){if(st.chosen==null){el.hidden=true;return}el.innerHTML=verdict(st.chosen===st.correct,txt());el.hidden=false}
 function answer(mod,st,i,paint){if(!st||st.chosen!=null)return;st.chosen=i;record(mod,i===st.correct);paint()}
 
+/* ---------- full table view ---------- */
+const ORDER=["UTG","HJ","CO","BTN","SB","BB"];
+const BLIND={SB:.5,BB:1};
+const SLOT=[null,[13,68],[11,30],[50,9],[89,30],[87,68]];
+const bb=x=>{const v=Number.isInteger(x)?String(x):x.toFixed(1);return (lang==="fr"?v.replace(".",","):v)+"bb"};
+/* acts: {POS:{st:"fold"|"wait"|"raise"|"hero",bet}} */
+function tableView(hero,cards,code,acts,action){
+  const hi=ORDER.indexOf(hero);let h='<div class="oval"></div>',pot=0;
+  for(let k=0;k<6;k++){const pos=ORDER[(hi+k)%6],a=acts[pos],bet=a.bet||0;pot+=bet;
+    if(k===0){
+      h+=`<div class="pseat hero"><div class="row">${cardsHTML(cards,true)}</div><div class="pbox">${t().you} · ${pos}<small class="mono">${code}</small></div></div>`;
+      if(bet)h+=`<div class="bet" style="left:50%;top:63%"><i></i>${bb(bet)}</div>`;
+    }else{
+      const [x,y]=SLOT[k];
+      const sub=a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:bet?bb(bet):t().toAct;
+      h+=`<div class="pseat ${a.st}" style="left:${x}%;top:${y}%"><div class="mini">${a.st==="fold"?"":"<span></span><span></span>"}</div><div class="pbox">${pos}<small>${sub}</small></div></div>`;
+      if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;
+    }
+    if(pos==="BTN"){const [x,y]=k===0?[74,78]:SLOT[k];h+=k===0?`<div class="dbtn" style="left:${x}%;top:${y}%">D</div>`:`<div class="dbtn" style="left:${x===50?x+13:x+(x<50?11:-11)}%;top:${x===50?y+4:y+(y<45?3:-3)}%">D</div>`}
+  }
+  return h+`<div class="center"><div class="ctx">${t().pos[hero]}</div><div class="potv">${t().pot} ${bb(pot)}</div><div class="cact">${action}</div></div>`;
+}
+function actsFor(hero,opener){const hi=ORDER.indexOf(hero),oi=opener?ORDER.indexOf(opener):-1,acts={};
+  ORDER.forEach((p,i)=>{const blind=BLIND[p]||0;
+    if(i===hi)acts[p]={st:"hero",bet:blind};
+    else if(i===oi)acts[p]={st:"raise",bet:2.5};
+    else if(i<hi)acts[p]={st:"fold",bet:blind};
+    else acts[p]={st:"wait",bet:blind}});
+  return acts}
+
 /* ---------- Preflop ---------- */
 let pf;
 function newPreflop(){
@@ -389,7 +440,7 @@ function newPreflop(){
   pf={pos,h,code,raise,correct:raise?1:0,chosen:null};paintPreflop();
 }
 function paintPreflop(){
-  $("pf-table").innerHTML=`<div class="ctx">${t().position}</div><div class="big">${t().pos[pf.pos]}</div><div class="row">${cardsHTML(pf.h,true)}</div><div class="chip mono">${pf.code}</div>`;
+  $("pf-table").innerHTML=tableView(pf.pos,pf.h,pf.code,actsFor(pf.pos,null),t().pfCtx);
   paintAnswers($("pf-ans"),[t().fold,t().raise],pf,["F","R"]);
   const set=RANGES[pf.pos];
   paintFb($("pf-fb"),pf,()=>`<p>${t().pfFb(pf.code,pf.raise,pf.pos,pct(set))}</p><div class="grid-wrap"><div class="grid">${gridHTML(set,pf.code)}</div></div><p class="muted">${t().legend}</p>`);
@@ -404,7 +455,6 @@ function paintStudy(){
 $("study-pos").addEventListener("click",e=>{const b=e.target.closest("[data-pos]");if(b){studyPos=b.dataset.pos;paintStudy()}});
 
 /* ---------- Defense: facing an open ---------- */
-const ORDER=["UTG","HJ","CO","BTN","SB","BB"];
 const DEF_SRC={
   IPvEP:{tb:"QQ+,AK,A5s,A4s",call:"JJ-55,AQs-ATs,KQs,KJs,QJs,JTs,T9s,98s,AQo"},
   IPvCO:{tb:"TT+,AQ+,A5s-A3s,K9s,Q9s,J9s",call:"99-22,AJs-A6s,KQs-KTs,QJs,QTs,JTs,T9s,98s,87s,76s,65s,AJo,KQo"},
@@ -432,7 +482,7 @@ function newDefense(){
   df={o,hero,key,h,code,correct:sp.tb.has(code)?2:sp.call.has(code)?1:0,chosen:null};paintDefense();
 }
 function paintDefense(){
-  $("df-table").innerHTML=`<div class="ctx">${t().position}</div><div class="big">${t().pos[df.hero]}</div><div class="row">${cardsHTML(df.h,true)}</div><div class="row"><span class="chip"><i></i>${t().dfOpen(df.o)}</span><span class="chip mono">${df.code}</span></div>`;
+  $("df-table").innerHTML=tableView(df.hero,df.h,df.code,actsFor(df.hero,df.o),t().dfOpen(df.o));
   paintAnswers($("df-ans"),[t().fold,t().call,"3-bet"],df,["F","C","3"]);
   const sp=DEF[df.key];
   paintFb($("df-fb"),df,()=>`<p>${t().dfFb(df.code,t().acts[df.correct],df.hero+" vs "+df.o)}</p>${df.hero==="SB"?`<p class="muted">${t().dfSb}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(sp,df.code)}</div></div><p class="muted">${t().legend3}</p>`);
