@@ -46,6 +46,23 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .lang button{white-space:nowrap;background:none;border:0;padding:3px 10px;font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--muted)}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 
+.gear{background:none;border:1.5px solid var(--line);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+.gear:hover{border-color:var(--brass)}
+.gear svg{width:18px;height:18px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:50;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;width:100%;max-width:420px;max-height:100%;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:18px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.sheet h2{margin:0;font-family:var(--f-display);font-weight:800;font-size:26px;text-transform:uppercase;letter-spacing:.02em}
+.field{display:flex;flex-direction:column;gap:8px}
+.field .t{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.field select{font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.check{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--in);flex:none}
+.check b{display:block;font-weight:600}
+.check small{display:block;color:var(--muted);font-size:13px;line-height:1.4}
+.check.off{opacity:.5;cursor:default}
+.sheet .next{align-self:flex-end}
+.field .lang{align-self:flex-start} .field .lang button{padding:6px 14px;font-size:13px}
 .tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
 .tabs::-webkit-scrollbar{display:none}
 .tab{background:none;border:0;padding:8px 12px 10px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-1px}
@@ -162,10 +179,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
     <div><div class="brand">Hold'em <span>Drill</span></div><div class="tagline" data-t="tagline"></div></div>
     <div class="right">
       <div class="streak" aria-live="polite"><span data-t="streak"></span> <b id="streak">0</b> · <span data-t="best"></span> <b id="best">0</b></div>
-      <div class="lang" id="size" role="group" aria-label="Table size"><button data-size="6" aria-pressed="true">6-max</button><button data-size="9" aria-pressed="false">9-max</button></div>
-      <div class="lang" id="lang" role="group" aria-label="Language">
-        <button data-lang="en" aria-pressed="true">EN</button><button data-lang="fr" aria-pressed="false">FR</button>
-      </div>
+      <button class="gear" id="open-settings" aria-haspopup="dialog" data-tl="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
   </header>
   <nav class="tabs" role="tablist">
@@ -242,6 +256,28 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
     <div class="stats" id="stats"></div>
   </section>
 
+  <div class="modal" id="settings" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="set-title">
+      <h2 id="set-title" data-t="settings"></h2>
+      <div class="field">
+        <label class="t" for="set-lang" data-t="setLang"></label>
+        <select id="set-lang">
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+        </select>
+      </div>
+      <label class="check" id="set-terms-row">
+        <input type="checkbox" id="set-terms">
+        <span><b data-t="setTerms"></b><small id="set-terms-hint"></small></span>
+      </label>
+      <div class="field">
+        <span class="t" data-t="setTable"></span>
+        <div class="lang" id="size" role="group" aria-label="Table size"><button data-size="6" aria-pressed="true">6-max</button><button data-size="9" aria-pressed="false">9-max</button></div>
+      </div>
+      <button class="next" id="close-settings" data-t="done"></button>
+    </div>
+  </div>
+
   <p class="hint" data-t="hint"></p>
   <p class="note" data-t="note"></p>
 </div>
@@ -251,7 +287,10 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 "use strict";
 /* ---------- i18n ---------- */
 const T={
-en:{tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
+en:{settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
+  setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
+  setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
   prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec"},
   pdesc:{gto:"A balanced, solver-style regular. Plays the classical charts, so there is no big leak to attack.",
     tag:"Tight-aggressive regular. Plays fewer hands than GTO, mostly pairs, broadways and suited aces, and raises when they play.",
@@ -323,7 +362,10 @@ en:{tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",exploitLbl:"How to
   mods:{preflop:"Preflop — opening ranges",defense:"Defense — facing an open",equity:"Hand vs hand equity",potodds:"Pot odds and outs",showdown:"Showdown — reading the board"},
   overall:"Overall",sub:(ok,n)=>`${ok} right out of ${n}`,subAll:(n,b)=>`${n} questions · best streak ${b}`,
   reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device."},
-fr:{tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
+fr:{settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
+  setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
+  setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
   prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2"},
   pdesc:{gto:"Régulier équilibré, style solveur. Joue les charts classiques : aucune grosse fuite à attaquer.",
     tag:"Régulier serré-agressif. Joue moins de mains que GTO, surtout des paires, des broadways et des as suited, et relance quand il joue.",
@@ -398,7 +440,16 @@ fr:{tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",exploitLbl:
 };
 const LKEY="holdem-drill-lang";
 let lang="en";try{const l=localStorage.getItem(LKEY);if(l&&T[l])lang=l}catch(e){}
-const t=()=>T[lang];
+/* "Keep poker terms in English": the chosen language, with poker vocabulary taken from English. */
+const TKEY="holdem-drill-terms";
+let keepTerms=false;try{keepTerms=localStorage.getItem(TKEY)==="1"}catch(e){}
+const TERM_KEYS=["tabPreflop","tabEquity","fold","raise","call","check","folded","raiseLbl","villain","stages","cat","royal","draws","sizes",
+  "bet","split","showdownCtx","shown","iso","complete","limpB","acts","actsLimp","actsLimpBB","prof","allin"];
+const TERMED={};
+function t(){if(lang==="en"||!keepTerms)return T[lang];
+  if(!TERMED[lang]){const d=Object.assign({},T[lang]);for(const k of TERM_KEYS)if(T.en[k]!==undefined)d[k]=T.en[k];
+    d.pos=Object.assign({},T[lang].pos,{BTN:T.en.pos.BTN});TERMED[lang]=d}
+  return TERMED[lang]}
 
 const R="23456789TJQKA", SU=["s","h","d","c"], SYM={s:"♠",h:"♥",d:"♦",c:"♣"};
 const $=id=>document.getElementById(id);
@@ -807,12 +858,19 @@ const PAINT={preflop:()=>pf&&paintPreflop(),defense:()=>df&&paintDefense(),equit
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-t]").forEach(el=>{const v=t()[el.dataset.t];el.textContent=typeof v==="function"?v(size):v});
-  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+  $("set-lang").value=lang;$("set-terms").checked=keepTerms&&lang!=="en";$("set-terms").disabled=lang==="en";
+  $("set-terms-row").classList.toggle("off",lang==="en");$("set-terms-hint").textContent=lang==="en"?t().setTermsOff:t().setTermsHint;
+  $("open-settings").setAttribute("aria-label",t().settings);$("open-settings").title=t().settings;
   for(const k in PAINT)PAINT[k]();
   paintStudy();paintDStudy();paintDProf();if(current==="stats")paintStats();if(current==="villains")paintVillains();
 }
-$("lang").addEventListener("click",e=>{const b=e.target.closest("[data-lang]");if(!b||b.dataset.lang===lang)return;
-  lang=b.dataset.lang;try{localStorage.setItem(LKEY,lang)}catch(err){}applyLang()});
+$("set-lang").addEventListener("change",e=>{if(!T[e.target.value])return;lang=e.target.value;try{localStorage.setItem(LKEY,lang)}catch(err){}applyLang()});
+$("set-terms").addEventListener("change",e=>{keepTerms=e.target.checked;try{localStorage.setItem(TKEY,keepTerms?"1":"0")}catch(err){}applyLang()});
+function openSettings(){$("settings").hidden=false;$("set-lang").focus()}
+function closeSettings(){$("settings").hidden=true;$("open-settings").focus()}
+$("open-settings").addEventListener("click",openSettings);
+$("close-settings").addEventListener("click",closeSettings);
+$("settings").addEventListener("click",e=>{if(e.target.id==="settings")closeSettings()});
 /* Table size: deal fresh hands in every table module that is already open, since the seats change. */
 function paintSize(){document.querySelectorAll("[data-size]").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.size===size))}
 $("size").addEventListener("click",e=>{const b=e.target.closest("[data-size]");if(!b||+b.dataset.size===size)return;
@@ -840,6 +898,7 @@ document.querySelector(".tabs").addEventListener("click",e=>{const tb=e.target.c
 window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
 document.addEventListener("click",e=>{if(e.target.closest("[data-next]")&&INIT[current]){INIT[current]();window.scrollTo({top:0,behavior:"smooth"})}});
 document.addEventListener("keydown",e=>{
+  if(!$("settings").hidden){if(e.key==="Escape")closeSettings();return}
   if(e.ctrlKey||e.metaKey||e.altKey||e.target.tagName==="SELECT")return;const k=e.key.toLowerCase();
   if(!INIT[current])return;const st=STATE[current]();if(!st)return;
   if((k==="enter"||k===" ")&&st.chosen!=null){e.preventDefault();INIT[current]();return}
