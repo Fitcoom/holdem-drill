@@ -3574,13 +3574,13 @@ function heroPlan(pos,prof){
 const MIXW={gto:2,tag:3,nit:2,weak:2,lag:1.5,maniac:.5,station:2,whale:.5,live:2,omc:1};
 function mixProf(){let r=Math.random()*Object.values(MIXW).reduce((a,b)=>a+b);for(const k in MIXW){r-=MIXW[k];if(r<0)return k}return "gto"}
 const PFKEY="holdem-drill-pfopp";
-let pfProf="mixed";try{pfProf=localStorage.getItem(PFKEY)||"mixed"}catch(e){}
-function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+["mixed","custom"].concat(PROFILES,["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}"${PNAME[k]?` title="${PNAME[k]} « ${t().pnick[k]} »"`:""}>${k==="random"?t().random:k==="mixed"?"🎲 "+t().mixed:k==="custom"?"✏️ "+t().myTable:av(k,22)+t().prof[k]}</button>`).join("");paintTblEd("pf-tbl")}
+let pfProf="mixed";try{pfProf=localStorage.getItem(PFKEY)==="custom"?"custom":"mixed"}catch(e){}
+function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+["mixed","custom"].map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}"${PNAME[k]?` title="${PNAME[k]} « ${t().pnick[k]} »"`:""}>${k==="random"?t().random:k==="mixed"?"🎲 "+t().mixed:k==="custom"?"✏️ "+t().myTable:av(k,22)+t().prof[k]}</button>`).join("");paintTblEd("pf-tbl")}
 $("pf-prof").addEventListener("click",e=>{const b=e.target.closest("[data-pfprof]");if(!b||b.dataset.pfprof===pfProf)return;
   pfProf=b.dataset.pfprof;try{localStorage.setItem(PFKEY,pfProf)}catch(err){}paintPfProf();newPreflop()});
 let pf;
 function newPreflop(){
-  if(!["random","mixed","custom"].includes(pfProf)&&!PROFILES.includes(pfProf))pfProf="mixed";
+  if(pfProf!=="custom")pfProf="mixed";
   const ops=OPENERS(),pos=ops[rnd(ops.length)];
   let prof=!pers()?"gto":pfProf==="random"?PROFILES[rnd(PROFILES.length)]:pfProf,profs=null;
   if(pers()&&(pfProf==="mixed"||pfProf==="custom")){profs={};const a=actsFor(pos,null);for(const p in a)if(a[p].st==="wait")profs[p]=pfProf==="custom"?seatType(p):mixProf()}
