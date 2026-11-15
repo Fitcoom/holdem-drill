@@ -3958,6 +3958,7 @@ const ALLC=[];for(let a=1;a<52;a++)for(let b=0;b<a;b++)ALLC.push([a,b]);
 const VALT={gto:.6,tag:.62,nit:.75,weak:.72,lag:.5,maniac:.35,station:.7,whale:.6,live:.65,omc:.8};
 const CALLT={gto:.4,tag:.45,nit:.6,weak:.55,lag:.35,maniac:.25,station:.15,whale:.2,live:.3,omc:.6};
 const SLOW={station:.6,whale:.6,live:.5,omc:.5,weak:.5};
+const SENS={maniac:.4,whale:.5,station:.45,live:.7};
 function combosOf(codes){if(!codes)return ALLC.map(([a,b])=>({a,b,w:1}));const set=new Set(codes);return ALLC.filter(([a,b])=>set.has(handCode(a,b))).map(([a,b])=>({a,b,w:1}))}
 function heroRange(){const p=G.P[0],pos=plPos(0);switch(p.pf){case "open":return pos==="BB"?[...topShare(12)]:[...rangeFor(pos)];case "3bet":return [...topShare(6)];case "call":return [...topShare(20)];case "limp":return [...topShare(45)];default:return null}}
 function boardPct(){const g=G,key=g.board.join(",");if(g.bpKey!==key){const bd=new Set(g.board),arr=[];
@@ -3967,8 +3968,13 @@ function isDraw(a,b,bd){const cs=[a,b,...bd],su=[0,0,0,0];for(const c of cs)su[c
   for(let x=0;x<4;x++)if(su[x]===4&&((a&3)===x||(b&3)===x))return true;
   const rk=new Set(cs.map(c=>c>>2)),ha=a>>2,hb=b>>2;if(rk.has(12))rk.add(-1);
   for(let lo=-1;lo<=8;lo++){let n=0,hole=false;for(let r=lo;r<lo+5;r++)if(rk.has(r)){n++;if(r===ha||r===hb||r===-1&&(ha===12||hb===12))hole=true}if(n===4&&hole)return true}return false}
-function narrow(i,act,facing){const g=G,p=g.P[i];if(!p.rc||!g.board.length)return;const ty=p.ty||"gto",st=SIMP[ty]||SIMP.gto,pc=boardPct();
-  const vt=Math.min(.95,(VALT[ty]??.6)+(facing&&act==="raise"?.1:0)),ct=CALLT[ty]??.4,bw=Math.min(1,st.bluff*.5),before=p.rc.map(c=>c.w);
+function narrow(i,act,facing,f=.66,price=.25){const g=G,p=g.P[i];if(!p.rc||!g.board.length)return;const ty=p.ty||"gto",st=SIMP[ty]||SIMP.gto,pc=boardPct();
+  /* bet size: bigger bets and raises show stronger ranges and fewer bluffs; a bigger price to call
+     needs a stronger hand. Maniacs, whales and stations size and call with little thought, so less so. */
+  const sens=SENS[ty]??1,big=Math.max(-.4,Math.min(1.6,f-.66));
+  const vt=Math.min(.97,Math.max(.2,(VALT[ty]??.6)+(facing&&act==="raise"?.1:0)+big*.12*sens));
+  const ct=Math.min(.95,Math.max(.05,(CALLT[ty]??.4)+(price-.25)*.6*sens));
+  const bw=Math.min(1,st.bluff*.5*(1-Math.max(-.5,Math.min(.6,big*.45))*sens)),before=p.rc.map(c=>c.w);
   for(const c of p.rc){if(!c.w)continue;if(g.board.includes(c.a)||g.board.includes(c.b)){c.w=0;continue}
     const q=pc(evalH([c.a,c.b,...g.board])),dr=g.street<3&&isDraw(c.a,c.b,g.board);
     if(act==="raise"||act==="bet")c.w*=q>=vt?1:dr?Math.min(1,bw*2.5):bw;
@@ -4089,7 +4095,7 @@ function newHand(){const g=G,n=g.n;if(g.timer)clearTimeout(g.timer);g.snap=null;
   const sb=(g.btn+1)%n,bbI=(g.btn+2)%n;put(sb,.5);put(bbI,1);g.P[sb].last="SB";g.P[bbI].last="BB";g.toAct=(g.btn+3)%n;
   g.log.push(`<b>${t().plStreets[0]}</b> · ${plName(sb)} SB · ${plName(bbI)} BB`);step()}
 function actTxt(k,p,call){return t().plAct[k]+(k==="call"?" "+bb(call):k==="bet"||k==="raise"||k==="allin"?" "+bb(p.bet):"")}
-function doAct(i,kind,to){const g=G,p=g.P[i],call=r2(Math.min(g.curBet-p.bet,p.stack));
+function doAct(i,kind,to){const g=G,p=g.P[i],call=r2(Math.min(g.curBet-p.bet,p.stack)),ptB=potOf(),b0=p.bet;
   if((kind==="raise"||kind==="bet"||kind==="allin")&&r2(Math.min(to,p.bet+p.stack))<=g.curBet)kind=call>0?"call":"check";
   if(kind==="check"&&call>0)kind="call";
   let k=kind;const rn=g.raiseN;
@@ -4100,7 +4106,8 @@ function doAct(i,kind,to){const g=G,p=g.P[i],call=r2(Math.min(g.curBet-p.bet,p.s
   p.acted=true;p.lastK=k;p.last=actTxt(k,p,call);g.log.push(`${plName(i)}: ${p.last}`);
   if(["raise","bet"].includes(k)||k==="allin"&&g.curBet===p.bet&&p.bet>0)g.aggr=i;
   if(g.street===0&&kind!=="fold"&&kind!=="check")p.pf=kind==="call"?(rn===0?"limp":"call"):(rn===0?"open":"3bet");
-  if(g.street>0&&kind!=="fold")narrow(i,k==="allin"?(g.aggr===i?"raise":"call"):k,call>0)}
+  if(g.street>0&&kind!=="fold"){const add=r2(p.bet-b0),f=Math.max(0,add-call)/Math.max(.5,ptB+call),price=call>0?Math.min(add,call)/(ptB+call):0;
+    narrow(i,k==="allin"?(g.aggr===i?"raise":"call"):k,call>0,f,price)}}
 function roundDone(){const g=G,live=g.P.filter(p=>!p.folded);if(live.length<=1)return true;
   const a=g.P.filter(canAct),top=Math.max(...live.map(p=>p.bet));
   if(a.length===0)return true;if(a.length===1&&a[0].bet>=top)return true;
