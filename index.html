@@ -116,6 +116,15 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .pseat.hero .pbox{border-color:var(--brass);background:var(--brass-soft)}
 .pseat.raise .pbox,.pseat.limp .pbox{border-color:var(--tb)} .pseat.limp .pbox small{color:var(--tb);font-weight:700} .pseat.raise .pbox small{color:var(--tb);font-weight:700}
 .mini{display:flex;gap:2px;min-height:24px;align-items:flex-end}
+.hc{display:flex;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+.hc .hcb{width:20px;height:28px;display:block}
+.hc .hcb+.hcb{margin-left:-7px;transform:rotate(9deg) translateY(1px)} .hc .hcb:first-child{transform:rotate(-5deg)}
+.hc.fold{filter:grayscale(1) brightness(.85)}
+.cseat{position:relative}
+.hc.big{position:absolute;left:62%;top:34%;z-index:3}
+.hc.big .hcb{width:28px;height:39px} .hc.big .hcb+.hcb{margin-left:-10px}
+.ring.n9 .hc.big .hcb{width:22px;height:30px} .ring.n9 .hc.big .hcb+.hcb{margin-left:-8px}
+@media (max-width:420px){.hc.big .hcb{width:21px;height:29px}.hc.big .hcb+.hcb{margin-left:-8px}.ring.n9 .hc.big{top:2%;left:70%}.ring.n9 .hc.big .hcb{width:16px;height:22px}.ring.n9 .hc.big .hcb+.hcb{margin-left:-6px}.hc .hcb{width:16px;height:22px}}
 .mini span:not(.card){width:17px;height:24px;border-radius:3px;background:repeating-linear-gradient(45deg,var(--back-a) 0 3px,var(--back-b) 3px 6px);border:1.5px solid var(--card-bg)}
 .bet{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-mono);font-size:12px;color:var(--on-felt);display:flex;align-items:center;gap:4px;z-index:1;font-variant-numeric:tabular-nums}
 .bet i{width:11px;height:11px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px rgba(255,255,255,.35) inset}
@@ -3440,11 +3449,11 @@ function tableView(o){
     }else{
       const [x,y]=seatXY(k,n);
       const sub=a.sub!=null?a.sub:a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:bet?bb(bet):t().toAct;
-      const cards=a.cards?cardsHTML(a.cards,"sm"):a.av?av(a.av,30):a.st==="fold"?"":"<span></span><span></span>";
+      const cards=a.cards?cardsHTML(a.cards,"sm"):holeCards(a.st==="fold");
       if(a.av&&!a.cards){ // character seat: portrait, position, type and bet in one capsule
         const act=a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:a.st==="limp"?`Limp ${bb(bet)}`:bet?bb(bet):t().toAct;
         const tx=x<22?-22:x>78?-78:-50;
-        h+=`<div class="pseat char ${a.st}${win}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${av(a.av,52)}<div class="cinfo"><b>${lbl(pos)}<span class="cname"> · ${PNAME[a.av]}</span></b><span class="ctype" style="background:${AVC[a.av]}">${PSHORT[a.av]}</span><span class="cbet">${act}</span></div></div></div>`;
+        h+=`<div class="pseat char ${a.st}${win}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${av(a.av,52)}${holeCards(a.st==="fold"," big")}<div class="cinfo"><b>${lbl(pos)}<span class="cname"> · ${PNAME[a.av]}</span></b><span class="ctype" style="background:${AVC[a.av]}">${PSHORT[a.av]}</span><span class="cbet">${act}</span></div></div></div>`;
       }else{
       h+=`<div class="pseat ${a.st}${win}" style="left:${x}%;top:${y}%"><div class="mini">${cards}</div><div class="pbox">${lbl(pos)}<small>${sub}</small></div></div>`;
       if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;}
@@ -3477,6 +3486,9 @@ const AVC={gto:"#3d6fb6",tag:"#2f7a5c",nit:"#8a8f98",weak:"#7fa3c4",lag:"#b4532d
 const PSHORT={gto:"GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Station",whale:"Whale",live:"Rec",omc:"OMC"};
 const PNAME={gto:"Ada",tag:"Marcus",nit:"Harold",weak:"Nora",lag:"Vince",maniac:"Roxy",station:"Larry",whale:"Baron",live:"Dale",omc:"Walt"};
 /* portraits: original illustrations generated for this app (av/<profile>.webp, 256 px) */
+/* hole-card back, drawn in the portraits' cartoon style (ink outline, cel highlight, spade medallion) */
+const HCB='<svg class="hcb" viewBox="0 0 26 36" aria-hidden="true"><rect x="1" y="1" width="24" height="34" rx="3.5" fill="#f7eedc" stroke="#22182a" stroke-width="1.8"/><rect x="3.6" y="3.6" width="18.8" height="28.8" rx="2" fill="#b8322a" stroke="#22182a" stroke-width="1"/><path d="M3.6 10.8L10.8 3.6M3.6 18L18 3.6M3.6 25.2L22.4 6.4M5.2 32.4L22.4 15.2M12.4 32.4L22.4 22.4M19.6 32.4L22.4 29.6M10.8 32.4L3.6 25.2M18 32.4L3.6 18M22.4 29.6L3.6 10.8M22.4 22.4L10.8 10.8M22.4 15.2L18 10.8M22.4 6.4L19.6 3.6" stroke="#d9574c" stroke-width="1.2"/><circle cx="13" cy="18" r="5.6" fill="#f7eedc" stroke="#22182a" stroke-width="1.2"/><path d="M13 14.2C11.2 16.2 9.8 17.2 9.8 18.8C9.8 20.4 11.6 21 12.6 19.8L11.9 22.2H14.1L13.4 19.8C14.4 21 16.2 20.4 16.2 18.8C16.2 17.2 14.8 16.2 13 14.2Z" fill="#22182a"/><path d="M5 6.2Q5 4.6 6.6 4.6H9" stroke="#fff" stroke-width="1.2" opacity=".55" fill="none" stroke-linecap="round"/></svg>';
+const holeCards=(fold,cls="")=>`<div class="hc${cls}${fold?" fold":""}">${HCB}${HCB}</div>`;
 function av(prof,size){if(!AVC[prof])return "";return `<img class="av" src="av/${prof}.webp" width="${size}" height="${size}" alt="" loading="lazy" style="background:${AVC[prof]}">`}
 /* ---------- Mode: Classic (GTO-style charts only) or Personalities ---------- */
 const MKEY="holdem-drill-mode";
