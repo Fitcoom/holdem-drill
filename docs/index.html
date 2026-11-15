@@ -462,7 +462,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
   plA:{best:a=>`Best play here: <b>${a}</b>.`,gto:"That's the GTO play: fine, but the exploit earns more against these players.",limp:"Open-limping outside the small blind is a leak: raise or fold.",tight:"Too tight: this hand is a profitable open against the players behind.",loose:"Too loose: this hand loses money here.",
     bbCheck:"Free flop: checking is fine.",isoMiss:"Strong hand against limpers: raise to isolate.",iso:"Good: punish the limpers with a raise.",
     eq:e=>`Your equity vs their likely ranges ≈ <b>${e}</b>.`,eqNeed:(e,n)=>`Your equity vs their likely ranges ≈ <b>${e}</b>; you need about <b>${n}</b> to continue.`,
-    strongBet:p=>`When a ${p} bets, they usually have it.`,lightBet:p=>`A ${p} bets with lots of weak hands: you can call lighter.`,
+    strongBet:p=>`When a ${p} bets, they usually have it.`,strongBut:p=>`A ${p}'s bet is usually strong, but your hand is still good enough to continue.`,lightBut:p=>`A ${p} bets with lots of weak hands, but even so your hand is too weak to continue.`,lightBet:p=>`A ${p} bets with lots of weak hands: you can call lighter.`,
     valRaise:"Raise for value: worse hands will pay you.",foldOk:"Folding is right: you don't get the price.",foldBad:"Folding gave up a hand with far more equity than you needed: call, or raise for value.",
     callOk:"Calling is right: the price is good.",callBad:"Not enough equity to call.",thin:"Thin: calling or checking is enough here.",
     bluffOk:"Good bluff spot: these players fold too much.",bluffBad:"Don't bluff players who never fold.",value:"Bet for value: they call with worse.",
@@ -583,7 +583,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
   plA:{best:a=>`Meilleur choix ici : <b>${a}</b>.`,gto:"C'est le jeu GTO : correct, mais l'exploit rapporte plus contre ces joueurs.",limp:"Limper d'entrée hors de la petite blinde est une fuite : relance ou fold.",tight:"Trop serré : cette main est une ouverture rentable contre les joueurs derrière.",loose:"Trop large : cette main perd de l'argent ici.",
     bbCheck:"Flop gratuit : checker est correct.",isoMiss:"Main forte contre des limpeurs : relance pour isoler.",iso:"Bien : tu punis les limpeurs avec une relance.",
     eq:e=>`Ton équité contre leurs ranges probables ≈ <b>${e}</b>.`,eqNeed:(e,n)=>`Ton équité contre leurs ranges probables ≈ <b>${e}</b> ; il te faut environ <b>${n}</b> pour continuer.`,
-    strongBet:p=>`Quand un ${p} mise, il a généralement la main.`,lightBet:p=>`Un ${p} mise avec beaucoup de mains faibles : tu peux payer plus large.`,
+    strongBet:p=>`Quand un ${p} mise, il a généralement la main.`,strongBut:p=>`La mise d'un ${p} est généralement forte, mais ta main reste assez bonne pour continuer.`,lightBut:p=>`Un ${p} mise avec beaucoup de mains faibles, mais même là ta main est trop faible pour continuer.`,lightBet:p=>`Un ${p} mise avec beaucoup de mains faibles : tu peux payer plus large.`,
     valRaise:"Relance pour la value : des mains moins bonnes vont te payer.",foldOk:"Folder est correct : tu n'as pas la cote.",foldBad:"En foldant, tu abandonnes une main qui avait bien plus d'équité que nécessaire : paie, ou relance pour la value.",
     callOk:"Payer est correct : le prix est bon.",callBad:"Pas assez d'équité pour payer.",thin:"Limite : payer ou checker suffit ici.",
     bluffOk:"Bon spot de bluff : ces joueurs foldent trop.",bluffBad:"Ne bluffe pas des joueurs qui ne foldent jamais.",value:"Mise pour la value : ils paient avec moins bien.",
@@ -3979,7 +3979,7 @@ function gradeHero(kind){const g=G,h=g.P[0],A=t().plA,call=r2(Math.min(g.curBet-
     const ag=g.aggr>0?g.P[g.aggr]:null,adj=call>0&&ag?BETADJ[ag.ty]||0:0,need=call>0?call/(pt+call):0,need2=need+adj;
     const types=live.map(i=>g.P[i].ty),callers=types.some(x=>["station","whale","live"].includes(x)),folders=types.every(x=>["nit","weak","omc"].includes(x));
     why.push(call>0?A.eqNeed(pctS(eq),pctS(Math.max(0,need2))):A.eq(pctS(eq)));
-    if(ag&&call>0&&adj>=.06)why.push(A.strongBet(t().prof[ag.ty]));if(ag&&call>0&&adj<=-.05)why.push(A.lightBet(t().prof[ag.ty]));
+    if(ag&&call>0&&(adj>=.06||adj<=-.05)){const ok=eq-need2>=0,pn=t().prof[ag.ty];why.push(adj>0?(ok?A.strongBut(pn):A.strongBet(pn)):(ok?A.lightBet(pn):A.lightBut(pn)))}
     if(call>0){const m=eq-need2;
       if(g.street===0){const val=r<=(ag&&["lag","maniac"].includes(ag.ty)?9:4.5);
         if(act==="fold")sc=m<.05?(val?30:90):m<.12?55:25;else if(act==="call")sc=m>=.05?(val?70:90):m>=0?55:25;else sc=val?95:m>=.05?55:25;
