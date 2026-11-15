@@ -184,6 +184,12 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .hc.big.shown{display:flex;gap:1px} .hc.big.shown .card{transform:none}
 .pl-sess{display:flex;gap:14px;align-items:center;flex-wrap:wrap} .pl-sess .pos{color:var(--ok,#3fb950)} .pl-sess .neg{color:var(--ko,#f85149)}
 .pl-ans{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))} .plres{font-weight:700;text-align:center}
+.pl-grade{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;margin:10px 0}
+.pl-grade.ok{border-color:#30a46c} .pl-grade.ko{border-color:#e5484d}
+.pl-grade .gauge{width:130px;flex:none} .pl-grade .needle{transform-origin:70px 74px;transition:transform .9s cubic-bezier(.3,1.5,.5,1)}
+.pl-g{display:flex;flex-direction:column;align-items:center;flex:none}.pl-prec{display:flex;flex-direction:column;align-items:center;line-height:1;margin-top:6px}.pl-prec span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.7}.pl-prec b{font-family:var(--f-display);font-size:30px}
+.pl-grade .verdict{font-size:20px} .pl-lv{font-weight:700;margin:2px 0 4px} .pl-grade p{margin:3px 0}
+@media (max-width:420px){.pl-grade{flex-direction:column;align-items:center;text-align:center}}
 .pl-coach{display:flex;gap:6px;align-items:center;font-size:13px;margin:10px 0}
 .pl-log{font-size:12.5px;margin-top:6px} .pl-log ol{margin:6px 0;padding-left:20px;max-height:220px;overflow:auto}
 .vfaces{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 2px}
@@ -306,6 +312,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
     <div class="bar pl-sess" id="pl-sess"></div>
     <div class="ring" id="pl-table"></div>
     <div id="pl-ctrl"></div>
+    <div class="pl-grade" id="pl-grade" hidden></div>
     <label class="pl-coach"><input type="checkbox" id="pl-coach"> <span data-t="plCoach"></span></label>
     <details class="pl-log"><summary data-t="plLog"></summary><ol id="pl-log"></ol></details>
   </section>
@@ -429,7 +436,15 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
   settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
-  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs random hands ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",myTable:"My table",tblHint:"Pick the player type at each seat. Your own seat changes every hand: whoever sits there sits out that hand.",otherFaces:"Also at your tables:",gtoPick:(g,b)=>`You picked the GTO play (<b>${g}</b>). It is balanced and can't be exploited, so it counts as right. But these players have leaks: <b>${b}</b> exploits them and earns more. Here is why:`,pfMix:"Mixed table: the most dangerous player behind decides. One LAG or maniac behind tightens your range; open wider only when everyone behind folds too much; limp only when everyone behind is passive and a limper is there.",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs random hands ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plLv:["Blunder","Mistake","Questionable","Good","Excellent"],
+  plA:{best:a=>`Best play here: <b>${a}</b>.`,gto:"That's the GTO play: fine, but the exploit earns more against these players.",limp:"Open-limping outside the small blind is a leak: raise or fold.",tight:"Too tight: this hand is a profitable open against the players behind.",loose:"Too loose: this hand loses money here.",
+    bbCheck:"Free flop: checking is fine.",isoMiss:"Strong hand against limpers: raise to isolate.",iso:"Good: punish the limpers with a raise.",
+    eq:e=>`Your equity vs their likely ranges ≈ <b>${e}</b>.`,eqNeed:(e,n)=>`Your equity vs their likely ranges ≈ <b>${e}</b>; you need about <b>${n}</b> to continue.`,
+    strongBet:p=>`When a ${p} bets, they usually have it.`,lightBet:p=>`A ${p} bets with lots of weak hands: you can call lighter.`,
+    valRaise:"Raise for value: worse hands will pay you.",foldOk:"Folding is right: you don't get the price.",foldBad:"You had the odds to continue.",
+    callOk:"Calling is right: the price is good.",callBad:"Not enough equity to call.",thin:"Thin: calling or checking is enough here.",
+    bluffOk:"Good bluff spot: these players fold too much.",bluffBad:"Don't bluff players who never fold.",value:"Bet for value: they call with worse.",
+    missed:"Missed value: bet your strong hands, especially against calling stations.",thinCheck:"Checking is OK, a small value bet was possible.",checkOk:"Checking is right with this hand."},myTable:"My table",tblHint:"Pick the player type at each seat. Your own seat changes every hand: whoever sits there sits out that hand.",otherFaces:"Also at your tables:",gtoPick:(g,b)=>`You picked the GTO play (<b>${g}</b>). It is balanced and can't be exploited, so it counts as right. But these players have leaks: <b>${b}</b> exploits them and earns more. Here is why:`,pfMix:"Mixed table: the most dangerous player behind decides. One LAG or maniac behind tightens your range; open wider only when everyone behind folds too much; limp only when everyone behind is passive and a limper is there.",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
   prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec",omc:"OMC"},
   pnick:{gto:"The Solver",tag:"The Grinder",nit:"The Rock",weak:"Second Thoughts",lag:"Pressure",maniac:"All-In",station:"Show Me",whale:"Deep Pockets",live:"Friday Night",omc:"Coffee"},
   ptag:{gto:"Mixes every frequency. Feels nothing.",tag:"Twelve tables, one plan: value.",nit:"Last bluffed in 1998.",weak:"Wants to win. Hates to lose.",lag:"Bets because you won't.",maniac:"Raises first. Looks at her cards later.",station:"Never folds a pair. Or anything else.",whale:"Here for fun, paying for the whole table.",live:"Limps, calls, tells great stories.",omc:"Raises once a night. Believe him."},
@@ -542,7 +557,15 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
   settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
-  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre des mains au hasard ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",myTable:"Ma table",tblHint:"Choisis le type de joueur à chaque siège. Ton siège change à chaque main : le joueur qui s'y trouve ne joue pas cette main.",otherFaces:"Aussi à tes tables :",gtoPick:(g,b)=>`Tu as choisi le jeu GTO (<b>${g}</b>). Il est équilibré et inexploitable, donc il compte comme bon. Mais ces joueurs ont des failles : <b>${b}</b> les exploite et rapporte plus. Voici pourquoi :`,pfMix:"Table mixte : c'est le joueur le plus dangereux derrière toi qui décide. Un seul LAG ou maniaque derrière resserre ta range ; ouvre plus large seulement si tout le monde derrière fold trop ; limpe seulement si tout le monde derrière est passif et qu'un limpeur est là.",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre des mains au hasard ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plLv:["Gaffe","Erreur","Discutable","Bon","Excellent"],
+  plA:{best:a=>`Meilleur choix ici : <b>${a}</b>.`,gto:"C'est le jeu GTO : correct, mais l'exploit rapporte plus contre ces joueurs.",limp:"Limper d'entrée hors de la petite blinde est une fuite : relance ou fold.",tight:"Trop serré : cette main est une ouverture rentable contre les joueurs derrière.",loose:"Trop large : cette main perd de l'argent ici.",
+    bbCheck:"Flop gratuit : checker est correct.",isoMiss:"Main forte contre des limpeurs : relance pour isoler.",iso:"Bien : tu punis les limpeurs avec une relance.",
+    eq:e=>`Ton équité contre leurs ranges probables ≈ <b>${e}</b>.`,eqNeed:(e,n)=>`Ton équité contre leurs ranges probables ≈ <b>${e}</b> ; il te faut environ <b>${n}</b> pour continuer.`,
+    strongBet:p=>`Quand un ${p} mise, il a généralement la main.`,lightBet:p=>`Un ${p} mise avec beaucoup de mains faibles : tu peux payer plus large.`,
+    valRaise:"Relance pour la value : des mains moins bonnes vont te payer.",foldOk:"Folder est correct : tu n'as pas la cote.",foldBad:"Tu avais la cote pour continuer.",
+    callOk:"Payer est correct : le prix est bon.",callBad:"Pas assez d'équité pour payer.",thin:"Limite : payer ou checker suffit ici.",
+    bluffOk:"Bon spot de bluff : ces joueurs foldent trop.",bluffBad:"Ne bluffe pas des joueurs qui ne foldent jamais.",value:"Mise pour la value : ils paient avec moins bien.",
+    missed:"Value manquée : mise tes grosses mains, surtout contre les calling stations.",thinCheck:"Checker passe, une petite mise de value était possible.",checkOk:"Checker est correct avec cette main."},myTable:"Ma table",tblHint:"Choisis le type de joueur à chaque siège. Ton siège change à chaque main : le joueur qui s'y trouve ne joue pas cette main.",otherFaces:"Aussi à tes tables :",gtoPick:(g,b)=>`Tu as choisi le jeu GTO (<b>${g}</b>). Il est équilibré et inexploitable, donc il compte comme bon. Mais ces joueurs ont des failles : <b>${b}</b> les exploite et rapporte plus. Voici pourquoi :`,pfMix:"Table mixte : c'est le joueur le plus dangereux derrière toi qui décide. Un seul LAG ou maniaque derrière resserre ta range ; ouvre plus large seulement si tout le monde derrière fold trop ; limpe seulement si tout le monde derrière est passif et qu'un limpeur est là.",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
   prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2",omc:"OMC"},
   pnick:{gto:"La Solveuse",tag:"Le Grinder",nit:"Le Roc",weak:"Mille Doutes",lag:"La Pression",maniac:"Tapis",station:"Montre-moi",whale:"Poches Profondes",live:"Vendredi Soir",omc:"Café"},
   ptag:{gto:"Mixe chaque fréquence. Ne ressent rien.",tag:"Douze tables, un seul plan : la value.",nit:"Son dernier bluff date de 1998.",weak:"Veut gagner. Déteste perdre.",lag:"Mise parce que toi, tu n'oses pas.",maniac:"Relance d'abord. Regarde ses cartes après.",station:"Ne fold jamais une paire. Ni rien d'autre.",whale:"Là pour s'amuser, paie pour toute la table.",live:"Limpe, paie, raconte de bonnes histoires.",omc:"Relance une fois par soir. Crois-le."},
@@ -3896,6 +3919,67 @@ $("size").addEventListener("click",e=>{const b=e.target.closest("[data-size]");i
   paintSize();for(const k of ["preflop","defense","equity","showdown"])if(started[k])INIT[k]();if(G)newGame();applyLang()});
 
 
+
+/* ---------- Play coach: grade every hero decision (0-100) against these opponents ----------
+   Preflop unopened: same logic as the Preflop drill (players behind decide); the GTO play scores 75.
+   Otherwise: equity vs the bots' likely ranges (from what they did preflop), against the price,
+   adjusted for who is betting (a nit's bet is strong, a maniac's is not). */
+const BETADJ={nit:.08,weak:.08,omc:.1,station:.1,whale:.05,live:.06,gto:0,tag:.02,lag:-.05,maniac:-.1};
+function botRange(i){const p=G.P[i],s=SIMP[p.ty]||SIMP.gto,pos=plPos(i),L=LIMPERS[p.ty];
+  switch(p.pf){case "open":return [...(L?L.raise:pos==="BB"?topShare(s.tb*1.5):openRange(p.ty,pos))];
+    case "3bet":return [...topShare(Math.max(2,s.tb))];
+    case "limp":return L?[...L.limp,...L.raise]:[...topShare(Math.min(60,s.cont*1.5))];
+    case "call":return [...topShare(s.cont)];default:return null}}
+function pairFrom(r,used){for(let k=0;k<30;k++){const c=r[rnd(r.length)],a=R.indexOf(c[0]),b=R.indexOf(c[1]),s1=rnd(4);let s2=rnd(4);
+    if(c.length===3&&c[2]==="s")s2=s1;else while(s2===s1)s2=rnd(4);const x=a*4+s1,y=b*4+s2;if(!used.has(x)&&!used.has(y))return [x,y]}return null}
+function randPair(used){let x,y;do x=rnd(52);while(used.has(x));do y=rnd(52);while(used.has(y)||y===x);return [x,y]}
+function rangeEq(h,board,opps,it){let w=0;for(let k=0;k<it;k++){const used=new Set([...h,...board]),hs=[];
+    for(const i of opps){const r=G.P[i].rng||botRange(i);const c=(r&&r.length&&pairFrom(r,used))||randPair(used);hs.push(c);used.add(c[0]);used.add(c[1])}
+    const rest=[];for(let c=0;c<52;c++)if(!used.has(c))rest.push(c);const nd=5-board.length;
+    for(let j=0;j<nd;j++){const m=j+rnd(rest.length-j);[rest[j],rest[m]]=[rest[m],rest[j]]}
+    const bd=board.concat(rest.slice(0,nd)),me=evalH(h.concat(bd));let lose=false,tie=0;
+    for(const o of hs){const sc=evalH(o.concat(bd));if(sc>me){lose=true;break}if(sc===me)tie++}if(!lose)w+=1/(tie+1)}return w/it}
+function gradeHero(kind){const g=G,h=g.P[0],A=t().plA,call=r2(Math.min(g.curBet-h.bet,h.stack)),pt=potOf(),pos=plPos(0);
+  const act=kind==="allin"||kind==="bet"?"raise":kind,live=[];g.P.forEach((p,i)=>{if(i&&!p.folded)live.push(i)});
+  const code=handCode(h.cards[0],h.cards[1]),r=SRANK[code]??100,why=[];let sc;
+  const pctS=x=>Math.round(x*100)+(lang==="fr"?" %":"%");
+  if(g.street===0&&g.raiseN===0&&pos!=="BB"){
+    const behind=live.filter(i=>!g.P[i].acted).map(i=>g.P[i].ty),plan=heroPlan(pos,behind.length?behind:["gto"]),gp=heroPlan(pos,"gto");
+    const pick=pl=>pl.trap.has(code)?"call":pl.raise.has(code)?"raise":pl.limp.has(code)?"call":"fold";
+    const best=pick(plan),gb=pick(gp);why.push(A.best(t().pfActs[best==="raise"?2:best==="call"?1:0]));
+    if(act===best)sc=95;else if(act===gb){sc=75;why.push(A.gto)}else if(act==="call"&&pos!=="SB"){sc=15;why.push(A.limp)}else if(act==="fold"){sc=35;why.push(A.tight)}else{sc=30;why.push(A.loose)}
+    if(act===best&&plan.key&&plan.key!=="gto"&&t().pfNote[plan.key])why.push(t().pfNote[plan.key]);
+  }else if(g.street===0&&g.raiseN===0){ // BB, nobody raised
+    if(act==="check")sc=r<=8&&live.some(i=>g.P[i].pf==="limp")?60:85;else sc=r<=8?92:r<=15?60:35;
+    why.push(act==="check"?(sc>=80?A.bbCheck:A.isoMiss):sc>=80?A.iso:A.loose);
+  }else{
+    const opp=g.street===0?[g.aggr]:live.slice(0,3),eq=rangeEq(h.cards,g.board,opp.filter(i=>i>0&&i<g.n),g.street===0?400:300);
+    const ag=g.aggr>0?g.P[g.aggr]:null,adj=call>0&&ag?BETADJ[ag.ty]||0:0,need=call>0?call/(pt+call):0,need2=need+adj;
+    const types=live.map(i=>g.P[i].ty),callers=types.some(x=>["station","whale","live"].includes(x)),folders=types.every(x=>["nit","weak","omc"].includes(x));
+    why.push(call>0?A.eqNeed(pctS(eq),pctS(Math.max(0,need2))):A.eq(pctS(eq)));
+    if(ag&&call>0&&adj>=.06)why.push(A.strongBet(t().prof[ag.ty]));if(ag&&call>0&&adj<=-.05)why.push(A.lightBet(t().prof[ag.ty]));
+    if(call>0){const m=eq-need2;
+      if(g.street===0){const val=r<=(ag&&["lag","maniac"].includes(ag.ty)?9:4.5);
+        if(act==="fold")sc=m<.05?(val?30:90):m<.12?55:25;else if(act==="call")sc=m>=.05?(val?70:90):m>=0?55:25;else sc=val?95:m>=.05?55:25;
+        if(act!=="raise"&&val)why.push(A.valRaise);}
+      else if(act==="fold"){sc=m<0?90:m<.05?60:25;why.push(m<0?A.foldOk:A.foldBad)}
+      else if(act==="call"){sc=m>=0?(eq>=.7&&callers?75:90):m>-.05?55:20;why.push(m>=0?(eq>=.7&&callers?A.valRaise:A.callOk):A.callBad)}
+      else{sc=eq>=.65?95:eq>=need2?60:folders&&g.street<3?50:20;why.push(eq>=.65?A.valRaise:eq>=need2?A.thin:folders?A.bluffOk:A.bluffBad)}}
+    else{const vT=callers?.5:.58;
+      if(act==="raise"){sc=eq>=vT?95:folders&&eq<.35?75:eq<.35?(callers?15:35):55;why.push(eq>=vT?A.value:folders&&eq<.35?A.bluffOk:eq<.35?(callers?A.bluffBad:A.thin):A.thin)}
+      else{sc=eq>=vT+.12?35:eq>=vT?60:85;why.push(eq>=vT+.12?A.missed:eq>=vT?A.thinCheck:A.checkOk)}}
+  }
+  return {sc,why}}
+function gauge(sc){const a=-90+sc*1.8;return `<svg class="gauge" viewBox="0 0 140 84" aria-hidden="true"><defs><linearGradient id="pl-gg" x1="0" x2="1"><stop offset="0" stop-color="#e5484d"/><stop offset=".5" stop-color="#f5c542"/><stop offset="1" stop-color="#30a46c"/></linearGradient></defs>
+  <path d="M14 74A56 56 0 0 1 126 74" stroke="url(#pl-gg)" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M14 74A56 56 0 0 1 126 74" stroke="${INK2}" stroke-width="15.5" fill="none" stroke-linecap="round" opacity=".18" stroke-dasharray="1 9"/>
+  <g class="needle" style="transform:rotate(-90deg)" data-a="${a}"><path d="M70 74L65.5 71L70 22L74.5 71Z" fill="var(--ink)" stroke="var(--surface)" stroke-width="1"/></g><circle cx="70" cy="74" r="6.5" fill="var(--ink)"/></svg>`}
+const INK2="#22182a";
+function showGrade(gr){const ok=gr.sc>=65,L=t().plLv,lv=gr.sc>=85?L[4]:gr.sc>=65?L[3]:gr.sc>=45?L[2]:gr.sc>=25?L[1]:L[0];
+  const el=$("pl-grade");el.hidden=false;el.className="pl-grade "+(ok?"ok":"ko");
+  el.innerHTML=`<div class="pl-g">${gauge(gr.sc)}<div class="pl-prec"><span>${t().plPrec}</span><b>${gr.sc}</b></div></div><div><div class="verdict ${ok?"ok":"ko"}">${ok?t().plRight:t().plWrong}</div><div class="pl-lv">${lv}</div>${gr.why.map(x=>`<p class="muted">${x}</p>`).join("")}</div>`;
+  const n=el.querySelector(".needle");requestAnimationFrame(()=>requestAnimationFrame(()=>{n.style.transform=`rotate(${n.dataset.a}deg)`}))}
+
 /* ---------- Play: full hands against the personalities ----------
    Every street, the button moves each hand, stacks carry over, busted players rebuy 100bb.
    Bots: preflop from their own ranges (openRange / LIMPERS) and a hand ranking; postflop from a quick
@@ -3923,7 +4007,7 @@ const plPos=i=>{const n=G.n,k=(i-G.btn+n)%n;return ORDER()[(k-3+n)%n]};
 const plName=i=>i?(pers()?PNAME[G.P[i].face]:lbl(plPos(i))):t().you;
 const potOf=()=>r2(G.P.reduce((a,p)=>a+p.inv,0));
 const canAct=p=>!p.folded&&!p.allin;
-function newGame(){if(G&&G.timer)clearTimeout(G.timer);const n=size,tb=myTable();
+function newGame(){if(G&&G.timer)clearTimeout(G.timer);$("pl-grade").hidden=true;const n=size,tb=myTable();
   G={n,btn:rnd(n),done:0,inv:100,P:[{hero:true,stack:100}]};const ty={};
   for(let i=1;i<n;i++)ty[i]=!pers()?"gto":plProf==="custom"?(PROFILES.includes(tb[plPos(i)])?tb[plPos(i)]:mixProf()):mixProf();
   const faces=castFaces(ty);for(let i=1;i<n;i++)G.P.push({ty:ty[i],face:faces[i],stack:100});
@@ -3931,21 +4015,23 @@ function newGame(){if(G&&G.timer)clearTimeout(G.timer);const n=size,tb=myTable()
 function put(i,x){const p=G.P[i];x=r2(Math.min(x,p.stack));p.stack=r2(p.stack-x);p.bet=r2(p.bet+x);p.inv=r2(p.inv+x);if(p.stack<=0){p.stack=0;p.allin=true}}
 function newHand(){const g=G,n=g.n;if(g.timer)clearTimeout(g.timer);g.btn=(g.btn+1)%n;
   for(const p of g.P){if(p.stack<1){if(p.hero)g.inv=r2(g.inv+100-p.stack);p.stack=100}
-    Object.assign(p,{bet:0,inv:0,folded:false,allin:false,acted:false,last:"",lastK:"",win:0,show:false,score:0})}
+    Object.assign(p,{bet:0,inv:0,folded:false,allin:false,acted:false,last:"",lastK:"",win:0,show:false,score:0,pf:null,rng:null})}
   const deck=shuffle([...Array(52).keys()]);g.P.forEach((p,i)=>p.cards=[deck[2*i],deck[2*i+1]].sort((a,b)=>b-a));g.deck=deck.slice(2*n);
-  Object.assign(g,{board:[],street:0,curBet:1,minR:1,raiseN:0,over:false,log:[],result:"",start:g.P[0].stack});
+  Object.assign(g,{board:[],street:0,curBet:1,minR:1,raiseN:0,over:false,log:[],result:"",start:g.P[0].stack,aggr:-1});
   const sb=(g.btn+1)%n,bbI=(g.btn+2)%n;put(sb,.5);put(bbI,1);g.P[sb].last="SB";g.P[bbI].last="BB";g.toAct=(g.btn+3)%n;
   g.log.push(`<b>${t().plStreets[0]}</b> · ${plName(sb)} SB · ${plName(bbI)} BB`);step()}
 function actTxt(k,p,call){return t().plAct[k]+(k==="call"?" "+bb(call):k==="bet"||k==="raise"||k==="allin"?" "+bb(p.bet):"")}
 function doAct(i,kind,to){const g=G,p=g.P[i],call=r2(Math.min(g.curBet-p.bet,p.stack));
   if((kind==="raise"||kind==="bet"||kind==="allin")&&r2(Math.min(to,p.bet+p.stack))<=g.curBet)kind=call>0?"call":"check";
   if(kind==="check"&&call>0)kind="call";
-  let k=kind;
+  let k=kind;const rn=g.raiseN;
   if(kind==="fold")p.folded=true;
   else if(kind==="call"){put(i,call);if(p.allin)k="allin"}
   else if(kind!=="check"){to=r2(Math.min(to,p.bet+p.stack));const inc=r2(to-g.curBet),wasBet=g.curBet===0;put(i,r2(to-p.bet));
     for(const q of g.P)if(q!==p)q.acted=false;if(inc>=g.minR)g.minR=inc;g.curBet=Math.max(g.curBet,to);g.raiseN++;k=p.allin?"allin":wasBet?"bet":"raise"}
-  p.acted=true;p.lastK=k;p.last=actTxt(k,p,call);g.log.push(`${plName(i)}: ${p.last}`)}
+  p.acted=true;p.lastK=k;p.last=actTxt(k,p,call);g.log.push(`${plName(i)}: ${p.last}`);
+  if(["raise","bet"].includes(k)||k==="allin"&&g.curBet===p.bet&&p.bet>0)g.aggr=i;
+  if(g.street===0&&i>0&&kind!=="fold"&&kind!=="check")p.pf=kind==="call"?(rn===0?"limp":"call"):(rn===0?"open":"3bet")}
 function roundDone(){const g=G,live=g.P.filter(p=>!p.folded);if(live.length<=1)return true;
   const a=g.P.filter(canAct),top=Math.max(...live.map(p=>p.bet));
   if(a.length===0)return true;if(a.length===1&&a[0].bet>=top)return true;
@@ -3956,9 +4042,10 @@ function step(){const g=G;if(g.over)return paintPlay();
   let i=g.toAct;for(let k=0;k<g.n;k++){const p=g.P[i];if(canAct(p)&&(!p.acted||p.bet<g.curBet))break;i=(i+1)%g.n}g.toAct=i;
   paintPlay();if(i===0)return;
   g.timer=setTimeout(()=>{botAct(i);g.toAct=(i+1)%g.n;step()},650)}
-function heroAct(kind,to){const g=G;if(!g||g.over||g.toAct!==0)return;doAct(0,kind,to);g.toAct=1%g.n;step()}
+function heroAct(kind,to){const g=G;if(!g||g.over||g.toAct!==0)return;const gr=gradeHero(kind);(g.grades=g.grades||[]).push(gr.sc);showGrade(gr);doAct(0,kind,to);g.toAct=1%g.n;step()}
 function nextStreet(){const g=G;for(const p of g.P){p.bet=0;p.acted=false;if(!p.folded&&!p.allin){p.last="";p.lastK=""}}
-  g.curBet=0;g.minR=1;g.raiseN=0;g.street++;
+  if(g.street===0)g.P.forEach((p,i)=>{if(i)p.rng=botRange(i)});
+  g.curBet=0;g.minR=1;g.raiseN=0;g.aggr=-1;g.street++;
   if(g.street>=4)return finish();
   g.board.push(...g.deck.splice(0,g.street===1?3:1));g.toAct=(g.btn+1)%g.n;
   g.log.push(`<b>${t().plStreets[g.street]}</b> ${g.board.map(c=>R[c>>2]+"♠♥♦♣"[c&3]).join(" ")} · ${t().pot} ${bb(potOf())}`);
@@ -4012,7 +4099,7 @@ function paintPlay(){const g=G;if(!g)return;const seats={};
   paintRing("pl-table",{bottom:hp,bottomCards:h.cards,bottomLabel:`${t().you} · ${lbl(hp)}`,bottomSub:bb(h.stack)+(h.win>0?` · +${bb(h.win)}`:""),seats,
     center:boardCenter(t().plStreets[g.over&&g.P.some(p=>p.show)?4:Math.min(g.street,3)],g.board,`${t().pot} ${bb(potOf())}`)});
   const net=r2(h.stack-g.inv);
-  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}<button class="pill" data-plnew>${t().plNew}</button>`;
+  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}<button class="pill" data-plnew>${t().plNew}</button>`;
   let c="";
   if(g.over)c=`<p class="plres">${g.result}</p><button class="next" data-plnext>${t().plNext}</button>`;
   else if(g.toAct===0){const call=r2(Math.min(g.curBet-h.bet,h.stack));
