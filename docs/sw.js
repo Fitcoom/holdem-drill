@@ -1,5 +1,5 @@
 const CACHE = "holdem-drill-1.0.0";
-const CORE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
+const CORE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "av/gto.webp", "av/lag.webp", "av/live.webp", "av/maniac.webp", "av/nit.webp", "av/omc.webp", "av/station.webp", "av/tag.webp", "av/weak.webp", "av/whale.webp"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 });

@@ -155,10 +155,10 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .study .bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .pill{border:1.5px solid var(--line);background:none;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
 .pill .av{margin-left:-7px}
-svg.av{flex:none;border-radius:50%;display:block}
-.mini svg.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
+img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:border-box;border:1.5px solid #22182a}
+.mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
-.vhead svg.av{box-shadow:0 0 0 3px var(--brass)}
+.vhead img.av{box-shadow:0 0 0 3px var(--brass)}
 .vtype{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.75;margin-top:2px}
 .vtag{font-style:italic;font-size:14px;margin-top:4px}
 .pill[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -3458,108 +3458,9 @@ function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag,pro
 
 /* ---------- Personality avatars (original SVG characters, 64×64) ---------- */
 const AVC={gto:"#3d6fb6",tag:"#2f7a5c",nit:"#8a8f98",weak:"#7fa3c4",lag:"#b4532d",maniac:"#8e2f7a",station:"#d4a017",whale:"#1f6f8b",live:"#8e5b3a",omc:"#4b5d67"};
-const AVS={gto:"♠",tag:"♣",nit:"♠",weak:"♦",lag:"♥",maniac:"♥",station:"♣",whale:"♦",live:"♣",omc:"♠"};
 const PNAME={gto:"Ada",tag:"Marcus",nit:"Harold",weak:"Nora",lag:"Vince",maniac:"Roxy",station:"Larry",whale:"Baron",live:"Dale",omc:"Walt"};
-const INK="#22182a";
-const avS=(w=1.4)=>`stroke="${INK}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
-const aP=(d,f="none",w)=>`<path d="${d}" fill="${f}" ${avS(w)}/>`;
-const aF=(d,f,o)=>`<path d="${d}" fill="${f}"${o?` opacity="${o}"`:""}/>`;
-const aL=(d,c,w=1.2)=>`<path d="${d}" stroke="${c}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
-const aE=(cx,cy,rx,ry,f,w)=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${f}" ${avS(w)}/>`;
-const aC=(cx,cy,r,f)=>`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}"/>`;
-/* head with cel shading: dark base, lighter face shifted left, ink outline */
-const avFace=(sk,sh,rx=12,ry=13.5,cy=29)=>aE(32-rx,cy+2,2.4,3.2,sk)+aE(32+rx,cy+2,2.4,3.2,sh)
-  +aE(32,cy,rx,ry,sh,1.5)+`<ellipse cx="31" cy="${cy-.6}" rx="${rx-1.9}" ry="${ry-1.5}" fill="${sk}"/>`;
-const avEye=(x,y,dx=0,dy=0,rx=2.6,ry=3)=>aE(x,y,rx,ry,"#fff",1)+aC(x+dx,y+dy+.3,1.45,INK)+aC(x+dx+.5,y+dy-.4,.5,"#fff");
-const avEyes2=(dx=0,dy=0,y=30)=>avEye(27,y,dx,dy)+avEye(37,y,dx,dy);
-const avBlush=(c="#ff7a7a",y=34.5)=>aC(23.8,y,2.3,c).replace("/>",' opacity=".35"/>')+aC(40.2,y,2.3,c).replace("/>",' opacity=".35"/>');
-const AVP={
-  /* Ada "The Solver": blunt bob, studio headphones, hoodie, unreadable */
-  gto:aP("M18.5 41C15 27 19 13.5 32 13.5S49 27 45.5 41C43 43 40 42.5 39.5 40.5L40 27H24L24.5 40.5C24 42.5 21 43 18.5 41Z","#1d1a2c")
-    +avFace("#f3caa6","#d9a37f")
-    +aP("M20 26V22.5C20 16.5 25 14.5 32 14.5S44 16.5 44 22.5V26Z","#1d1a2c")+aL("M27 16.5Q31 15.8 35 16.4","#4a4566",1.1)
-    +avEye(27,30.4,.3,.2,2.5,2.3)+avEye(37,30.4,.3,.2,2.5,2.3)+aL("M24.2 29Q27 27.6 29.8 29M34.2 29Q37 27.6 39.8 29",INK,1.7)
-    +aC(27.9,30.9,.45,"#5eead4")+aC(37.9,30.9,.45,"#5eead4")+aL("M29.6 36.4H34.4",INK,1.3)
-    +`<path d="M17.5 27C17.5 12.5 24 9 32 9S46.5 12.5 46.5 27" stroke="${INK}" stroke-width="3.6" fill="none"/><path d="M17.5 27C17.5 12.5 24 9 32 9S46.5 12.5 46.5 27" stroke="#4a5568" stroke-width="1.6" fill="none"/>`
-    +aP("M14.5 26.5Q14.5 23.5 17.5 23.5H20.5V35.5H17.5Q14.5 35.5 14.5 32.5Z","#2d3748")+aP("M49.5 26.5Q49.5 23.5 46.5 23.5H43.5V35.5H46.5Q49.5 35.5 49.5 32.5Z","#2d3748")
-    +aF("M16 27H17.4V32H16Z","#5eead4")+aF("M46.6 27H48V32H46.6Z","#5eead4"),
-  /* Marcus "The Grinder": snapback, mirrored aviators, quarter-zip */
-  tag:avFace("#8d5524","#6d3f18")
-    +aP("M19.5 25.5C19.5 15 25 12 32 12S44.5 15 44.5 25.5Z","#111827")+aL("M32 12.3V24.5","#2b3446",1)
-    +aP("M18.5 24.5Q32 21 47.5 23.4Q49.5 26.6 45 26.8Q32 25.4 18.5 26.9Z","#0b0f17")+aC(32,18,2.4,"#2ecc71").replace("/>",` stroke="${INK}" stroke-width="1"/>`)
-    +aP("M22.6 28.4H30.6Q30.6 33.6 26.6 33.6Q22.6 33.6 22.6 28.4Z","#0f172a")+aP("M33.4 28.4H41.4Q41.4 33.6 37.4 33.6Q33.4 33.6 33.4 28.4Z","#0f172a")
-    +aL("M30.6 29.2H33.4",INK,1.3)+aF("M23.8 29.3H26.6L24.6 32Z","#5eead4",.9)+aF("M34.6 29.3H37.4L35.4 32Z","#5eead4",.9)
-    +aL("M28.4 37.2Q32.6 38.8 36.2 36",INK,1.4),
-  /* Harold "The Rock": bald, coke-bottle glasses, bow tie, cardigan */
-  nit:avFace("#f5d0b0","#ddaa86",11.5,14.5,28.5)
-    +aF("M25.5 18.5Q28.5 16 31.5 17.2Q28.5 17.6 25.5 19.6Z","#fff",.7)
-    +aP("M20.8 33C19.6 26.5 20.4 22.5 22.6 21C23 25 22.3 29 23 33Z","#e5e7eb",1)+aP("M43.2 33C44.4 26.5 43.6 22.5 41.4 21C41 25 41.7 29 41 33Z","#e5e7eb",1)
-    +aL("M27.5 19.8H33M29 22H35.5","#b98764",1)
-    +aL("M23.2 25.2L29.6 26.4M34.4 26.4L40.8 25.2",INK,1.8)
-    +`<g fill="rgba(255,255,255,.45)" ${avS(1.9)}><circle cx="27" cy="30.5" r="4"/><circle cx="37" cy="30.5" r="4"/></g>`+aL("M31 30.2Q32 29.4 33 30.2",INK,1.6)
-    +aC(27.3,30.8,1.1,INK)+aC(37.3,30.8,1.1,INK)
-    +aL("M28.8 38.6Q32 36.6 35.2 38.6",INK,1.4)+aL("M26.6 35.4L27.6 37M37.4 35.4L36.4 37","#c08d6a",1),
-  /* Nora "Second Thoughts": ponytail, oversized hoodie, sweating */
-  weak:aP("M39 16.5C49 13.5 54 24 49.5 37C47.5 31 46 26 41.5 23Z","#c88a45")
-    +avFace("#ffe0c4","#efbd97")
-    +aP("M19.8 28C19 17 25 14 32 14S45 16.5 44.4 26C40.5 24.5 37 21.5 35 18.5C32.5 23 26 26 19.8 28Z","#d79a52")+aC(42,18.5,2.2,"#e2646f").replace("/>",` stroke="${INK}" stroke-width="1"/>`)
-    +aL("M24.4 25.6L29.4 24.2M34.6 24.2L39.6 25.6",INK,1.5)+avEyes2(.9,.2,30.2)
-    +aL("M27.8 37Q29.4 35.6 31 37T34.2 37T37.2 37",INK,1.3)+avBlush("#ff6b81",34.2)
-    +aP("M46 20Q48.8 24.6 46 26Q43.2 24.6 46 20Z","#8fd3ff",1)+aP("M48.6 30Q50.4 33 48.6 34Q46.8 33 48.6 30Z","#8fd3ff",.9),
-  /* Vince "Pressure": pompadour, stubble, leather jacket, raised brow */
-  lag:avFace("#e0ac69","#c08646")
-    +aF("M22 33Q23.5 42 32 42.8Q40.5 42 42 33Q37.5 38.4 32 38.4Q26.5 38.4 22 33Z","#4a2f1a",.28)
-    +aP("M20 27.5C16.5 16.5 22.5 8.5 33.5 9C41 9.4 47 13 46 20.5C45.6 24 44.8 26 44 28C42.5 21.5 38.5 19.6 33 20.2C27 20.8 23.8 23 20 27.5Z","#2a1a10")
-    +aL("M25.5 14Q33.5 10.6 41.5 15M29 17.5Q35 15.4 41 18.4","#6b4a33",1.1)
-    +aL("M23.8 26.4L29.6 25.8",INK,1.8)+aL("M34.4 24.6Q37.2 22.6 40.4 23.8",INK,1.8)
-    +avEye(27,30.4,.6,.3,2.5,2.4)+avEye(37,30.4,.6,.3,2.5,2.6)+aL("M24.4 29.2Q27 28.2 29.6 29.2",INK,1.6)
-    +aL("M28.2 36.4Q33 38 37 34.6",INK,1.4)+`<circle cx="20" cy="34.6" r="1.5" fill="none" stroke="#f1c40f" stroke-width="1.1"/>`,
-  /* Roxy "All-In": flame hair, wild eyes, studded jacket */
-  maniac:aP("M16.5 33C11 24 15 15.5 18 11C19.4 15.5 21.4 14.6 22.4 9C24.6 13.6 26.6 11.4 27.6 5C30 10.4 31.6 8.6 33.4 3.5C34.6 8.6 37.4 7.6 39.6 5C39.8 10.4 42.6 10.6 45.6 8.4C45.6 13.6 48.6 15.6 49.6 13.6C51 20 51 27.4 47.5 33Z","#ff3d7f",1.5)
-    +aF("M20 30C17 24 19 18 21 15.5C22 19 24 18 25 13.5C26.6 17 28.6 15.5 29.6 10.5C31.4 15 33 13.5 34.4 9.5C35.4 14 37.6 13.5 39.4 11C39.6 15.5 42 16 44 14.6C44.6 19 46.4 20 47 18.6C47.6 23 46.6 27 44.6 30Z","#ffb020")
-    +avFace("#f1c27d","#d59e5c")
-    +aP("M20.4 26C21.6 21 25 19 28 20.6C30 16.6 34 16.6 36 20.6C39 19 42.4 21 43.6 26C40 23.4 36.6 23.6 32 24C27.4 23.6 24 23.4 20.4 26Z","#ff3d7f",1.2)
-    +aL("M23.2 25.2L29.6 27M34.4 27L40.8 25.2",INK,1.8)
-    +aE(27,30.6,3.1,3.4,"#fff",1)+aE(37,30.6,3.1,3.4,"#fff",1)+aC(28,31.2,1.1,INK)+aC(36.2,29.8,1.1,INK)
-    +aP("M24.6 34.6Q32 45.4 39.4 34.6Z","#5a1020")+aP("M25.6 35.2Q32 37.2 38.4 35.2L37.6 36.8Q32 38.4 26.4 36.8Z","#fff",.8)+aF("M29.5 40.6Q32 39 34.5 40.6Q32 42.4 29.5 40.6Z","#ff7a9a")
-    +aP("M44.6 34L42.6 37.6H44.4L43 41.2L46.2 36.8H44.4L45.6 34Z","#ffd93d",.7),
-  /* Larry "Show Me": Hawaiian shirt, shades on head, cocktail, all smiles */
-  station:avFace("#c68642","#a5682c",13,13.5,29)
-    +aP("M19.4 31C18.6 24 20.4 20 23.6 18.4C23 22.4 22.6 26 23.2 31Z","#3b2416",1)+aP("M44.6 31C45.4 24 43.6 20 40.4 18.4C41 22.4 41.4 26 40.8 31Z","#3b2416",1)
-    +aP("M29 16.4Q32 12.6 35 16.4Q32 15 29 16.4Z","#3b2416",1)
-    +aP("M22.6 18.2H30.4Q30.4 22.6 26.5 22.6Q22.6 22.6 22.6 18.2Z","#222")+aP("M33.6 18.2H41.4Q41.4 22.6 37.5 22.6Q33.6 22.6 33.6 18.2Z","#222")+aL("M30.4 19H33.6",INK,1.3)+aF("M24 19H26.4L24.6 21.2Z","#ffd166",.9)
-    +aL("M24.4 30.4Q27 27.6 29.6 30.4M34.4 30.4Q37 27.6 39.6 30.4",INK,1.8)
-    +aP("M25.4 34.4Q32 43 38.6 34.4Z","#7a2e1a")+aF("M28.6 39.4Q32 37.4 35.4 39.4Q32 41.8 28.6 39.4Z","#ff8a8a")+avBlush("#ff5a3c",34),
-  /* Baron "Deep Pockets": top hat, monocle, cigar, gold chain */
-  whale:avFace("#ffd9b8","#eeb08a",14,13,30)
-    +aP("M15.6 19.2Q32 15.8 48.4 19.2Q48.4 22.4 32 21.4Q15.6 22.4 15.6 19.2Z","#0b0b1a")
-    +aP("M22.4 18.6L23.4 3.5H40.6L41.6 18.6Q32 17.4 22.4 18.6Z","#141428")+aF("M23.1 13.2H40.9L41.1 16.4H22.9Z","#c0392b")+aL("M26 6V14","#2c2c4a",1.4)
-    +avEye(26.6,30.2,.2,.3,2.5,2.3)+aL("M23.8 28.8Q26.6 27.6 29.4 28.8",INK,1.7)+avEye(37.4,30.2,0,0,2.6,3)
-    +`<circle cx="37.4" cy="30.2" r="4.2" fill="rgba(255,255,255,.3)" stroke="#f1c40f" stroke-width="1.5"/>`+aL("M41.4 31.6Q43.6 37 42 42","#f1c40f",.9)
-    +aP("M23 36.6Q26.6 32.6 32 35.2Q37.4 32.6 41 36.6Q43.8 38 45.6 35.2Q45.4 39.8 41 39.2Q36.6 38.4 32 37Q27.4 38.4 23 39.2Q18.6 39.8 18.4 35.2Q20.2 38 23 36.6Z","#6b4226",1.1)
-    +aP("M35.5 39.6L46.2 38.4L46.6 41L36 42Z","#8b5a2b",1)+aF("M46.2 38.4L48.4 38.2L48.8 40.8L46.6 41Z","#ccc")+aC(48.8,39.5,.8,"#ff7a3c")
-    +aL("M49.6 36Q51.6 33.6 49.8 31.4T50.6 26.4","#e8e8e8",1)+avBlush("#ff6b6b",34.6),
-  /* Dale "Friday Night": trucker cap, beard, flannel, beer */
-  live:avFace("#e0ac69","#c0884a")
-    +aP("M20.4 30.5C20.6 40.6 26 45.4 32 45.4S43.4 40.6 43.6 30.5C41 35 38 36 32 36S23 35 20.4 30.5Z","#5a3720",1.4)
-    +aF("M28 37.6Q32 35.6 36 37.6Q34 40.6 32 40.6Q30 40.6 28 37.6Z","#3a1d10")+aL("M29.4 37.4Q32 36.4 34.6 37.4","#e8c49a",1)
-    +aP("M19.5 26C19.5 15.4 25 12 32 12S44.5 15.4 44.5 26Z","#f2f2f2")+`<path d="M38 13.6L44 24M41 14.6L44.4 20" stroke="#cfcfcf" stroke-width=".9"/>`
-    +aP("M23.6 24C23.6 15.4 27.6 12.8 32 12.8S40.4 15.4 40.4 24Z","#c0392b",1.2)+`<text x="32" y="22.4" text-anchor="middle" font-size="7.5" font-weight="900" fill="#fff" font-family="Arial,sans-serif">♦</text>`
-    +aP("M18.4 25.4Q32 21.6 45.6 25.4Q46.2 28.4 32 27.4Q17.8 28.4 18.4 25.4Z","#a93226")
-    +aL("M24.6 28.2Q27 27 29.4 28.2M34.6 28.2Q37 27 39.4 28.2",INK,1.6)+avEyes2(0,.2,31),
-  /* Walt "Coffee": flat cap, white mustache, windbreaker, mug of coffee */
-  omc:avFace("#f5cba7","#e0a882",12,13.5,29.5)
-    +aP("M20.4 32.6C19.4 26.4 20.2 23.4 22.4 22C22.8 25.4 22.4 29 23 32.6Z","#f4f6f7",1)+aP("M43.6 32.6C44.6 26.4 43.8 23.4 41.6 22C41.2 25.4 41.6 29 41 32.6Z","#f4f6f7",1)
-    +aP("M19 24.8C18.6 16 24.4 13 32 13S46.4 15.6 46.2 22.4Z","#7f8c8d")+`<g fill="#95a5a6"><circle cx="26" cy="17.5" r=".7"/><circle cx="31" cy="16" r=".7"/><circle cx="36" cy="16.6" r=".7"/><circle cx="40" cy="18.6" r=".7"/><circle cx="29" cy="20" r=".7"/><circle cx="34" cy="19.6" r=".7"/></g>`
-    +aP("M18.6 24.4Q32 20.4 48 22.4Q48.6 26.2 42 26Q32 24.8 18.6 26.8Z","#5d6d7e")
-    +aP("M23.4 28.4Q27 25.4 30.4 27.8Q27 27.4 23.4 28.4Z","#fff",.9)+aP("M40.6 28.4Q37 25.4 33.6 27.8Q37 27.4 40.6 28.4Z","#fff",.9)
-    +aL("M24.8 31Q27 29.6 29.2 31M34.8 31Q37 29.6 39.2 31",INK,1.6)+aL("M21.8 31.4L23.2 32.4M21.8 33.6L23.4 33.6M42.2 31.4L40.8 32.4M42.2 33.6L40.6 33.6","#b97a55",.9)
-    +aP("M25.4 36.6Q28.6 33.2 32 35Q35.4 33.2 38.6 36.6Q35.4 38.8 32 37.4Q28.6 38.8 25.4 36.6Z","#fff",1.1)+aL("M30 40.4H34",INK,1.2)
-};
-const avTint=(c,k)=>{const n=parseInt(c.slice(1),16);return "#"+[16,8,0].map(s=>Math.round((n>>s&255)+(255-(n>>s&255))*k).toString(16).padStart(2,"0")).join("")};
-let avN=0;
-function av(prof,size){const c=AVC[prof];if(!c)return "";const u=prof+(++avN);
-  return `<svg class="av" viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true"><defs><clipPath id="avc-${u}"><circle cx="32" cy="32" r="32"/></clipPath><radialGradient id="avg-${u}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${avTint(c,.45)}"/><stop offset="1" stop-color="${c}"/></radialGradient></defs><g clip-path="url(#avc-${u})"><rect width="64" height="64" fill="url(#avg-${u})"/><text x="52" y="27" text-anchor="middle" font-size="26" fill="#fff" opacity=".16" font-family="Arial,sans-serif">${AVS[prof]}</text><text x="10" y="50" text-anchor="middle" font-size="16" fill="#fff" opacity=".1" font-family="Arial,sans-serif">${AVS[prof]}</text><g transform="translate(32 31) scale(1.15) translate(-32 -24)">${AVP[prof]}</g></g><circle cx="32" cy="32" r="31" fill="none" stroke="${INK}" stroke-width="2"/></svg>`}
+/* portraits: original illustrations generated for this app (av/<profile>.webp, 256 px) */
+function av(prof,size){if(!AVC[prof])return "";return `<img class="av" src="av/${prof}.webp" width="${size}" height="${size}" alt="" loading="lazy" style="background:${AVC[prof]}">`}
 /* ---------- Mode: Classic (GTO-style charts only) or Personalities ---------- */
 const MKEY="holdem-drill-mode";
 let mode="pers";try{if(localStorage.getItem(MKEY)==="classic")mode="classic"}catch(e){}

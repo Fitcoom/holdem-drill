@@ -72,9 +72,17 @@ html = head + body[:cut] + "</head>\n<body>\n" + body[cut:] + sw_reg
 }
 """, encoding="utf-8")
 
+# ---------- portraits (av/*.webp) ----------
+import shutil
+(APP / "av").mkdir(exist_ok=True)
+AV = sorted((ROOT / "av").glob("*.webp"))
+for f in AV:
+    shutil.copy2(f, APP / "av" / f.name)
+AVS = ", ".join(f'"av/{f.name}"' for f in AV)
+
 # ---------- service worker (hors ligne) ----------
 (APP / "sw.js").write_text(f"""const CACHE = "holdem-drill-{VERSION}";
-const CORE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png"];
+const CORE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", {AVS}];
 self.addEventListener("install", e => {{
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 }});
