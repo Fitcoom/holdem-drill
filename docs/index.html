@@ -176,6 +176,14 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--brass);outline
 .pill{border:1.5px solid var(--line);background:none;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
 .pill .av{margin-left:-7px}
 img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:border-box;border:1.5px solid #22182a}
+.cseat{display:flex;align-items:center;gap:7px;background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:3px 11px 3px 3px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.cseat img.av{width:52px;height:52px;border-width:2px}
+.cinfo{display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-size:12px;font-weight:700;line-height:1.15;white-space:nowrap}
+.ctype{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#fff;padding:1px 6px;border-radius:6px;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.cbet{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--muted)}
+.pseat.raise .cseat,.pseat.limp .cseat{border-color:var(--tb)} .pseat.raise .cbet,.pseat.limp .cbet{color:var(--tb);font-weight:800}
+.ring.n9 .cseat img.av{width:42px;height:42px} .ring.n9 .cinfo{font-size:11px}
+@media (max-width:420px){.cseat{gap:5px;padding:2px 7px 2px 2px}.cseat img.av{width:40px;height:40px}.cinfo{font-size:10.5px}.ctype{font-size:8.5px}.ring.n9 .cseat img.av{width:32px;height:32px}.ring.n9 .cname{display:none}.ring.n9 .cseat{padding-right:6px}}
 .mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
 .vhead img.av{box-shadow:0 0 0 3px var(--brass)}
@@ -3452,8 +3460,13 @@ function tableView(o){
       const [x,y]=seatXY(k,n);
       const sub=a.sub!=null?a.sub:a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:bet?bb(bet):t().toAct;
       const cards=a.cards?cardsHTML(a.cards,"sm"):a.av?av(a.av,30):a.st==="fold"?"":"<span></span><span></span>";
-      h+=`<div class="pseat ${a.st}${win}" style="left:${x}%;top:${y}%"><div class="mini">${cards}</div><div class="pbox">${lbl(pos)}${a.av?` · ${PNAME[a.av]}`:""}<small>${sub}</small></div></div>`;
-      if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;
+      if(a.av&&!a.cards){ // character seat: portrait, position, type and bet in one capsule
+        const act=a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:a.st==="limp"?`Limp ${bb(bet)}`:bet?bb(bet):t().toAct;
+        const tx=x<22?-22:x>78?-78:-50;
+        h+=`<div class="pseat char ${a.st}${win}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${av(a.av,52)}<div class="cinfo"><b>${lbl(pos)}<span class="cname"> · ${PNAME[a.av]}</span></b><span class="ctype" style="background:${AVC[a.av]}">${PSHORT[a.av]}</span><span class="cbet">${act}</span></div></div></div>`;
+      }else{
+      h+=`<div class="pseat ${a.st}${win}" style="left:${x}%;top:${y}%"><div class="mini">${cards}</div><div class="pbox">${lbl(pos)}<small>${sub}</small></div></div>`;
+      if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;}
     }
     if(pos==="BTN"){let x,y;if(k===0){x=74;y=78}else{[x,y]=seatXY(k,n);const mid=Math.abs(x-50)<3;x=mid?x+13:x+(x<50?11:-11);y=mid?y+4:y+(y<45?3:-3)}
       h+=`<div class="dbtn" style="left:${x}%;top:${y}%">D</div>`}
@@ -3480,6 +3493,7 @@ function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag,pro
 
 /* ---------- Personality avatars (original SVG characters, 64×64) ---------- */
 const AVC={gto:"#3d6fb6",tag:"#2f7a5c",nit:"#8a8f98",weak:"#7fa3c4",lag:"#b4532d",maniac:"#8e2f7a",station:"#d4a017",whale:"#1f6f8b",live:"#8e5b3a",omc:"#4b5d67"};
+const PSHORT={gto:"GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Station",whale:"Whale",live:"Rec",omc:"OMC"};
 const PNAME={gto:"Ada",tag:"Marcus",nit:"Harold",weak:"Nora",lag:"Vince",maniac:"Roxy",station:"Larry",whale:"Baron",live:"Dale",omc:"Walt"};
 /* portraits: original illustrations generated for this app (av/<profile>.webp, 256 px) */
 function av(prof,size){if(!AVC[prof])return "";return `<img class="av" src="av/${prof}.webp" width="${size}" height="${size}" alt="" loading="lazy" style="background:${AVC[prof]}">`}
