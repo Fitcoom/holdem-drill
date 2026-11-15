@@ -195,6 +195,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .pl-undo{margin-top:8px}
 .pl-grade .verdict{font-size:20px} .pl-lv{font-weight:700;margin:2px 0 4px} .pl-grade p{margin:3px 0}
 @media (max-width:420px){.pl-grade{flex-direction:column;align-items:center;text-align:center}}
+.pl-autonote{text-align:center;font-size:12px;margin-top:4px}
 .pl-coach{display:flex;gap:6px;align-items:center;font-size:13px;margin:10px 0}
 .pl-log{font-size:12.5px;margin-top:6px} .pl-log ol{margin:6px 0;padding-left:20px;max-height:220px;overflow:auto}
 .vfaces{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 2px}
@@ -319,6 +320,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
     <div id="pl-ctrl"></div>
     <div class="pl-grade" id="pl-grade" hidden></div>
     <label class="pl-coach"><input type="checkbox" id="pl-coach"> <span data-t="plCoach"></span></label>
+    <label class="pl-coach"><input type="checkbox" id="pl-auto"> <span data-t="plAuto"></span></label>
     <details class="pl-log"><summary data-t="plLog"></summary><ol id="pl-log"></ol></details>
   </section>
   <section id="v-villains" hidden>
@@ -441,7 +443,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
   settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
-  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",plYourAct:"your play",plLv:["Blunder","Mistake","Questionable","Good","Excellent"],
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",plAuto:"Deal the next hand automatically",plAutoNote:"Next hand coming…",plYourAct:"your play",plLv:["Blunder","Mistake","Questionable","Good","Excellent"],
   plA:{size:x=>`Bet size: about <b>${x}</b> is better here. Too big risks a lot to win little, and only better hands call.`,best:a=>`Best play here: <b>${a}</b>.`,gto:"That's the GTO play: fine, but the exploit earns more against these players.",limp:"Open-limping outside the small blind is a leak: raise or fold.",tight:"Too tight: this hand is a profitable open against the players behind.",loose:"Too loose: this hand loses money here.",
     bbCheck:"Free flop: checking is fine.",isoMiss:"Strong hand against limpers: raise to isolate.",iso:"Good: punish the limpers with a raise.",
     eq:e=>`Your equity vs their likely ranges ≈ <b>${e}</b>.`,eqNeed:(e,n)=>`Your equity vs their likely ranges ≈ <b>${e}</b>; you need about <b>${n}</b> to continue.`,
@@ -562,7 +564,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
   settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
-  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",plYourAct:"ton choix",plLv:["Gaffe","Erreur","Discutable","Bon","Excellent"],
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",plAuto:"Distribuer la main suivante automatiquement",plAutoNote:"Main suivante dans un instant…",plYourAct:"ton choix",plLv:["Gaffe","Erreur","Discutable","Bon","Excellent"],
   plA:{size:x=>`Taille de mise : environ <b>${x}</b> est mieux ici. Trop gros, tu risques beaucoup pour gagner peu, et seules les mains meilleures paient.`,best:a=>`Meilleur choix ici : <b>${a}</b>.`,gto:"C'est le jeu GTO : correct, mais l'exploit rapporte plus contre ces joueurs.",limp:"Limper d'entrée hors de la petite blinde est une fuite : relance ou fold.",tight:"Trop serré : cette main est une ouverture rentable contre les joueurs derrière.",loose:"Trop large : cette main perd de l'argent ici.",
     bbCheck:"Flop gratuit : checker est correct.",isoMiss:"Main forte contre des limpeurs : relance pour isoler.",iso:"Bien : tu punis les limpeurs avec une relance.",
     eq:e=>`Ton équité contre leurs ranges probables ≈ <b>${e}</b>.`,eqNeed:(e,n)=>`Ton équité contre leurs ranges probables ≈ <b>${e}</b> ; il te faut environ <b>${n}</b> pour continuer.`,
@@ -4055,6 +4057,8 @@ $("pl-prof").addEventListener("click",e=>{const b=e.target.closest("[data-plprof
   plProf=b.dataset.plprof;try{localStorage.setItem(PLKEY,plProf)}catch(err){}paintPlProf();newGame()});
 $("pl-tbl").addEventListener("change",onTblChange);
 let G=null;
+const PAKEY="holdem-drill-plauto";let plAuto=true;try{plAuto=localStorage.getItem(PAKEY)!=="0"}catch(e){}
+const fastFwd=()=>plAuto&&G&&G.P[0].folded;
 const plPos=i=>{const n=G.n,k=(i-G.btn+n)%n;return ORDER()[(k-3+n)%n]};
 const plName=i=>i?(pers()?PNAME[G.P[i].face]:lbl(plPos(i))):t().you;
 const potOf=()=>r2(G.P.reduce((a,p)=>a+p.inv,0));
@@ -4065,7 +4069,7 @@ function newGame(){if(G&&G.timer)clearTimeout(G.timer);$("pl-grade").hidden=true
   const faces=castFaces(ty);for(let i=1;i<n;i++)G.P.push({ty:ty[i],face:faces[i],stack:100});
   G.btn=(G.btn-1+n)%n;newHand()}
 function put(i,x){const p=G.P[i];x=r2(Math.min(x,p.stack));p.stack=r2(p.stack-x);p.bet=r2(p.bet+x);p.inv=r2(p.inv+x);if(p.stack<=0){p.stack=0;p.allin=true}}
-function newHand(){const g=G,n=g.n;if(g.timer)clearTimeout(g.timer);g.snap=null;g.btn=(g.btn+1)%n;
+function newHand(){const g=G,n=g.n;if(g.timer)clearTimeout(g.timer);g.autoAt=0;g.btn=(g.btn+1)%n;
   for(const p of g.P){if(p.stack<1){if(p.hero)g.inv=r2(g.inv+100-p.stack);p.stack=100}
     Object.assign(p,{bet:0,inv:0,folded:false,allin:false,acted:false,last:"",lastK:"",win:0,show:false,score:0,pf:null,rng:null,rc:null})}
   const deck=shuffle([...Array(52).keys()]);g.P.forEach((p,i)=>p.cards=[deck[2*i],deck[2*i+1]].sort((a,b)=>b-a));g.deck=deck.slice(2*n);
@@ -4095,7 +4099,7 @@ function step(){const g=G;if(g.over)return paintPlay();
   if(roundDone())return nextStreet();
   let i=g.toAct;for(let k=0;k<g.n;k++){const p=g.P[i];if(canAct(p)&&(!p.acted||p.bet<g.curBet))break;i=(i+1)%g.n}g.toAct=i;
   paintPlay();if(i===0)return;
-  g.timer=setTimeout(()=>{botAct(i);g.toAct=(i+1)%g.n;step()},650)}
+  g.timer=setTimeout(()=>{botAct(i);g.toAct=(i+1)%g.n;step()},fastFwd()?0:650)}
 function optLabel(kind,to){const g=G;return kind==="fold"?t().fold:kind==="check"?t().check:t().plAct[kind]+(kind==="call"?" "+bb(r2(Math.min(g.curBet-g.P[0].bet,g.P[0].stack))):" "+bb(to))}
 function heroAct(kind,to){const g=G;if(!g||g.over||g.toAct!==0)return;
   const {snap,timer,...rest}=g;const snapNew=structuredClone(rest);
@@ -4110,7 +4114,7 @@ function nextStreet(){const g=G;for(const p of g.P){p.bet=0;p.acted=false;if(!p.
   if(g.street>=4)return finish();
   g.board.push(...g.deck.splice(0,g.street===1?3:1));g.toAct=(g.btn+1)%g.n;
   g.log.push(`<b>${t().plStreets[g.street]}</b> ${g.board.map(c=>R[c>>2]+"♠♥♦♣"[c&3]).join(" ")} · ${t().pot} ${bb(potOf())}`);
-  if(g.P.filter(canAct).length<2){paintPlay();g.timer=setTimeout(nextStreet,900);return}
+  if(g.P.filter(canAct).length<2){paintPlay();g.timer=setTimeout(nextStreet,fastFwd()?0:900);return}
   step()}
 function finish(){const g=G;g.over=true;const L=g.P.filter(p=>!p.folded);
   if(L.length===1){const w=L[0];w.win=potOf();w.stack=r2(w.stack+w.win)}
@@ -4122,7 +4126,7 @@ function finish(){const g=G;g.over=true;const L=g.P.filter(p=>!p.folded);
       for(const w of ws){const sh=r2(amt/ws.length);w.win=r2(w.win+sh);w.stack=r2(w.stack+sh)}prev=v})}
   g.done++;
   g.result=g.P.map((p,i)=>p.win>0?(i?t().plWins(plName(i),bb(p.win),p.show?handName(p.score):""):t().plYouWin(bb(p.win),p.show?handName(p.score):"")):"").filter(Boolean).join(" · ");
-  g.log.push(`<b>${g.result}</b>`);paintPlay()}
+  g.log.push(`<b>${g.result}</b>`);if(plAuto){g.autoAt=Date.now()+(g.P[0].folded?1200:2600);g.timer=setTimeout(newHand,g.autoAt-Date.now())}paintPlay()}
 function botAct(i){const g=G,p=g.P[i],s=SIMP[p.ty]||SIMP.gto,call=r2(g.curBet-p.bet),pt=potOf();
   if(g.street===0){const code=handCode(p.cards[0],p.cards[1]),pos=plPos(i),r=SRANK[code]??100;
     const limpers=g.P.filter((q,j)=>j!==i&&!q.folded&&q.bet===1&&plPos(j)!=="BB").length;
@@ -4162,7 +4166,7 @@ function paintPlay(){const g=G;if(!g)return;const seats={};
   const net=r2(h.stack-g.inv);
   $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}<button class="pill" data-plnew>${t().plNew}</button>`;
   let c="";
-  if(g.over)c=`<p class="plres">${g.result}</p><button class="next" data-plnext>${t().plNext}</button>`;
+  if(g.over)c=`<p class="plres">${g.result}</p><button class="next" data-plnext>${t().plNext}</button>${g.autoAt?`<p class="muted pl-autonote">${t().plAutoNote}</p>`:""}`;
   else if(g.toAct===0){const call=r2(Math.min(g.curBet-h.bet,h.stack));
     c=`<p class="q">${call>0?`${t().plToCall}: <b>${bb(call)}</b> · `:""}${t().pot}: <b>${bb(potOf())}</b></p><div class="answers pl-ans">${heroOpts().map(([k,to])=>`<button class="ans" data-pa="${k}" data-to="${to||0}">${k==="fold"?t().fold:k==="check"?t().check:k==="call"?t().plAct.call+" "+bb(call):t().plAct[k]+" "+bb(to)}</button>`).join("")}</div>`;
     if($("pl-coach").checked){const ob=[];g.P.forEach((q,j)=>{if(j&&!q.folded)ob.push(j)});const e=Math.round(rangeEq(h.cards,g.board,ob.slice(0,3),500)*100),need=call>0?Math.round(call/(potOf()+call)*100):0;c+=`<p class="muted">${t().plEq(e,need)}</p>`}}
@@ -4171,6 +4175,8 @@ function paintPlay(){const g=G;if(!g)return;const seats={};
 $("pl-ctrl").addEventListener("click",e=>{const b=e.target.closest("[data-pa]");if(b)return heroAct(b.dataset.pa,+b.dataset.to);if(e.target.closest("[data-plnext]"))newHand()});
 $("pl-sess").addEventListener("click",e=>{if(e.target.closest("[data-plnew]"))newGame()});
 $("pl-coach").addEventListener("change",()=>paintPlay());
+$("pl-auto").checked=plAuto;$("pl-auto").addEventListener("change",e=>{plAuto=e.target.checked;try{localStorage.setItem(PAKEY,plAuto?"1":"0")}catch(err){}
+  const g=G;if(!g)return;if(g.over){clearTimeout(g.timer);g.autoAt=0;if(plAuto){g.autoAt=Date.now()+1500;g.timer=setTimeout(newHand,1500)}paintPlay()}});
 $("pl-grade").addEventListener("click",e=>{const r=e.target.closest("[data-retry]");if(r){const k=r.dataset.retry,to=+r.dataset.to;undoPlay();heroAct(k,to);return}if(e.target.closest("[data-undo]"))undoPlay()});
 
 /* ---------- navigation ---------- */
