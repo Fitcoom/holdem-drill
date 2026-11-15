@@ -421,7 +421,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
   settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
-  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",pfMix:"Mixed table: the most dangerous player behind decides. One LAG or maniac behind tightens your range; open wider only when everyone behind folds too much; limp only when everyone behind is passive and a limper is there.",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
   prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec",omc:"OMC"},
   pnick:{gto:"The Solver",tag:"The Grinder",nit:"The Rock",weak:"Second Thoughts",lag:"Pressure",maniac:"All-In",station:"Show Me",whale:"Deep Pockets",live:"Friday Night",omc:"Coffee"},
   ptag:{gto:"Mixes every frequency. Feels nothing.",tag:"Twelve tables, one plan: value.",nit:"Last bluffed in 1998.",weak:"Wants to win. Hates to lose.",lag:"Bets because you won't.",maniac:"Raises first. Looks at her cards later.",station:"Never folds a pair. Or anything else.",whale:"Here for fun, paying for the whole table.",live:"Limps, calls, tells great stories.",omc:"Raises once a night. Believe him."},
@@ -534,7 +534,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
   settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
-  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",pfMix:"Table mixte : c'est le joueur le plus dangereux derrière toi qui décide. Un seul LAG ou maniaque derrière resserre ta range ; ouvre plus large seulement si tout le monde derrière fold trop ; limpe seulement si tout le monde derrière est passif et qu'un limpeur est là.",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
   prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2",omc:"OMC"},
   pnick:{gto:"La Solveuse",tag:"Le Grinder",nit:"Le Roc",weak:"Mille Doutes",lag:"La Pression",maniac:"Tapis",station:"Montre-moi",whale:"Poches Profondes",live:"Vendredi Soir",omc:"Café"},
   ptag:{gto:"Mixe chaque fréquence. Ne ressent rien.",tag:"Douze tables, un seul plan : la value.",nit:"Son dernier bluff date de 1998.",weak:"Veut gagner. Déteste perdre.",lag:"Mise parce que toi, tu n'oses pas.",maniac:"Relance d'abord. Regarde ses cartes après.",station:"Ne fold jamais une paire. Ni rien d'autre.",whale:"Là pour s'amuser, paie pour toute la table.",live:"Limpe, paie, raconte de bonnes histoires.",omc:"Relance une fois par soir. Crois-le."},
@@ -3497,7 +3497,7 @@ function actsFor(hero,opener,oSt,oBet){const ord=ORDER(),hi=ord.indexOf(hero),oi
 function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag,prof){
   const seats=actsFor(hero,opener,oSt,oBet);
   if(behindTag)for(const p in seats)if(seats[p].st==="wait")seats[p].sub=behindTag;
-  if(prof&&pers()){if(opener)seats[opener].av=prof;else for(const p in seats)if(seats[p].st==="wait")seats[p].av=prof}
+  if(prof&&pers()){if(opener)seats[opener].av=prof;else for(const p in seats)if(seats[p].st==="wait")seats[p].av=typeof prof==="object"?prof[p]:prof}
   if(opener){const a=seats[opener];a.sub=oSt==="limp"?`${tag?tag+" · ":""}Limp`:tag?`${tag} · ${bb(a.bet)}`:undefined}let pot=0;for(const p in seats)pot+=seats[p].bet||0;
   paintRing(id,{bottom:hero,bottomCards:cards,bottomLabel:`${t().you} · ${lbl(hero)}`,bottomSub:code,seats,
     center:`<div class="ctx">${t().pos[hero]}</div><div class="potv">${t().pot} ${bb(pot)}</div><div class="cact">${action}</div>`});
@@ -3527,39 +3527,51 @@ const SB_LIMP=(()=>{const l=expand(RANGE_SRC.SB+",K2s+,Q2s+,J4s+,T6s+,96s+,85s+,
 const SPEC=expand("22-66,A2s-A9s,K2s-K9s,Q9s,J9s,T9s,T8s,98s,97s,87s,86s,76s,75s,65s,64s,54s,53s,43s");
 const TRAP=expand("KK+");
 function topShare(W){const set=new Set();let n=0;for(const c of ranked("tag")){if(n>=W/100*1326)break;set.add(c);n+=combos(c)}return set}
+/* prof: one profile (everyone behind plays it) or a list (mixed table). With a mix, the most
+   dangerous player behind decides: a maniac or LAG tightens you; you open wider only when everyone
+   behind folds too much; speculative limps only when everyone behind is passive and a limper is there. */
+const TIGHT=new Set(["nit","weak","omc"]),PASSIVE=new Set(["nit","weak","omc","station","whale","live"]);
 function heroPlan(pos,prof){
+  const P=[].concat(prof);
   let raise=new Set(pos==="SB"?SB_RAISE:rangeFor(pos)),limp=new Set(pos==="SB"?SB_LIMP:[]),trap=new Set();
-  const late=["CO","BTN","SB"].includes(pos);
-  if(prof==="nit"||prof==="weak"||prof==="omc"){for(const c of topShare(Math.min(90,pct(raise)*(late?1.4:1.2))))raise.add(c)}
-  if(prof==="lag"||prof==="maniac"){const keep=topShare(pct(raise)*(prof==="maniac"?.8:.88));for(const c of [...raise])if(!keep.has(c))raise.delete(c)}
-  if(prof==="maniac")for(const c of TRAP)trap.add(c);
-  if(LIMPERS[prof]&&prof!=="omc"&&late)for(const c of SPEC)if(!raise.has(c))limp.add(c);
+  const late=["CO","BTN","SB"].includes(pos),mani=P.includes("maniac"),lagB=P.includes("lag");
+  const tight=P.every(x=>TIGHT.has(x)),limper=P.find(x=>LIMPERS[x]&&x!=="omc"),spec=late&&limper&&P.every(x=>PASSIVE.has(x));
+  if(tight){for(const c of topShare(Math.min(90,pct(raise)*(late?1.4:1.2))))raise.add(c)}
+  if(mani||lagB){const keep=topShare(pct(raise)*(mani?.8:.88));for(const c of [...raise])if(!keep.has(c))raise.delete(c)}
+  if(mani)for(const c of TRAP)trap.add(c);
+  if(spec)for(const c of SPEC)if(!raise.has(c))limp.add(c);
   for(const c of raise)limp.delete(c);
-  return {raise,limp,trap}}
+  const key=P.every(x=>x===P[0])?P[0]:mani?"maniac":lagB?"lag":spec?limper:tight?P[0]:"gto";
+  return {raise,limp,trap,key}}
+/* realistic mix of players for a mixed table */
+const MIXW={gto:2,tag:3,nit:2,weak:2,lag:1.5,maniac:.5,station:2,whale:.5,live:2,omc:1};
+function mixProf(){let r=Math.random()*Object.values(MIXW).reduce((a,b)=>a+b);for(const k in MIXW){r-=MIXW[k];if(r<0)return k}return "gto"}
 const PFKEY="holdem-drill-pfopp";
-let pfProf="gto";try{pfProf=localStorage.getItem(PFKEY)||"gto"}catch(e){}
-function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}"${k==="random"?"":` title="${PNAME[k]} « ${t().pnick[k]} »"`}>${k==="random"?t().random:av(k,22)+t().prof[k]}</button>`).join("")}
+let pfProf="mixed";try{pfProf=localStorage.getItem(PFKEY)||"mixed"}catch(e){}
+function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+["mixed"].concat(PROFILES,["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}"${PNAME[k]?` title="${PNAME[k]} « ${t().pnick[k]} »"`:""}>${k==="random"?t().random:k==="mixed"?"🎲 "+t().mixed:av(k,22)+t().prof[k]}</button>`).join("")}
 $("pf-prof").addEventListener("click",e=>{const b=e.target.closest("[data-pfprof]");if(!b||b.dataset.pfprof===pfProf)return;
   pfProf=b.dataset.pfprof;try{localStorage.setItem(PFKEY,pfProf)}catch(err){}paintPfProf();newPreflop()});
 let pf;
 function newPreflop(){
-  if(pfProf!=="random"&&!PROFILES.includes(pfProf))pfProf="gto";
-  const prof=!pers()?"gto":pfProf==="random"?PROFILES[rnd(PROFILES.length)]:pfProf;
-  const ops=OPENERS(),pos=ops[rnd(ops.length)],plan=heroPlan(pos,prof);let h,code;
+  if(pfProf!=="random"&&pfProf!=="mixed"&&!PROFILES.includes(pfProf))pfProf="mixed";
+  const ops=OPENERS(),pos=ops[rnd(ops.length)];
+  let prof=!pers()?"gto":pfProf==="random"?PROFILES[rnd(PROFILES.length)]:pfProf,profs=null;
+  if(pers()&&pfProf==="mixed"){profs={};const a=actsFor(pos,null);for(const p in a)if(a[p].st==="wait")profs[p]=mixProf()}
+  const plan=heroPlan(pos,profs?Object.values(profs):prof);if(profs)prof=plan.key;let h,code;
   for(let k=0;k<12;k++){h=deal(2);code=handCode(h[0],h[1]);
     const inAny=RANGES.BTN.has(code)||RANGES.SB.has(code)||plan.limp.has(code);
     const obvious=rangeFor(ops[0]).has(code)&&pos!==ops[0]&&!plan.trap.has(code);
     if(!(inAny?obvious&&Math.random()<.5:Math.random()<.7))break}
   const correct=plan.trap.has(code)?1:plan.raise.has(code)?2:plan.limp.has(code)?1:0;
-  pf={size,pos,prof,h,code,correct,alt:plan.trap.has(code)?2:undefined,chosen:null};paintPreflop();
+  pf={size,pos,prof,profs,h,code,correct,alt:plan.trap.has(code)?2:undefined,chosen:null};paintPreflop();
 }
 function paintPreflop(){
-  const tag=pf.prof==="gto"?"":({station:"Station",live:"Live rec"})[pf.prof]||t().prof[pf.prof];
-  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx,"",null,null,tag,pf.prof);
+  const tag=pf.profs||pf.prof==="gto"?"":({station:"Station",live:"Live rec"})[pf.prof]||t().prof[pf.prof];
+  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx,"",null,null,tag,pf.profs||pf.prof);
   paintAnswers($("pf-ans"),[t().fold,t().limpBtn,t().raise],pf,["F","C","R"]);
-  const plan=heroPlan(pf.pos,pf.prof);
+  const plan=heroPlan(pf.pos,pf.profs?Object.values(pf.profs):pf.prof);
   paintFb($("pf-fb"),pf,()=>{const tb=new Set(plan.raise);for(const c of plan.trap)tb.delete(c);const gp={tb,call:new Set([...plan.limp,...plan.trap])}
-    return `<p>${t().pfFb2(pf.code,t().pfActs[pf.correct],lbl(pf.pos))}</p>${pf.alt!=null?`<p class="muted">${t().pfAlt()}</p>`:""}<p class="muted">${t().pfNote[pf.prof]}</p>${pf.pos==="SB"?`<p class="muted">${t().sbNote}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(gp,pf.code)}</div></div><p class="muted">${t().legendPf}</p>`});
+    return `<p>${t().pfFb2(pf.code,t().pfActs[pf.correct],lbl(pf.pos))}</p>${pf.alt!=null?`<p class="muted">${t().pfAlt()}</p>`:""}${pf.profs?`<p class="muted">${t().pfMix}</p>`:""}<p class="muted">${t().pfNote[pf.prof]}</p>${pf.pos==="SB"?`<p class="muted">${t().sbNote}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(gp,pf.code)}</div></div><p class="muted">${t().legendPf}</p>`});
 }
 function answerPreflop(i){if(!pf||pf.chosen!=null)return;answer("preflop",pf,i,paintPreflop);
   if(i===1&&!good(pf,1)&&pf.pos!=="SB"){$("limp-pop").hidden=false;$("limp-ok").focus()}}
