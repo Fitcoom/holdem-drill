@@ -178,6 +178,15 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 @media (max-width:420px){.cseat img.av{width:62px;height:62px}.cinfo{font-size:10.5px;padding:2px 6px}.ctype{font-size:8.5px}.ring:has(.pseat.char){height:360px;margin-top:30px}.ring.n9:has(.pseat.char){height:430px}.ring.n9 .cseat img.av{width:46px;height:46px}.ring.n9 .cname{display:none}}
 .mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
+.vfaces{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 2px}
+.vfaces span:not(.lbl){display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px}
+.tbl-ed{margin:4px 0 10px}
+.tbl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:6px}
+.rnd-av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--line);font-size:15px;flex:none}
+.tbl-grid label{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px 6px;font-size:12px}
+.tbl-grid label b{min-width:44px}
+.tbl-grid select{flex:1;min-width:0;font:inherit;font-size:12px;background:transparent;color:var(--ink);border:0}
+
 .vhead img.av{box-shadow:0 0 0 3px var(--brass)}
 .vtype{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.75;margin-top:2px}
 .vtag{font-style:italic;font-size:14px;margin-top:4px}
@@ -229,6 +238,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 
   <section id="v-preflop" hidden>
     <div class="bar" id="pf-prof"></div>
+    <div class="tbl-ed" id="pf-tbl" hidden></div>
     <div class="ring" id="pf-table"></div>
     <p class="q" data-t="pfQ"></p>
     <div class="answers" id="pf-ans"></div>
@@ -243,6 +253,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 
   <section id="v-defense" hidden>
     <div class="bar" id="df-prof"></div>
+    <div class="tbl-ed" id="df-tbl" hidden></div>
     <div class="ring" id="df-table"></div>
     <p class="q" id="df-q"></p>
     <div class="answers" id="df-ans"></div>
@@ -399,7 +410,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
   settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
-  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",pfMix:"Mixed table: the most dangerous player behind decides. One LAG or maniac behind tightens your range; open wider only when everyone behind folds too much; limp only when everyone behind is passive and a limper is there.",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",myTable:"My table",tblHint:"Pick the player type at each seat. Your own seat changes every hand: whoever sits there sits out that hand.",otherFaces:"Also at your tables:",gtoPick:(g,b)=>`You picked the GTO play (<b>${g}</b>). It is balanced and can't be exploited, so it counts as right. But these players have leaks: <b>${b}</b> exploits them and earns more. Here is why:`,pfMix:"Mixed table: the most dangerous player behind decides. One LAG or maniac behind tightens your range; open wider only when everyone behind folds too much; limp only when everyone behind is passive and a limper is there.",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
   prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec",omc:"OMC"},
   pnick:{gto:"The Solver",tag:"The Grinder",nit:"The Rock",weak:"Second Thoughts",lag:"Pressure",maniac:"All-In",station:"Show Me",whale:"Deep Pockets",live:"Friday Night",omc:"Coffee"},
   ptag:{gto:"Mixes every frequency. Feels nothing.",tag:"Twelve tables, one plan: value.",nit:"Last bluffed in 1998.",weak:"Wants to win. Hates to lose.",lag:"Bets because you won't.",maniac:"Raises first. Looks at her cards later.",station:"Never folds a pair. Or anything else.",whale:"Here for fun, paying for the whole table.",live:"Limps, calls, tells great stories.",omc:"Raises once a night. Believe him."},
@@ -512,7 +523,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
   settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
-  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",pfMix:"Table mixte : c'est le joueur le plus dangereux derrière toi qui décide. Un seul LAG ou maniaque derrière resserre ta range ; ouvre plus large seulement si tout le monde derrière fold trop ; limpe seulement si tout le monde derrière est passif et qu'un limpeur est là.",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",myTable:"Ma table",tblHint:"Choisis le type de joueur à chaque siège. Ton siège change à chaque main : le joueur qui s'y trouve ne joue pas cette main.",otherFaces:"Aussi à tes tables :",gtoPick:(g,b)=>`Tu as choisi le jeu GTO (<b>${g}</b>). Il est équilibré et inexploitable, donc il compte comme bon. Mais ces joueurs ont des failles : <b>${b}</b> les exploite et rapporte plus. Voici pourquoi :`,pfMix:"Table mixte : c'est le joueur le plus dangereux derrière toi qui décide. Un seul LAG ou maniaque derrière resserre ta range ; ouvre plus large seulement si tout le monde derrière fold trop ; limpe seulement si tout le monde derrière est passif et qu'un limpeur est là.",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
   prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2",omc:"OMC"},
   pnick:{gto:"La Solveuse",tag:"Le Grinder",nit:"Le Roc",weak:"Mille Doutes",lag:"La Pression",maniac:"Tapis",station:"Montre-moi",whale:"Poches Profondes",live:"Vendredi Soir",omc:"Café"},
   ptag:{gto:"Mixe chaque fréquence. Ne ressent rien.",tag:"Douze tables, un seul plan : la value.",nit:"Son dernier bluff date de 1998.",weak:"Veut gagner. Déteste perdre.",lag:"Mise parce que toi, tu n'oses pas.",maniac:"Relance d'abord. Regarde ses cartes après.",station:"Ne fold jamais une paire. Ni rien d'autre.",whale:"Là pour s'amuser, paie pour toute la table.",live:"Limpe, paie, raconte de bonnes histoires.",omc:"Relance une fois par soir. Crois-le."},
@@ -3429,7 +3440,7 @@ function paintAnswers(box,labels,st,keys){
   box.innerHTML=labels.map((l,i)=>`<button class="ans" data-i="${i}">${l}<kbd>${keys?keys[i]:i+1}</kbd></button>`).join("");
   if(st.chosen!=null){const bs=box.querySelectorAll(".ans");bs.forEach(b=>b.disabled=true);bs[st.correct].classList.add("ok");bs[st.chosen].classList.add(good(st,st.chosen)?"ok":"ko")}
 }
-const good=(st,i)=>i===st.correct||i===st.alt;
+const good=(st,i)=>i===st.correct||i===st.alt||i===st.gto;
 function paintFb(el,st,txt){if(st.chosen==null){el.hidden=true;return}el.innerHTML=verdict(good(st,st.chosen),txt());el.hidden=false}
 function answer(mod,st,i,paint){if(!st||st.chosen!=null)return;st.chosen=i;record(mod,good(st,i));paint()}
 
@@ -3453,7 +3464,7 @@ function tableView(o){
       if(a.av&&!a.cards){ // character seat: portrait, position, type and bet in one capsule
         const act=a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:a.st==="limp"?`Limp ${bb(bet)}`:bet?bb(bet):t().toAct;
         const tx=x<22?-22:x>78?-78:-50;
-        h+=`<div class="pseat char ${a.st}${win}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${av(a.av,52)}${holeCards(a.st==="fold"," big")}<div class="cinfo"><b>${lbl(pos)}<span class="cname"> · ${PNAME[a.av]}</span></b><span class="ctype" style="background:${AVC[a.av]}">${PSHORT[a.av]}</span><span class="cbet">${act}</span></div></div></div>`;
+        h+=`<div class="pseat char ${a.st}${win}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${av(a.av,52)}${holeCards(a.st==="fold"," big")}<div class="cinfo"><b>${lbl(pos)}<span class="cname"> · ${PNAME[a.av]}</span></b><span class="ctype" style="background:${AVC[avType(a.av)]}">${PSHORT[avType(a.av)]}</span><span class="cbet">${act}</span></div></div></div>`;
       }else{
       h+=`<div class="pseat ${a.st}${win}" style="left:${x}%;top:${y}%"><div class="mini">${cards}</div><div class="pbox">${lbl(pos)}<small>${sub}</small></div></div>`;
       if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;}
@@ -3484,12 +3495,21 @@ function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag,pro
 /* ---------- Personality avatars (original SVG characters, 64×64) ---------- */
 const AVC={gto:"#3d6fb6",tag:"#2f7a5c",nit:"#8a8f98",weak:"#7fa3c4",lag:"#b4532d",maniac:"#8e2f7a",station:"#d4a017",whale:"#1f6f8b",live:"#8e5b3a",omc:"#4b5d67"};
 const PSHORT={gto:"GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Station",whale:"Whale",live:"Rec",omc:"OMC"};
-const PNAME={gto:"Ada",tag:"Marcus",nit:"Harold",weak:"Nora",lag:"Vince",maniac:"Roxy",station:"Larry",whale:"Baron",live:"Dale",omc:"Walt"};
+const PNAME={"gto-1":"Kenji","gto-2":"Imani","gto-3":"Lukas","gto-4":"Jace","tag-1":"Sofia","tag-2":"Andre","tag-3":"Kyle","tag-4":"Ravi",
+  "nit-1":"Margaret","nit-2":"Gary","nit-3":"Trevor","nit-4":"Mei","weak-1":"Leo","weak-2":"Linda","weak-3":"Tyler","weak-4":"Phil",
+  "lag-1":"Jade","lag-2":"Malik","lag-3":"Dante","lag-4":"Silvio","maniac-1":"Spike","maniac-2":"Luna","maniac-3":"Zack","maniac-4":"Bjorn",
+  "station-1":"Dot","station-2":"Chad","station-3":"Hank","station-4":"Gloria","whale-1":"Vivienne","whale-2":"Tanner","whale-3":"Boone","whale-4":"Hiro",
+  "live-1":"Becky","live-2":"Mike","live-3":"Sal","live-4":"Cody","omc-1":"Edna","omc-2":"Clarence","omc-3":"Morty","omc-4":"Wen",gto:"Ada",tag:"Marcus",nit:"Harold",weak:"Nora",lag:"Vince",maniac:"Roxy",station:"Larry",whale:"Baron",live:"Dale",omc:"Walt"};
 /* portraits: original illustrations generated for this app (av/<profile>.webp, 256 px) */
 /* hole-card back, drawn in the portraits' cartoon style (ink outline, cel highlight, spade medallion) */
 const HCB='<svg class="hcb" viewBox="0 0 26 36" aria-hidden="true"><rect x="1" y="1" width="24" height="34" rx="3.5" fill="#f7eedc" stroke="#22182a" stroke-width="1.8"/><rect x="3.6" y="3.6" width="18.8" height="28.8" rx="2" fill="#b8322a" stroke="#22182a" stroke-width="1"/><path d="M3.6 10.8L10.8 3.6M3.6 18L18 3.6M3.6 25.2L22.4 6.4M5.2 32.4L22.4 15.2M12.4 32.4L22.4 22.4M19.6 32.4L22.4 29.6M10.8 32.4L3.6 25.2M18 32.4L3.6 18M22.4 29.6L3.6 10.8M22.4 22.4L10.8 10.8M22.4 15.2L18 10.8M22.4 6.4L19.6 3.6" stroke="#d9574c" stroke-width="1.2"/><circle cx="13" cy="18" r="5.6" fill="#f7eedc" stroke="#22182a" stroke-width="1.2"/><path d="M13 14.2C11.2 16.2 9.8 17.2 9.8 18.8C9.8 20.4 11.6 21 12.6 19.8L11.9 22.2H14.1L13.4 19.8C14.4 21 16.2 20.4 16.2 18.8C16.2 17.2 14.8 16.2 13 14.2Z" fill="#22182a"/><path d="M5 6.2Q5 4.6 6.6 4.6H9" stroke="#fff" stroke-width="1.2" opacity=".55" fill="none" stroke-linecap="round"/></svg>';
 const holeCards=(fold,cls="")=>`<div class="hc${cls}${fold?" fold":""}">${HCB}${HCB}</div>`;
-function av(prof,size){if(!AVC[prof])return "";return `<img class="av" src="av/${prof}.webp" width="${size}" height="${size}" alt="" loading="lazy" style="background:${AVC[prof]}">`}
+const avType=id=>String(id).replace(/-\d$/,"");
+const FACES=ty=>[ty,1,2,3,4].map((x,i)=>i?`${ty}-${x}`:ty);
+/* give each seat a face of its type, never the same face twice at one table */
+function castFaces(types){const used={},out={};for(const p in types){const ty=types[p];
+  const pool=FACES(ty).filter(f=>!(used[ty]||[]).includes(f));const f=pool.length?pool[rnd(pool.length)]:ty;(used[ty]=used[ty]||[]).push(f);out[p]=f}return out}
+function av(id,size){const c=AVC[avType(id)];if(!c)return "";return `<img class="av" src="av/${id}.webp" width="${size}" height="${size}" alt="" loading="lazy" style="background:${c}">`}
 /* ---------- Mode: Classic (GTO-style charts only) or Personalities ---------- */
 const MKEY="holdem-drill-mode";
 let mode="pers";try{if(localStorage.getItem(MKEY)==="classic")mode="classic"}catch(e){}
@@ -3508,6 +3528,13 @@ function topShare(W){const set=new Set();let n=0;for(const c of ranked("tag")){i
 /* prof: one profile (everyone behind plays it) or a list (mixed table). With a mix, the most
    dangerous player behind decides: a maniac or LAG tightens you; you open wider only when everyone
    behind folds too much; speculative limps only when everyone behind is passive and a limper is there. */
+const TBKEY=()=>"holdem-drill-table-"+size;
+function myTable(){let v={};try{v=JSON.parse(localStorage.getItem(TBKEY())||"{}")||{}}catch(e){}return v}
+function seatType(p){const v=myTable()[p];return PROFILES.includes(v)?v:mixProf()}
+function paintTblEd(id){const el=$(id),on=(id==="pf-tbl"?pfProf:dProf)==="custom"&&pers();el.hidden=!on;if(!on)return;const v=myTable();
+  el.innerHTML=`<p class="muted">${t().tblHint}</p><div class="tbl-grid">${ORDER().map(p=>`<label>${PROFILES.includes(v[p])?av(v[p],28):'<span class="rnd-av">🎲</span>'}<b>${lbl(p)}</b><select data-tpos="${p}"><option value="random">🎲 ${t().random}</option>${PROFILES.map(k=>`<option value="${k}"${v[p]===k?" selected":""}>${t().prof[k]}</option>`).join("")}</select></label>`).join("")}</div>`}
+function onTblChange(e){const s=e.target.closest("[data-tpos]");if(!s)return;const v=myTable();v[s.dataset.tpos]=s.value;try{localStorage.setItem(TBKEY(),JSON.stringify(v))}catch(err){}
+  paintTblEd("pf-tbl");paintTblEd("df-tbl");if(e.currentTarget.id==="pf-tbl")newPreflop();else newDefense()}
 const TIGHT=new Set(["nit","weak","omc"]),PASSIVE=new Set(["nit","weak","omc","station","whale","live"]);
 function heroPlan(pos,prof){
   const P=[].concat(prof);
@@ -3526,30 +3553,32 @@ const MIXW={gto:2,tag:3,nit:2,weak:2,lag:1.5,maniac:.5,station:2,whale:.5,live:2
 function mixProf(){let r=Math.random()*Object.values(MIXW).reduce((a,b)=>a+b);for(const k in MIXW){r-=MIXW[k];if(r<0)return k}return "gto"}
 const PFKEY="holdem-drill-pfopp";
 let pfProf="mixed";try{pfProf=localStorage.getItem(PFKEY)||"mixed"}catch(e){}
-function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+["mixed"].concat(PROFILES,["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}"${PNAME[k]?` title="${PNAME[k]} « ${t().pnick[k]} »"`:""}>${k==="random"?t().random:k==="mixed"?"🎲 "+t().mixed:av(k,22)+t().prof[k]}</button>`).join("")}
+function paintPfProf(){$("pf-prof").innerHTML=`<span class="lbl">${t().behindLbl}</span>`+["mixed","custom"].concat(PROFILES,["random"]).map(k=>`<button class="pill" aria-pressed="${k===pfProf}" data-pfprof="${k}"${PNAME[k]?` title="${PNAME[k]} « ${t().pnick[k]} »"`:""}>${k==="random"?t().random:k==="mixed"?"🎲 "+t().mixed:k==="custom"?"✏️ "+t().myTable:av(k,22)+t().prof[k]}</button>`).join("");paintTblEd("pf-tbl")}
 $("pf-prof").addEventListener("click",e=>{const b=e.target.closest("[data-pfprof]");if(!b||b.dataset.pfprof===pfProf)return;
   pfProf=b.dataset.pfprof;try{localStorage.setItem(PFKEY,pfProf)}catch(err){}paintPfProf();newPreflop()});
 let pf;
 function newPreflop(){
-  if(pfProf!=="random"&&pfProf!=="mixed"&&!PROFILES.includes(pfProf))pfProf="mixed";
+  if(!["random","mixed","custom"].includes(pfProf)&&!PROFILES.includes(pfProf))pfProf="mixed";
   const ops=OPENERS(),pos=ops[rnd(ops.length)];
   let prof=!pers()?"gto":pfProf==="random"?PROFILES[rnd(PROFILES.length)]:pfProf,profs=null;
-  if(pers()&&pfProf==="mixed"){profs={};const a=actsFor(pos,null);for(const p in a)if(a[p].st==="wait")profs[p]=mixProf()}
+  if(pers()&&(pfProf==="mixed"||pfProf==="custom")){profs={};const a=actsFor(pos,null);for(const p in a)if(a[p].st==="wait")profs[p]=pfProf==="custom"?seatType(p):mixProf()}
   const plan=heroPlan(pos,profs?Object.values(profs):prof);if(profs)prof=plan.key;let h,code;
   for(let k=0;k<12;k++){h=deal(2);code=handCode(h[0],h[1]);
     const inAny=RANGES.BTN.has(code)||RANGES.SB.has(code)||plan.limp.has(code);
     const obvious=rangeFor(ops[0]).has(code)&&pos!==ops[0]&&!plan.trap.has(code);
     if(!(inAny?obvious&&Math.random()<.5:Math.random()<.7))break}
   const correct=plan.trap.has(code)?1:plan.raise.has(code)?2:plan.limp.has(code)?1:0;
-  pf={size,pos,prof,profs,h,code,correct,alt:plan.trap.has(code)?2:undefined,chosen:null};paintPreflop();
+  const gp=heroPlan(pos,"gto"),g=gp.raise.has(code)?2:gp.limp.has(code)?1:0,alt=plan.trap.has(code)?2:undefined;
+  let cast=null;if(pers()){const ty={},a=actsFor(pos,null);for(const p in a)if(a[p].st==="wait")ty[p]=profs?profs[p]:prof;cast=castFaces(ty)}
+  pf={size,pos,prof,profs,cast,h,code,correct,alt,gto:g!==correct&&g!==alt?g:undefined,chosen:null};paintPreflop();
 }
 function paintPreflop(){
   const tag=pf.profs||pf.prof==="gto"?"":({station:"Station",live:"Live rec"})[pf.prof]||t().prof[pf.prof];
-  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx,"",null,null,tag,pf.profs||pf.prof);
+  preflopRing("pf-table",pf.pos,pf.h,pf.code,null,t().pfCtx,"",null,null,tag,pf.cast);
   paintAnswers($("pf-ans"),[t().fold,t().limpBtn,t().raise],pf,["F","C","R"]);
   const plan=heroPlan(pf.pos,pf.profs?Object.values(pf.profs):pf.prof);
   paintFb($("pf-fb"),pf,()=>{const tb=new Set(plan.raise);for(const c of plan.trap)tb.delete(c);const gp={tb,call:new Set([...plan.limp,...plan.trap])}
-    return `<p>${t().pfFb2(pf.code,t().pfActs[pf.correct],lbl(pf.pos))}</p>${pf.alt!=null?`<p class="muted">${t().pfAlt()}</p>`:""}${pf.profs?`<p class="muted">${t().pfMix}</p>`:""}<p class="muted">${t().pfNote[pf.prof]}</p>${pf.pos==="SB"?`<p class="muted">${t().sbNote}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(gp,pf.code)}</div></div><p class="muted">${t().legendPf}</p>`});
+    return `<p>${t().pfFb2(pf.code,t().pfActs[pf.correct],lbl(pf.pos))}</p>${pf.chosen===pf.gto?`<p>${t().gtoPick(t().pfActs[pf.gto],t().pfActs[pf.correct])}</p>`:""}${pf.alt!=null?`<p class="muted">${t().pfAlt()}</p>`:""}${pf.profs?`<p class="muted">${t().pfMix}</p>`:""}<p class="muted">${t().pfNote[pf.prof]}</p>${pf.pos==="SB"?`<p class="muted">${t().sbNote}</p>`:""}<div class="grid-wrap"><div class="grid">${grid3(gp,pf.code)}</div></div><p class="muted">${t().legendPf}</p>`});
 }
 function answerPreflop(i){if(!pf||pf.chosen!=null)return;answer("preflop",pf,i,paintPreflop);
   if(i===1&&!good(pf,1)&&pf.pos!=="SB"){$("limp-pop").hidden=false;$("limp-ok").focus()}}
@@ -3654,21 +3683,23 @@ function grid3(sp,cur){let h="";for(let i=0;i<13;i++)for(let j=0;j<13;j++){const
   const code=i===j?R[a]+R[a]:j>i?R[a]+R[b]+"s":R[b]+R[a]+"o";
   h+=`<div class="${sp.tb.has(code)?"tb":sp.call.has(code)?"in":""}${code===cur?" cur":""}">${code}</div>`}return h}
 const DPKEY="holdem-drill-opp";
-let dProf="gto";try{let v=localStorage.getItem(DPKEY);v=({classical:"gto",fish:"station"})[v]||v;if(v&&(v==="random"||PROFILES.includes(v)))dProf=v}catch(e){}
-function paintDProf(){$("df-prof").innerHTML=`<span class="lbl">${t().oppLbl}</span>`+PROFILES.concat(["random"]).map(k=>`<button class="pill" aria-pressed="${k===dProf}" data-prof="${k}"${k==="random"?"":` title="${PNAME[k]} « ${t().pnick[k]} »"`}>${k==="random"?t().random:av(k,22)+t().prof[k]}</button>`).join("")}
+let dProf="gto";try{let v=localStorage.getItem(DPKEY);v=({classical:"gto",fish:"station"})[v]||v;if(v&&(v==="random"||v==="custom"||PROFILES.includes(v)))dProf=v}catch(e){}
+$("pf-tbl").addEventListener("change",onTblChange);$("df-tbl").addEventListener("change",onTblChange);
+function paintDProf(){$("df-prof").innerHTML=`<span class="lbl">${t().oppLbl}</span>`+["custom"].concat(PROFILES,["random"]).map(k=>`<button class="pill" aria-pressed="${k===dProf}" data-prof="${k}"${PNAME[k]?` title="${PNAME[k]} « ${t().pnick[k]} »"`:""}>${k==="random"?t().random:k==="custom"?"✏️ "+t().myTable:av(k,22)+t().prof[k]}</button>`).join("");paintTblEd("df-tbl")}
 $("df-prof").addEventListener("click",e=>{const b=e.target.closest("[data-prof]");if(!b||b.dataset.prof===dProf)return;
   dProf=b.dataset.prof;try{localStorage.setItem(DPKEY,dProf)}catch(err){}paintDProf();newDefense()});
 let df;
 function newDefense(){
-  const prof=!pers()?"gto":dProf==="random"?PROFILES[rnd(PROFILES.length)]:dProf;
   const all=spots(),[o,hero]=all[rnd(all.length)];
+  const prof=!pers()?"gto":dProf==="random"?PROFILES[rnd(PROFILES.length)]:dProf==="custom"?seatType(o):dProf;
   const limp=!!LIMPERS[prof]&&Math.random()<LIMPERS[prof].pLimp;
   const W=limp?pct(LIMPERS[prof].limp):pct(openRange(prof,o));
   const key=limp?(hero==="BB"?"LimpBB":hero==="SB"?"LimpSB":"LimpIP"):defKey(o,hero,W),sp=chartFor(key,prof,hero);let h,code;
   for(let k=0;k<12;k++){h=deal(2);code=handCode(h[0],h[1]);if(sp.tb.has(code)||sp.call.has(code)||Math.random()>.7)break}
   const bbLimp=limp&&hero==="BB";
   const correct=bbLimp?(sp.tb.has(code)?1:0):sp.tb.has(code)?2:sp.call.has(code)?1:0;
-  df={size,prof,o,hero,W,key,limp,h,code,correct,chosen:null};paintDefense();
+  let gto;if(prof!=="gto"&&!limp){const gk=defKey(o,hero,pct(openRange("gto",o))),gs=chartFor(gk,"gto",hero),g=gs.tb.has(code)?2:gs.call.has(code)?1:0;if(g!==correct)gto=g}
+  df={size,prof,face:castFaces({o:prof}).o,o,hero,W,key,limp,h,code,correct,gto,chosen:null};paintDefense();
 }
 function dfLabels(){if(!df.limp)return {labels:[t().fold,t().call,"3-bet"],keys:["F","C","3"],acts:t().acts,q:t().dfQ};
   if(df.hero==="BB")return {labels:[t().check,t().iso],keys:["C","R"],acts:t().actsLimpBB,q:t().dfQLimpBB};
@@ -3676,13 +3707,13 @@ function dfLabels(){if(!df.limp)return {labels:[t().fold,t().call,"3-bet"],keys:
 function paintDefense(){
   const pn=t().prof[df.prof],tag=df.prof==="gto"?"":({station:"Station",live:"Live rec"})[df.prof]||pn,L=dfLabels();
   const action=(df.limp?t().dfLimp(lbl(df.o)):t().dfOpen(lbl(df.o)).replace("2.5bb",bb(PSIZE[df.prof])).replace("2,5bb",bb(PSIZE[df.prof])))+(tag?` (${tag})`:"");
-  preflopRing("df-table",df.hero,df.h,df.code,df.o,action,tag,df.limp?"limp":"raise",df.limp?1:PSIZE[df.prof],null,df.prof);
+  preflopRing("df-table",df.hero,df.h,df.code,df.o,action,tag,df.limp?"limp":"raise",df.limp?1:PSIZE[df.prof],null,pers()?df.face:null);
   $("df-q").textContent=L.q;
   paintAnswers($("df-ans"),L.labels,df,L.keys);
   const sp=chartFor(df.key,df.prof,df.hero);
   const why=df.limp?`<p class="muted">${t().limpWhy(pn,Math.round(df.W),lbl(df.o))}</p><p class="muted">${t().isoNote}</p>`
     :`<p class="muted">${t().vsProf(pn,lbl(df.o),Math.round(df.W),DEF_LABEL[df.key])}</p>${LIMPERS[df.prof]?`<p class="muted">${t().passiveNote}</p>`:""}${df.hero==="SB"?`<p class="muted">${t().dfSb}</p>`:""}`;
-  paintFb($("df-fb"),df,()=>`<p>${t().dfFb(df.code,L.acts[df.correct],lbl(df.hero)+" vs "+lbl(df.o))}</p>${why}<div class="grid-wrap"><div class="grid">${grid3(sp,df.code)}</div></div><p class="muted">${df.limp?t().legendLimp:t().legend3}</p>`);
+  paintFb($("df-fb"),df,()=>`<p>${t().dfFb(df.code,L.acts[df.correct],lbl(df.hero)+" vs "+lbl(df.o))}</p>${df.chosen===df.gto?`<p>${t().gtoPick(L.acts[df.gto],L.acts[df.correct])}</p>`:""}${why}<div class="grid-wrap"><div class="grid">${grid3(sp,df.code)}</div></div><p class="muted">${df.limp?t().legendLimp:t().legend3}</p>`);
 }
 $("df-ans").addEventListener("click",e=>{const b=e.target.closest(".ans");if(b)answer("defense",df,+b.dataset.i,paintDefense)});
 let dStudy="BBvBTN";
@@ -3700,7 +3731,7 @@ function paintVillains(){
   $("vp-intro").innerHTML=`<div class="verdict">${t().popTitle}</div><p>${t().popText}</p><ul class="poplist">${t().popFacts.map(f=>`<li>${f}</li>`).join("")}</ul><p class="muted">${t().popSrc}</p>`;
   $("vp-prof").innerHTML=PROFILES.map(k=>`<button class="pill" aria-pressed="${k===vProf}" data-vprof="${k}">${av(k,22)}${t().prof[k]}</button>`).join("");
   const sz=LIMPERS[vProf]?`${t().limpsLbl} ${bb(PSIZE[vProf])}`:bb(PSIZE[vProf]);
-  $("vp-card").innerHTML=`<div class="vhead">${av(vProf,84)}<div><div class="verdict">${PNAME[vProf]} « ${t().pnick[vProf]} »</div><div class="vtype">${t().prof[vProf]}</div><div class="vtag">${t().ptag[vProf]}</div></div></div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span>${t().pfacts[vProf].map(f=>`<span>${f}</span>`).join("")}</div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p><p class="src">${t().srcLbl} ${PSRC[vProf].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(" · ")}</p>`;
+  $("vp-card").innerHTML=`<div class="vhead">${av(vProf,84)}<div><div class="verdict">${PNAME[vProf]} « ${t().pnick[vProf]} »</div><div class="vtype">${t().prof[vProf]}</div><div class="vtag">${t().ptag[vProf]}</div></div></div><div class="vfaces"><span class="lbl">${t().otherFaces}</span>${FACES(vProf).slice(1).map(f=>`<span>${av(f,44)}<small>${PNAME[f]}</small></span>`).join("")}</div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span>${t().pfacts[vProf].map(f=>`<span>${f}</span>`).join("")}</div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p><p class="src">${t().srcLbl} ${PSRC[vProf].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(" · ")}</p>`;
   $("vp-pos").hidden=!!LIMPERS[vProf];
   $("vp-pos").innerHTML=OPENERS().map(p=>`<button class="pill" aria-pressed="${p===vPos}" data-vpos="${p}">${lbl(p)}</button>`).join("");
   if(LIMPERS[vProf]){const L=LIMPERS[vProf];$("vp-grid").innerHTML=grid3({tb:L.raise,call:L.limp},"");$("vp-pct").textContent=t().vpLimper(pct(L.raise),pct(L.limp));return}
@@ -3853,7 +3884,7 @@ const ANS={preflop:i=>answerPreflop(i),defense:i=>answer("defense",df,i,paintDef
 let current="preflop";const started={};
 function paintMode(){
   document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===mode));
-  $("pf-prof").hidden=$("df-prof").hidden=!pers();
+  $("pf-prof").hidden=$("df-prof").hidden=!pers();paintTblEd("pf-tbl");paintTblEd("df-tbl");
   document.querySelector('.tab[data-view="villains"]').hidden=!pers();
 }
 $("mode").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b||b.dataset.mode===mode)return;
