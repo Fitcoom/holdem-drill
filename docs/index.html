@@ -215,6 +215,9 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .pl-rrow .tried{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px;font-family:inherit} .pl-rrow .tried .mid{color:#f5c542} .pl-rrow .tried .ko{color:#e5484d}
 .pl-rrow .gbox{display:flex;gap:6px;align-items:center}
 .pl-readdone{margin:8px 0;padding:8px 10px;border-radius:10px;background:rgba(48,164,108,.15);border:1px solid #30a46c}
+.ic.big{width:56px;height:56px}
+.rd-prog{cursor:pointer;text-transform:none!important}
+.rd-faces{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}.rd-faces span{display:flex;flex-direction:column;align-items:center;font-size:11px}
 .rd-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .rd-dots{display:flex;gap:4px}.rd-dots .sic{cursor:pointer;opacity:.55}.rd-dots .sic.ok{opacity:1;box-shadow:0 0 0 2px #30a46c}
 .rd-hint{margin:6px 0 0;font-size:13px}
@@ -250,6 +253,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
   #pl-ctrl .q{margin:4px 0 6px;font-size:14px}
   #pl-prof .pill,#pf-prof .pill,#df-prof .pill{padding:5px 10px;font-size:13px}
   .pl-sess{gap:8px;font-size:12px}
+  .hint{display:none}
   #mode{display:grid!important;grid-template-columns:repeat(3,1fr);gap:4px} #mode button{white-space:normal;font-size:13px;padding:8px 4px}
   #mode{flex-wrap:wrap}
   .tbl-ed .tbl-grid{grid-template-columns:repeat(3,1fr);gap:6px}
@@ -443,7 +447,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
     <label class="pl-coach"><input type="checkbox" id="pl-coach"> <span data-t="plCoach"></span></label>
     <label class="pl-coach"><input type="checkbox" id="pl-auto"> <span data-t="plAuto"></span></label>
     <div class="pl-speed" id="pl-speed"></div>
-    <div class="pl-read" id="pl-read" hidden></div>
+    <div id="pl-read" hidden></div>
     <details class="pl-log"><summary data-t="plLog"></summary><ol id="pl-log"></ol></details>
   </section>
   <section id="v-villains" hidden>
@@ -6313,7 +6317,7 @@ function heroOpts(){const g=G,p=g.P[0],call=r2(Math.min(g.curBet-p.bet,p.stack))
 
 /* Read the table: hidden opponents, observed stats, your read per seat, then reveal and score. */
 const FAMILY={fitfold:"lp",fakereg:"ta",nit:"tp",weak:"tp",omc:"tp",tag:"ta",gto:"ta",station:"lp",whale:"lp",live:"lp",lag:"la",maniac:"la"};
-function paintRead(){const g=G,el=$("pl-read");if(!g||!g.read){el.hidden=true;return}el.hidden=false;const pc=(a,b)=>b?Math.round(a/b*100)+"%":"–";
+function paintRead(){const g=G,el=$("pl-read");el.hidden=true;if(!g||!g.read)return;const pc=(a,b)=>b?Math.round(a/b*100)+"%":"–";
   const bots=g.P.filter((p,i)=>i),done=bots.filter(p=>p.idOK).length,wrong=bots.reduce((a,p)=>a+p.tries.length,0),all=done===bots.length;
   const rows=g.P.map((p,i)=>{if(!i)return "";const h=p.hs,af=h.calls?(h.agg/h.calls).toFixed(1):h.agg?"∞":"–";
     const near=x=>!STY[x]&&!styles()&&FAMILY[x]===FAMILY[p.ty];const tried=p.tries.length?`<div class="tried">${p.tries.map(x=>`<span class="${near(x)?"mid":"ko"}">${near(x)?"≈":"✘"} ${STY[x]?STYS[x]:PSHORT[x]}</span>`).join(" ")}</div>`:"";
@@ -6335,6 +6339,8 @@ function closeSeat(){$("seat-sheet").hidden=true;sheetCtx=null}
 function profileHTML(ty){const f=famOf(ty);
   return `<p>${styles()?t().styDesc[f]:t().pdesc[ty]}</p><p><b>${t().exploitLbl}</b> ${styles()?t().styExp[f]:t().pexp[ty]}</p>${gtoBox(ty)}`}
 function paintSeat(){const c=sheetCtx;if(!c)return;let h="";
+  if(c.help){$("seat-body").innerHTML=`<div class="shead">${ic("read","big")}<div><div class="verdict">${t().plRead}</div></div></div><p>${t().plTapGuess}</p><p class="muted">${t().plReadClose}</p>`;return}
+  if(c.done){$("seat-body").innerHTML=`<div class="shead">${ic("read","big")}<div><div class="verdict">${t().plRead}</div><div class="vtype">${t().plFound}</div></div></div><div class="pl-readdone"><b>${t().plReadDone(c.done.hands,c.done.wrong,c.done.score)}</b></div><div class="rd-faces">${G.P.filter((q,j)=>j).map(q=>`<span>${av(q.face,44)}<small>${PNAME[q.face]}</small><small>${tyShort(q.ty)}</small></span>`).join("")}</div><button class="next" data-newread2>${t().plNewTable}</button>`;return}
   if(c.pick){const cur=optOf(myTable()[c.pick.pos]);
     $("seat-body").innerHTML=`<div class="shead"><div><div class="verdict">${lbl(c.pick.pos)}</div><div class="vtype">${t().tblPick}</div></div></div><div class="sguess"><button data-pickv="random"${!validOpt(cur)?' class="on"':""}>${ic("mixed","rnd-av")}<span>${t().random}</span></button>${OPTS().map(k=>`<button data-pickv="${k}"${cur===k?' class="on"':""}>${optAv(k,40)}<span>${optName(k)}</span></button>`).join("")}</div>`;return}
   if(c.play!=null){const g=G;if(!g||!g.P[c.play]){closeSeat();return}const i=c.play,p=g.P[i],hs=p.hs,pc=(a,b)=>b?Math.round(a/b*100)+"%":"–";
@@ -6351,9 +6357,11 @@ for(const id of ["pl-table","pf-table","df-table"])$(id).addEventListener("click
   if(id==="pl-table"){if(!G)return;const pos=sEl.dataset.seat,i=G.P.findIndex((q,j)=>j&&plPos(j)===pos);if(i>0)openSeat({play:i})}
   else if(sEl.dataset.face)openSeat({face:sEl.dataset.face})});
 $("seat-sheet").addEventListener("click",e=>{if(e.target.id==="seat-sheet"||e.target.closest("[data-sclose]")){closeSeat();return}
+  if(e.target.closest("[data-newread2]")){closeSeat();newGame();return}
   const pk=e.target.closest("[data-pickv]");if(pk&&sheetCtx&&sheetCtx.pick){const {pos,ed}=sheetCtx.pick;closeSeat();setTbl(pos,pk.dataset.pickv,ed);return}
   const b=e.target.closest("[data-sguess]");if(!b||!sheetCtx||sheetCtx.play==null)return;const p=G.P[sheetCtx.play],v=b.dataset.sguess;
-  if(v===p.ty||STY[v]&&famOf(p.ty)===v)p.idOK=true;else p.tries.push(v);paintPlay()});
+  if(v===p.ty||STY[v]&&famOf(p.ty)===v)p.idOK=true;else p.tries.push(v);paintPlay();
+  const bots=G.P.filter((q,j)=>j);if(p.idOK&&bots.every(q=>q.idOK)){const wrong=bots.reduce((a,q)=>a+q.tries.length,0);openSeat({done:{hands:G.done,wrong,score:Math.max(0,100-wrong*10)}})}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("seat-sheet").hidden)closeSeat()});
 
 function paintPlay(){const g=G;if(!g)return;paintRead();if(sheetCtx&&sheetCtx.play!=null)paintSeat();const seats={};
@@ -6366,7 +6374,7 @@ function paintPlay(){const g=G;if(!g)return;paintRead();if(sheetCtx&&sheetCtx.pl
   paintRing("pl-table",{bottom:hp,bottomCards:h.cards,bottomLabel:`${t().you} · ${lbl(hp)}`,bottomSub:bb(h.stack)+(h.win>0?` · +${bb(h.win)}`:""),seats,
     center:boardCenter(t().plStreets[g.over&&g.P.some(p=>p.show)?4:Math.min(g.street,3)],g.board,`${t().pot} ${bb(potOf())}`)});
   const net=r2(h.stack-g.inv);
-  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}<button class="pill" data-plnew>${t().plNew}</button>`;
+  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}${g.read?`<span class="lbl rd-prog" data-readinfo>${ic("read")} <b>${g.P.filter((q,j)=>j&&q.idOK).length}/${g.n-1}</b></span>`:""}<button class="pill" data-plnew>${g.read?t().plNewTable:t().plNew}</button>`;
   let c="";
   if(g.over)c=`<p class="plres">${g.result}</p><button class="next" data-plnext>${t().plNext}</button>${g.autoAt?`<p class="muted pl-autonote">${t().plAutoNote}</p>`:""}`;
   else if(g.toAct===0){const call=r2(Math.min(g.curBet-h.bet,h.stack));
@@ -6375,7 +6383,7 @@ function paintPlay(){const g=G;if(!g)return;paintRead();if(sheetCtx&&sheetCtx.pl
   else c=`<p class="q muted">${t().plWait(plName(g.toAct))}</p>`;
   $("pl-ctrl").innerHTML=c;$("pl-log").innerHTML=g.log.map(x=>`<li>${x}</li>`).join("")}
 $("pl-ctrl").addEventListener("click",e=>{const b=e.target.closest("[data-pa]");if(b)return heroAct(b.dataset.pa,+b.dataset.to);if(e.target.closest("[data-plnext]"))newHand()});
-$("pl-sess").addEventListener("click",e=>{if(e.target.closest("[data-plnew]"))newGame()});
+$("pl-sess").addEventListener("click",e=>{if(e.target.closest("[data-plnew]"))newGame();else if(e.target.closest("[data-readinfo]"))openSeat({help:1})});
 $("pl-coach").addEventListener("change",()=>paintPlay());
 $("pl-auto").checked=plAuto;$("pl-auto").addEventListener("change",e=>{plAuto=e.target.checked;try{localStorage.setItem(PAKEY,plAuto?"1":"0")}catch(err){}
   const g=G;if(!g)return;if(g.over){clearTimeout(g.timer);g.autoAt=0;if(plAuto){g.autoAt=Date.now()+1500;g.timer=setTimeout(newHand,1500)}paintPlay()}});
