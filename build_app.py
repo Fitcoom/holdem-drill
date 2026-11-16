@@ -9,7 +9,9 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).parent
 APP = ROOT / "docs"
 APP.mkdir(exist_ok=True)
-VERSION = "1.0.0"
+import hashlib
+# Version = empreinte du contenu : chaque build modifié change sw.js, donc le navigateur voit la mise à jour.
+VERSION = hashlib.sha1((ROOT / "index.html").read_bytes() + b"".join(f.read_bytes() for f in sorted((ROOT / "av").glob("*.webp")))).hexdigest()[:10]
 
 FELT, FELT2, CARD, BRASS = (30, 90, 68), (20, 66, 50), (251, 251, 248), (216, 167, 72)
 
@@ -39,7 +41,13 @@ img{max-width:100%}
 sw_reg = """
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  // Vérifie les mises à jour à chaque visite (et toutes les 30 min), sans passer par le cache HTTP,
+  // puis recharge une fois quand la nouvelle version prend le relais.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded) { reloaded = true; location.reload(); } });
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
+    .then(r => { r.update(); setInterval(() => r.update(), 30 * 60 * 1000); }).catch(() => {}));
 }
 </script>
 </body>
@@ -90,10 +98,10 @@ self.addEventListener("activate", e => {{
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 }});
-// Réseau d'abord (mises à jour immédiates), cache en secours (hors ligne).
+// Réseau d'abord en contournant le cache HTTP (mises à jour immédiates), cache en secours (hors ligne).
 self.addEventListener("fetch", e => {{
-  if (e.request.method !== "GET") return;
-  e.respondWith(fetch(e.request).then(r => {{
+  if (e.request.method !== "GET" || new URL(e.request.url).origin !== location.origin) return;
+  e.respondWith(fetch(e.request, {{ cache: "no-cache" }}).then(r => {{
     const copy = r.clone();
     caches.open(CACHE).then(c => c.put(e.request, copy));
     return r;

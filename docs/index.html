@@ -6269,7 +6269,13 @@ paintStreak();paintSize();paintMode();applyLang();show(location.hash.slice(1)||"
 
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  // Vérifie les mises à jour à chaque visite (et toutes les 30 min), sans passer par le cache HTTP,
+  // puis recharge une fois quand la nouvelle version prend le relais.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded) { reloaded = true; location.reload(); } });
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
+    .then(r => { r.update(); setInterval(() => r.update(), 30 * 60 * 1000); }).catch(() => {}));
 }
 </script>
 </body>
