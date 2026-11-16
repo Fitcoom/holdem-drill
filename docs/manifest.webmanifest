@@ -1,14 +1,14 @@
 {
-  "name": "Hold'em Drill",
-  "short_name": "Hold'em Drill",
-  "description": "Texas Hold'em 6-max poker trainer: preflop ranges, equity, pot odds, showdown.",
+  "name": "Exploit Poker Trainer",
+  "short_name": "Exploit",
+  "description": "Exploit Poker Trainer: learn to read and exploit poker players. Play the player, not the chart.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0e1512",
-  "theme_color": "#1e5a44",
+  "theme_color": "#0e1512",
   "categories": ["games", "education"],
   "icons": [
     {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},

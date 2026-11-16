@@ -1,4 +1,4 @@
-"""Construit la version installable (PWA) de Hold'em Drill dans docs/ (servi par GitHub Pages).
+"""Construit la version installable (PWA) d'Exploit Poker Trainer dans docs/ (servi par GitHub Pages).
 
 Source unique : index.html (aussi publié comme artifact claude.ai).
 Usage : python build_app.py
@@ -22,15 +22,15 @@ head = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1e5a44">
-<meta name="description" content="Texas Hold'em poker trainer: preflop ranges, equity, pot odds, showdown.">
+<meta name="theme-color" content="#0e1512">
+<meta name="description" content="Exploit Poker Trainer: learn to read and exploit poker players. Play the player, not the chart.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Hold'em Drill">
+<meta name="apple-mobile-web-app-title" content="Exploit">
 <style>
 :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0;-webkit-tap-highlight-color:transparent}
@@ -61,16 +61,16 @@ html = head + body[:cut] + "</head>\n<body>\n" + body[cut:] + sw_reg
 
 # ---------- manifest ----------
 (APP / "manifest.webmanifest").write_text("""{
-  "name": "Hold'em Drill",
-  "short_name": "Hold'em Drill",
-  "description": "Texas Hold'em 6-max poker trainer: preflop ranges, equity, pot odds, showdown.",
+  "name": "Exploit Poker Trainer",
+  "short_name": "Exploit",
+  "description": "Exploit Poker Trainer: learn to read and exploit poker players. Play the player, not the chart.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0e1512",
-  "theme_color": "#1e5a44",
+  "theme_color": "#0e1512",
   "categories": ["games", "education"],
   "icons": [
     {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
@@ -93,7 +93,7 @@ for f in UI:
 AVS = ", ".join([f'"av/{f.name}"' for f in AV] + [f'"ui/{f.name}"' for f in UI])
 
 # ---------- service worker (hors ligne) ----------
-(APP / "sw.js").write_text(f"""const CACHE = "holdem-drill-{VERSION}";
+(APP / "sw.js").write_text(f"""const CACHE = "exploit-poker-trainer-{VERSION}";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", {AVS}];
 self.addEventListener("install", e => {{
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
@@ -117,36 +117,17 @@ self.addEventListener("fetch", e => {{
 SYM = "C:/Windows/Fonts/seguisym.ttf"
 DISP = "C:/Windows/Fonts/impact.ttf"
 
+LOGO = Image.open(ROOT / "brand" / "logo-1024.png").convert("RGB")
+BG = (14, 21, 18)
+
 def icon(size, maskable=False):
-    s = 4  # suréchantillonnage pour l'anticrénelage
-    W = size * s
-    im = Image.new("RGBA", (W, W), (0, 0, 0, 0))
-    d = ImageDraw.Draw(im)
-    if maskable:
-        d.rectangle([0, 0, W, W], fill=FELT)
-    else:
-        d.rounded_rectangle([0, 0, W - 1, W - 1], radius=int(W * 0.22), fill=FELT)
-    d.ellipse([W * .08, W * .08, W * .92, W * .92], outline=FELT2, width=int(W * .03))
-    k = 0.72 if maskable else 1.0  # zone sûre maskable
-    cw, ch = W * .46 * k, W * .62 * k
-    x0, y0 = (W - cw) / 2 + W * .02, (W - ch) / 2
-    # carte de fond inclinée (as de cœur suggéré par une couleur laiton)
-    back = Image.new("RGBA", (W, W), (0, 0, 0, 0))
-    bd = ImageDraw.Draw(back)
-    bd.rounded_rectangle([x0, y0, x0 + cw, y0 + ch], radius=int(cw * .12), fill=BRASS)
-    back = back.rotate(14, center=(W / 2, W / 2), resample=Image.BICUBIC)
-    im.alpha_composite(back)
-    front = Image.new("RGBA", (W, W), (0, 0, 0, 0))
-    fd = ImageDraw.Draw(front)
-    fx = x0 - W * .05
-    fd.rounded_rectangle([fx, y0, fx + cw, y0 + ch], radius=int(cw * .12), fill=CARD, outline=(200, 205, 200), width=int(W * .006))
-    f_sym = ImageFont.truetype(SYM, int(ch * .55))
-    fd.text((fx + cw / 2, y0 + ch * .56), "♠", font=f_sym, fill=(22, 24, 26), anchor="mm")
-    f_a = ImageFont.truetype(DISP, int(ch * .2))
-    fd.text((fx + cw * .1, y0 + ch * .05), "A", font=f_a, fill=(22, 24, 26), anchor="la")
-    front = front.rotate(-6, center=(W / 2, W / 2), resample=Image.BICUBIC)
-    im.alpha_composite(front)
-    return im.resize((size, size), Image.LANCZOS)
+    """App icons from the illustrated logo; maskable versions keep it inside the safe zone."""
+    if not maskable:
+        return LOGO.resize((size, size), Image.LANCZOS)
+    im = Image.new("RGB", (size, size), BG)
+    k = int(size * .8)
+    im.paste(LOGO.resize((k, k), Image.LANCZOS), ((size - k) // 2, (size - k) // 2))
+    return im
 
 icon(192).save(APP / "icon-192.png")
 icon(512).save(APP / "icon-512.png")

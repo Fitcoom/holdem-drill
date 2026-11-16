@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1e5a44">
-<meta name="description" content="Texas Hold'em poker trainer: preflop ranges, equity, pot odds, showdown.">
+<meta name="theme-color" content="#0e1512">
+<meta name="description" content="Exploit Poker Trainer: learn to read and exploit poker players. Play the player, not the chart.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Hold'em Drill">
+<meta name="apple-mobile-web-app-title" content="Exploit">
 <style>
 :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0;-webkit-tap-highlight-color:transparent}
 img{max-width:100%}
 [hidden]{display:none!important}
 </style>
-<title>Hold'em Drill</title>
+<title>Exploit Poker Trainer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -344,13 +344,53 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 @media (hover:none){.ans kbd,.hint{display:none}}
 @media (max-width:420px){.card{width:40px;height:56px}.card b{font-size:22px}.card i{font-size:17px}.card.lg{width:52px;height:72px}.big{font-size:28px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== Exploit Poker Trainer art direction: everything shares the portraits' look =====
+   ink outline (#22182a), a solid "cartoon" drop shadow under pressable things, brass accents. */
+:root{--inkl:#22182a}
+html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 55%) fixed,var(--bg)}
+.brandbox{display:flex;align-items:center;gap:10px}
+.logo{width:48px;height:48px;border-radius:50%;border:2.5px solid var(--inkl);box-shadow:0 3px 0 var(--inkl),0 0 0 2px var(--brass);object-fit:cover}
+.brand{font-size:28px;letter-spacing:.02em;text-shadow:0 3px 0 var(--inkl),0 0 1px var(--inkl)}
+.brand span{color:var(--brass);display:block;font-size:12.5px;letter-spacing:.18em;margin-top:3px;text-shadow:0 2px 0 var(--inkl)}
+.verdict{text-shadow:0 2px 0 var(--inkl)}
+/* pressable things */
+.ans,.pill,.next,.tseat,.sguess button,.moregrid button,.pl-opt,.sclose,.gear,.lang button,.tbl-grid .tseat,.pl-undo{border:2px solid var(--inkl)!important;box-shadow:0 3px 0 var(--inkl);transition:transform .06s,box-shadow .06s}
+.ans:active,.pill:active,.next:active,.tseat:active,.sguess button:active,.moregrid button:active,.pl-opt:active,.sclose:active{transform:translateY(2px);box-shadow:0 1px 0 var(--inkl)}
+.ans{background:linear-gradient(180deg,#1c2a23,#16201b);border-radius:14px}
+.ans:hover{border-color:var(--brass)!important}
+.ans.ok{background:linear-gradient(180deg,#1f4a33,#173826)} .ans.ko{background:linear-gradient(180deg,#4a2222,#3d1d1d)}
+.next{background:var(--brass);color:#1b1206;font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;border-radius:12px}
+.pill{background:#1a2620}
+.pill[aria-pressed="true"]{background:var(--brass);color:#1b1206;border-color:var(--inkl)!important}
+.lang{border:2px solid var(--inkl);box-shadow:0 3px 0 var(--inkl)} .lang button{box-shadow:none;border:0!important}
+.gear{border-radius:50%}
+/* panels */
+.fb,.srow,.ssheet,.pl-grade,.gtovs>div,.sstats div,.villains>div,.study,.how,.sheet,#vp-card,.intro{border:2px solid var(--inkl)!important;box-shadow:0 4px 0 var(--inkl)}
+.ssheet{border-bottom:0!important;box-shadow:0 -6px 0 var(--inkl),0 -14px 30px rgba(0,0,0,.5)}
+.gtovs>div.ex{border-color:var(--inkl)!important;background:linear-gradient(180deg,#463818,#3a2f17)}
+/* table */
+.oval{border:3px solid var(--inkl);box-shadow:0 5px 0 var(--inkl),inset 0 0 0 6px rgba(0,0,0,.18)}
+.card{border:2px solid var(--inkl)!important;box-shadow:0 3px 0 var(--inkl)}
+.cinfo{border-width:2px!important;border-color:var(--inkl)}
+.pbox{border:2px solid var(--inkl)}
+/* Opponents tab */
+.introd summary{cursor:pointer;list-style:none} .introd summary::-webkit-details-marker{display:none}
+.introd summary::after{content:" ⌄";opacity:.6} .introd[open] summary::after{content:" ⌃"}
+#vp-prof{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+#vp-prof .pill{display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:14px;padding:8px 4px;font-size:12px;text-align:center;line-height:1.15}
+#vp-prof .pill img.av{width:44px;height:44px;margin:0}
+/* bottom nav in the same language */
+.bnav{border-top:2px solid var(--inkl)}
+.bnav img{border:2px solid var(--inkl)}
+.note,.hint{font-size:12px;color:var(--muted);opacity:.8}
 </style>
 
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div><div class="brand">Hold'em <span>Drill</span></div><div class="tagline" data-t="tagline"></div></div>
+    <div class="brandbox"><img class="logo" src="ui/logo.webp" alt=""><div><div class="brand">Exploit<span>Poker Trainer</span></div><div class="tagline" data-t="tagline"></div></div></div>
     <div class="right">
       <div class="streak" aria-live="polite"><span data-t="streak"></span> <b id="streak">0</b> · <span data-t="best"></span> <b id="best">0</b></div>
       <button class="gear" id="open-settings" aria-haspopup="dialog" data-tl="settings"><img class="ic gear-ic" src="ui/ic-gear.webp" alt="" aria-hidden="true"></button>
@@ -5920,10 +5960,10 @@ const gtoBox=k=>`<div class="gtovs"><div><span class="lbl">${t().gtoVs}</span><p
 let vProf="nit",vPos="BTN",vFam="rock";
 function paintVillains(){
   if(!OPENERS().includes(vPos))vPos="BTN";
-  $("vp-intro").innerHTML=`<div class="verdict">${t().popTitle}</div><p>${t().popText}</p><ul class="poplist">${t().popFacts.map(f=>`<li>${f}</li>`).join("")}</ul><p class="muted">${t().popSrc}</p>`;
-  if(styles()){$("vp-prof").innerHTML=STYK.map(k=>`<button class="pill" aria-pressed="${k===vFam}" data-vfam="${k}">${optAv(k,22)}${t().sty[k]}</button>`).join("");vProf=STYREP[vFam];
+  $("vp-intro").innerHTML=`<details class="introd"><summary class="verdict">${t().popTitle}</summary><p>${t().popText}</p><ul class="poplist">${t().popFacts.map(f=>`<li>${f}</li>`).join("")}</ul><p class="muted">${t().popSrc}</p></details>`;
+  if(styles()){$("vp-prof").innerHTML=STYK.map(k=>`<button class="pill" aria-pressed="${k===vFam}" data-vfam="${k}">${optAv(k,44)}<span>${t().sty[k]}</span></button>`).join("");vProf=STYREP[vFam];
     $("vp-card").innerHTML=`<div class="vhead">${av(STYREP[vFam],84)}<div><div class="verdict">${t().sty[vFam]}</div><div class="vtype">${t().styFam[vFam]}</div></div></div><div class="vfaces"><span class="lbl">${t().styIncl}</span>${STY[vFam].map(k=>`<span>${av(k,44)}<small>${t().prof[k]}</small></span>`).join("")}</div><div class="facts"><span>${t().statsLbl}: ${STYSTAT[vFam]}</span></div><p>${t().styDesc[vFam]}</p><p><b>${t().exploitLbl}</b> ${t().styExp[vFam]}</p>${STY[vFam].map(k=>`<div class="gtofor">${av(k,26)}<b>${t().prof[k]}</b></div>${gtoBox(k)}`).join("")}<p class="muted">${t().styMore}</p>`}
-  else $("vp-prof").innerHTML=PROFILES.map(k=>`<button class="pill" aria-pressed="${k===vProf}" data-vprof="${k}">${av(k,22)}${t().prof[k]}</button>`).join("");
+  else $("vp-prof").innerHTML=PROFILES.map(k=>`<button class="pill" aria-pressed="${k===vProf}" data-vprof="${k}">${av(k,44)}<span>${t().prof[k]}</span></button>`).join("");
   const sz=LIMPERS[vProf]?`${t().limpsLbl} ${bb(PSIZE[vProf])}`:bb(PSIZE[vProf]);
   if(!styles())$("vp-card").innerHTML=`<div class="vhead">${av(vProf,84)}<div><div class="verdict">${PNAME[vProf]} « ${t().pnick[vProf]} »</div><div class="vtype">${t().prof[vProf]}</div><div class="vtag">${t().ptag[vProf]}</div></div></div><div class="vfaces"><span class="lbl">${t().otherFaces}</span>${FACES(vProf).slice(1).map(f=>`<span>${av(f,44)}<small>${PNAME[f]}</small></span>`).join("")}</div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span>${t().pfacts[vProf].map(f=>`<span>${f}</span>`).join("")}</div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p>${gtoBox(vProf)}<p class="src">${t().srcLbl} ${PSRC[vProf].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(" · ")}</p>`;
   $("vp-pos").hidden=!!LIMPERS[vProf];
