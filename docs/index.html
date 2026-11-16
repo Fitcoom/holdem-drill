@@ -196,8 +196,12 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .ring.n9:has(.pseat.char){height:470px}
 .ring.n9 .cseat .av{width:62px;height:62px} .ring.n9 .cinfo{font-size:11px}
 @media (max-width:420px){.cseat .av{width:62px;height:62px}.cinfo{font-size:10.5px;padding:2px 6px}.ctype{font-size:8.5px}.ring:has(.pseat.char){height:360px;margin-top:30px}.ring.n9:has(.pseat.char){height:430px}.ring.n9 .cseat .av{width:46px;height:46px}.ring.n9 .cname{display:none}}
-.av.anon{display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#5b6170,#2a2d36);color:#e8e8ec;font-family:var(--f-display);font-size:34px;font-weight:800;border:2.5px dashed #9aa0ad;box-sizing:border-box;flex:none}
-.ring.n9 .av.anon{font-size:26px}
+.av.anon{display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--sc,#5b6170) 55%,#fff),var(--sc,#2a2d36));font-size:40px;line-height:1;border:3px solid #22182a;box-shadow:0 0 0 3px var(--sc,#9aa0ad),0 3px 10px rgba(0,0,0,.45)!important;box-sizing:border-box;flex:none}
+.ring.n9 .av.anon{font-size:30px}
+@media (max-width:420px){.av.anon{font-size:32px}.ring.n9 .av.anon{font-size:22px}}
+.cinfo[style*="--sc"]{border-color:var(--sc);border-width:2.5px}
+.pl-rrow .stag{color:var(--sc);white-space:nowrap}
+.pl-rrow{border-left:4px solid var(--sc,transparent);padding-left:8px}
 .ctype.anon{background:transparent;border:1px dashed currentColor;color:var(--muted);text-shadow:none}
 .pl-read{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;margin:10px 0}
 .pl-read h3{margin:0 0 4px;font-size:15px}
@@ -5533,7 +5537,7 @@ function tableView(o){
       if(a.av){ // character seat: portrait, position, type and bet in one capsule
         const act=a.act!=null?a.act:a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:a.st==="limp"?`Limp ${bb(bet)}`:bet?bb(bet):t().toAct;
         const tx=x<22?-22:x>78?-78:-50;
-        h+=`<div class="pseat char ${a.st}${win}${a.turn?" turn":""}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${a.anon?`<span class="av anon">?</span>`:av(a.av,52)}${a.cards?`<div class="hc big shown">${cardsHTML(a.cards,"sm")}</div>`:holeCards(a.st==="fold"," big")}<div class="cinfo"><b>${lbl(pos)}<span class="cname"> · ${a.anon||PNAME[a.av]}</span></b>${a.anon?`<span class="ctype anon">${a.guess?PSHORT[a.guess]+" ?":"?"}</span>`:`<span class="ctype" style="background:${AVC[avType(a.av)]}">${PSHORT[avType(a.av)]}</span>`}<span class="cbet">${act}</span>${a.stack!=null?`<span class="cstk">${bb(a.stack)}</span>`:""}</div></div></div>`;
+        h+=`<div class="pseat char ${a.st}${win}${a.turn?" turn":""}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${a.anon?`<span class="av anon" style="--sc:${a.ac}">${a.ai}</span>`:av(a.av,52)}${a.cards?`<div class="hc big shown">${cardsHTML(a.cards,"sm")}</div>`:holeCards(a.st==="fold"," big")}<div class="cinfo"${a.ac?` style="--sc:${a.ac}"`:""}><b>${lbl(pos)}<span class="cname"> · ${a.anon||PNAME[a.av]}</span></b>${a.anon?`<span class="ctype anon">${a.guess?PSHORT[a.guess]+" ?":"?"}</span>`:`<span class="ctype" style="background:${AVC[avType(a.av)]}">${PSHORT[avType(a.av)]}</span>`}<span class="cbet">${act}</span>${a.stack!=null?`<span class="cstk">${bb(a.stack)}</span>`:""}</div></div></div>`;
       }else{
       h+=`<div class="pseat ${a.st}${win}${a.turn?" turn":""}" style="left:${x}%;top:${y}%"><div class="mini">${cards}</div><div class="pbox">${lbl(pos)}<small>${sub}</small></div></div>`;
       if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;}
@@ -6084,9 +6088,11 @@ $("pl-speed").addEventListener("click",e=>{const b=e.target.closest("[data-speed
 const PAKEY="holdem-drill-plauto";let plAuto=true;try{plAuto=localStorage.getItem(PAKEY)!=="0"}catch(e){}
 const fastFwd=()=>plAuto&&G&&G.P[0].folded&&!G.read;
 const plPos=i=>{const n=G.n,k=(i-G.btn+n)%n;return ORDER()[(k-3+n)%n]};
+const SEATC=["#e5484d","#3e8ef7","#30a46c","#f5a524","#a463f2","#12a5a5","#ec5fa8","#8d6e63"],SEATI=["🦊","🐻","🐸","🐯","🦉","🐼","🐙","🐺"];
+const seatTag=i=>`${SEATI[(i-1)%8]} ${t().plSeat(i)}`;
 const seatHidden=i=>G&&G.read&&!G.P[i].idOK;
 const hidden=()=>G&&G.read&&G.P.some((p,i)=>i&&!p.idOK);
-const plName=i=>i?(seatHidden(i)?t().plSeat(i):pers()?PNAME[G.P[i].face]:lbl(plPos(i))):t().you;
+const plName=i=>i?(seatHidden(i)?seatTag(i):pers()?PNAME[G.P[i].face]:lbl(plPos(i))):t().you;
 const potOf=()=>r2(G.P.reduce((a,p)=>a+p.inv,0));
 const canAct=p=>!p.folded&&!p.allin;
 function newGame(){if(G&&G.timer)clearTimeout(G.timer);$("pl-grade").hidden=true;const n=size,tb=myTable();
@@ -6190,7 +6196,7 @@ function paintRead(){const g=G,el=$("pl-read");if(!g||!g.read){el.hidden=true;re
     const tried=p.tries.length?`<div class="tried">${p.tries.map(x=>`<span class="${FAMILY[x]===FAMILY[p.ty]?"mid":"ko"}">${FAMILY[x]===FAMILY[p.ty]?"≈":"✘"} ${PSHORT[x]}</span>`).join(" ")}</div>`:"";
     const right=p.idOK?`<span class="res ok">✔ ${PNAME[p.face]} · ${t().prof[p.ty]}${p.tries.length?` <small>(${t().plTries(p.tries.length)})</small>`:""}</span>`
       :`<span class="gbox"><select data-guess="${i}"><option value="">${t().plGuess}…</option>${PROFILES.filter(k=>!p.tries.includes(k)).map(k=>`<option value="${k}">${t().prof[k]}</option>`).join("")}</select><button class="pill" data-try="${i}">${t().plTry}</button></span>`;
-    return `<div class="pl-rrow"><b>${t().plSeat(i)}</b><span class="stat">${t().plStats(h.n,pc(h.vp,h.n),pc(h.pfr,h.n),af)}${tried}</span>${right}</div>`}).join("");
+    return `<div class="pl-rrow" style="--sc:${SEATC[(i-1)%8]}"><b class="stag">${seatTag(i)}</b><span class="stat">${t().plStats(h.n,pc(h.vp,h.n),pc(h.pfr,h.n),af)}${tried}</span>${right}</div>`}).join("");
   const score=Math.max(0,100-wrong*10);
   el.innerHTML=`<h3>🕵️ ${t().plRead} · ${done}/${bots.length}</h3><p class="muted">${all?"":t().plReadHint}</p>${rows}${all?`<div class="pl-readdone"><b>${t().plReadDone(g.done,wrong,score)}</b></div>`:`<p class="muted">${t().plReadClose}</p>`}<div class="pl-rbtns"><button class="pill" data-newread>${t().plNewTable}</button></div>`}
 $("pl-read").addEventListener("click",e=>{const b=e.target.closest("[data-try]");
@@ -6201,7 +6207,7 @@ function paintPlay(){const g=G;if(!g)return;paintRead();const seats={};
   g.P.forEach((p,i)=>{const pos=plPos(i);
     if(i===0){seats[pos]={bet:p.bet,win:p.win>0};return}
     const st=p.folded?"fold":["raise","bet","allin"].includes(p.lastK)?"raise":p.lastK==="call"?"limp":"wait";
-    seats[pos]={st,bet:p.bet,av:pers()?p.face:null,anon:seatHidden(i)?t().plSeat(i):null,guess:"",cards:p.show?p.cards:null,act:p.last||(!g.over&&i===g.toAct?"…":""),stack:p.stack,win:p.win>0,turn:!g.over&&i===g.toAct,
+    seats[pos]={st,bet:p.bet,av:pers()?p.face:null,anon:seatHidden(i)?t().plSeat(i):null,ai:SEATI[(i-1)%8],ac:g.read?SEATC[(i-1)%8]:null,guess:"",cards:p.show?p.cards:null,act:p.last||(!g.over&&i===g.toAct?"…":""),stack:p.stack,win:p.win>0,turn:!g.over&&i===g.toAct,
       sub:`${p.last?p.last+" · ":""}${bb(p.stack)}`}});
   const h=g.P[0],hp=plPos(0);
   paintRing("pl-table",{bottom:hp,bottomCards:h.cards,bottomLabel:`${t().you} · ${lbl(hp)}`,bottomSub:bb(h.stack)+(h.win>0?` · +${bb(h.win)}`:""),seats,
