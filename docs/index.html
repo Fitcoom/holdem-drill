@@ -225,6 +225,20 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .pl-speed{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;margin:10px 0}
 .mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
+.elo{position:relative;display:flex;align-items:center;gap:6px;background:#1a2620;border:2px solid #22182a;box-shadow:0 3px 0 #22182a;border-radius:999px;padding:3px 10px 3px 3px;color:var(--ink);font-family:var(--f-mono);font-size:14px}
+.elo img{width:28px;height:28px;border-radius:50%;border:1.5px solid #22182a}
+.elo-d{position:absolute;right:-6px;top:-14px;font-weight:800;font-size:13px;padding:1px 6px;border-radius:999px;border:1.5px solid #22182a;animation:eloup 1.6s ease-out forwards}
+.elo-d.up{background:#30a46c;color:#071a10} .elo-d.down{background:#e5484d;color:#2a0606}
+@keyframes eloup{0%{transform:translateY(6px);opacity:0}15%{transform:none;opacity:1}80%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+.srow.rk{grid-template-columns:auto 1fr;align-items:center}
+.rkimg{width:72px;height:72px;border-radius:50%;border:2.5px solid #22182a;box-shadow:0 3px 0 #22182a,0 0 0 2px var(--brass)}
+.rkbody{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}.rkbody .meter,.rkbody .sub{grid-column:1/-1}
+.srow.leaks{display:flex;flex-direction:column;gap:10px}
+.leak{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;border-top:1px solid var(--line);padding-top:10px}
+.leak:first-of-type{border-top:0;padding-top:0}
+.leak>img{width:44px;height:44px;border-radius:50%;border:2px solid #22182a}
+.leak small{display:block;color:var(--muted);font-size:12px} .leak p{margin:4px 0 0;font-size:13.5px}
+.leak .pill{grid-column:2;justify-self:start;margin-top:6px}
 .bnav{display:none}
 .moregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:36px}
 .moregrid button,.bnav button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -392,6 +406,7 @@ html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 5
   <header class="top">
     <div class="brandbox"><img class="logo" src="ui/logo.webp" alt=""><div><div class="brand">Exploit<span>Poker Trainer</span></div><div class="tagline" data-t="tagline"></div></div></div>
     <div class="right">
+      <button class="elo" id="elo" aria-label="Rating"></button>
       <div class="streak" aria-live="polite"><span data-t="streak"></span> <b id="streak">0</b> · <span data-t="best"></span> <b id="best">0</b></div>
       <button class="gear" id="open-settings" aria-haspopup="dialog" data-tl="settings"><img class="ic gear-ic" src="ui/ic-gear.webp" alt="" aria-hidden="true"></button>
     </div>
@@ -615,7 +630,15 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"5 styles",modePers:"All 12"
   settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
-  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb. Tap a player to see their stats and profile.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",plTapGuess:"Tap a player at the table to see their stats and guess their type. Each wrong guess costs 10 points.",tabMore:"More",plHow:"How Play works",tblPick:"Choose the player at this seat",plSess:"This session",plWhoIs:"Who is this player?",plFound:"Identified",plTapHint:"Tap a player to see their stats and profile.",plAuto:"Deal the next hand automatically",plSpeed:"Bot speed",plSpeeds:{slow:"Slow",normal:"Normal",fast:"Fast",instant:"Instant"},
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb. Tap a player to see their stats and profile.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",tier:{fish:"Fish",student:"Student",reg:"Reg",shark:"Shark",legend:"Legend"},toNext:(n,t)=>`${n} points to ${t}`,topTier:"Top tier reached",decisions:n=>`${n} decisions`,
+  leaksTitle:"Your leaks",leaksFew:"Your leaks will show here after about 15 decisions (drills or Play).",leaksNone:"No clear leak right now: keep playing.",leakSeen:n=>`Seen ${n} time${n>1?"s":""} in your recent decisions`,practice:"Practice",
+  toughest:n=>`Toughest opponent: ${n}`,avgPrec:x=>`Your average precision against them: ${x}/100`,
+  leak:{pf_loose:["Too loose preflop","You play hands that lose money from that seat. Fold the bottom of your range."],pf_tight:["Too tight preflop","You fold profitable hands, especially when the players behind fold too much."],pf_limp:["Open-limping","Limping first in outside the small blind is a leak: raise or fold."],
+    def_loose:["Defends too wide","You call or 3-bet opens with hands that should fold."],def_tight:["Folds too much to opens","You give up hands that can defend profitably."],def_3bet:["Call vs 3-bet mix-ups","You call when you should 3-bet, or 3-bet when calling is better."],
+    call_light:["Calls without the odds","You call when your equity is below what the price requires."],fold_much:["Folds with the odds","You fold hands that had enough equity to continue."],
+    missed_value:["Missed value","You check strong hands instead of betting, especially against calling stations."],bluff_callers:["Bluffs players who don't fold","Bluffing stations and whales loses money: bet for value instead."],
+    thin:["Thin or loose bets","Your bets and raises come with too little equity in spots without fold equity."],size:["Bet sizing","Right action, wrong size: too big risks a lot to win little."],
+    math_eq:["Equity estimates","Practice estimating equity with the rule of 2 and 4."],math_odds:["Pot odds","Compare the price to call with your equity before deciding."],read_sd:["Reading showdowns","Check every five-card combination before naming the winner."]},plTapGuess:"Tap a player at the table to see their stats and guess their type. Each wrong guess costs 10 points.",tabMore:"More",plHow:"How Play works",tblPick:"Choose the player at this seat",plSess:"This session",plWhoIs:"Who is this player?",plFound:"Identified",plTapHint:"Tap a player to see their stats and profile.",plAuto:"Deal the next hand automatically",plSpeed:"Bot speed",plSpeeds:{slow:"Slow",normal:"Normal",fast:"Fast",instant:"Instant"},
   plRead:"Read the table",plReadHint:"Your opponents are hidden. Watch how they play, even after you fold (their stats build up hand after hand), and identify them one by one.",
   plSeat:n=>`Seat ${n}`,plGuess:"Your read",plCheck:"Check my reads",plNewTable:"New hidden table",plReadScore:s=>`Your reads: ${s}/100`,
   plReadClose:"Guess one seat at a time. ≈ means right family (tight or loose, passive or aggressive) but wrong type; ✘ means wrong family. Each wrong guess costs 10 points.",plTry:"Guess",plTries:n=>`${n} wrong guess${n>1?"es":""}`,plReadDone:(h,w,s)=>`Table read! ${h} hands, ${w} wrong guess${w===1?"":"es"}. Score: ${s}/100.`,plStats:(n,v,p,af)=>`${n} hands · VPIP ${v} · PFR ${p} · AF ${af}`,plAutoNote:"Next hand coming…",plYourAct:"your play",plLv:["Blunder","Mistake","Questionable","Good","Excellent"],
@@ -745,7 +768,15 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 1
   settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
-  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb. Touche un joueur pour voir ses stats et son profil.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",plTapGuess:"Touche un joueur à la table pour voir ses stats et deviner son type. Chaque erreur coûte 10 points.",tabMore:"Plus",plHow:"Comment marche le mode Jouer",tblPick:"Choisis le joueur à ce siège",plSess:"Cette session",plWhoIs:"Qui est ce joueur ?",plFound:"Identifié",plTapHint:"Touche un joueur pour voir ses stats et son profil.",plAuto:"Distribuer la main suivante automatiquement",plSpeed:"Vitesse des bots",plSpeeds:{slow:"Lent",normal:"Normal",fast:"Rapide",instant:"Instantané"},
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb. Touche un joueur pour voir ses stats et son profil.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",tier:{fish:"Poisson",student:"Élève",reg:"Régulier",shark:"Requin",legend:"Légende"},toNext:(n,t)=>`${n} points avant ${t}`,topTier:"Palier maximum atteint",decisions:n=>`${n} décisions`,
+  leaksTitle:"Tes leaks",leaksFew:"Tes leaks apparaîtront ici après environ 15 décisions (exercices ou Jouer).",leaksNone:"Pas de leak clair pour l'instant : continue à jouer.",leakSeen:n=>`Vu ${n} fois dans tes décisions récentes`,practice:"S'entraîner",
+  toughest:n=>`Adversaire le plus difficile : ${n}`,avgPrec:x=>`Ta précision moyenne contre lui : ${x}/100`,
+  leak:{pf_loose:["Trop large préflop","Tu joues des mains qui perdent de l'argent à ce siège. Fold le bas de ta range."],pf_tight:["Trop serré préflop","Tu folds des mains rentables, surtout quand les joueurs derrière foldent trop."],pf_limp:["Limp d'entrée","Limper en premier hors de la petite blinde est une fuite : relance ou fold."],
+    def_loose:["Défend trop large","Tu paies ou 3-bet des ouvertures avec des mains qui devraient folder."],def_tight:["Fold trop face aux ouvertures","Tu abandonnes des mains qui peuvent défendre de façon rentable."],def_3bet:["Confusion call / 3-bet","Tu paies quand il faut 3-bet, ou tu 3-bet quand payer est mieux."],
+    call_light:["Paie sans la cote","Tu paies alors que ton équité est sous ce que le prix exige."],fold_much:["Fold avec la cote","Tu folds des mains qui avaient assez d'équité pour continuer."],
+    missed_value:["Value manquée","Tu checkes des mains fortes au lieu de miser, surtout contre les calling stations."],bluff_callers:["Bluffe des joueurs qui ne foldent pas","Bluffer les stations et les whales perd de l'argent : mise pour la value à la place."],
+    thin:["Mises trop légères","Tes mises et relances ont trop peu d'équité dans des spots sans fold equity."],size:["Taille de mise","Bonne action, mauvaise taille : trop gros, tu risques beaucoup pour gagner peu."],
+    math_eq:["Estimation d'équité","Entraîne-toi à estimer l'équité avec la règle du 2 et du 4."],math_odds:["Cote du pot","Compare le prix à payer à ton équité avant de décider."],read_sd:["Lecture de l'abattage","Vérifie chaque combinaison de cinq cartes avant de nommer le gagnant."]},plTapGuess:"Touche un joueur à la table pour voir ses stats et deviner son type. Chaque erreur coûte 10 points.",tabMore:"Plus",plHow:"Comment marche le mode Jouer",tblPick:"Choisis le joueur à ce siège",plSess:"Cette session",plWhoIs:"Qui est ce joueur ?",plFound:"Identifié",plTapHint:"Touche un joueur pour voir ses stats et son profil.",plAuto:"Distribuer la main suivante automatiquement",plSpeed:"Vitesse des bots",plSpeeds:{slow:"Lent",normal:"Normal",fast:"Rapide",instant:"Instantané"},
   plRead:"Lis la table",plReadHint:"Tes adversaires sont cachés. Observe comment ils jouent, même après ton fold (leurs stats se remplissent main après main), et identifie-les un par un.",
   plSeat:n=>`Siège ${n}`,plGuess:"Ta lecture",plCheck:"Vérifier mes lectures",plNewTable:"Nouvelle table cachée",plReadScore:s=>`Tes lectures : ${s}/100`,
   plReadClose:"Devine un siège à la fois. ≈ veut dire bonne famille (serré ou large, passif ou agressif) mais mauvais type ; ✘ veut dire mauvaise famille. Chaque erreur coûte 10 points.",plTry:"Deviner",plTries:n=>`${n} erreur${n>1?"s":""}`,plReadDone:(h,w,s)=>`Table lue ! ${h} mains, ${w} erreur${w>1?"s":""}. Score : ${s}/100.`,plStats:(n,v,p,af)=>`${n} mains · VPIP ${v} · PFR ${p} · AF ${af}`,plAutoNote:"Main suivante dans un instant…",plYourAct:"ton choix",plLv:["Gaffe","Erreur","Discutable","Bon","Excellent"],
@@ -5652,7 +5683,8 @@ function paintAnswers(box,labels,st,keys){
 }
 const good=(st,i)=>i===st.correct||i===st.alt||i===st.gto;
 function paintFb(el,st,txt){if(st.chosen==null){el.hidden=true;return}el.innerHTML=verdict(good(st,st.chosen),txt());el.hidden=false}
-function answer(mod,st,i,paint){if(!st||st.chosen!=null)return;st.chosen=i;record(mod,good(st,i));paint()}
+function answer(mod,st,i,paint){if(!st||st.chosen!=null)return;st.chosen=i;record(mod,good(st,i));
+  if(typeof logDecision==="function")logDecision(mod,good(st,i)?(i===st.gto&&i!==st.correct?75:100):0,drillCat(mod,st,i),pers()&&st.prof&&st.prof!=="gto"?st.prof:null,(DRILLD[mod]||1000)+(st.gto!=null?150:0));paint()}
 
 /* ---------- full table view ----------
    The bottom seat is always the player we look from; the others follow clockwise in order of play.
@@ -6079,9 +6111,9 @@ function paintStats(){
   const rows=Object.keys(t().mods).map(k=>{const [ok,n]=S.m[k];tot[0]+=ok;tot[1]+=n;const p=n?Math.round(ok/n*100):0;
     return `<div class="srow"><h3>${t().mods[k]}</h3><div class="val">${n?p+" %":"—"}</div><div class="meter"><span style="width:${p}%"></span></div><div class="sub">${t().sub(ok,n)}</div></div>`}).join("");
   const tp=tot[1]?Math.round(tot[0]/tot[1]*100):0;
-  $("stats").innerHTML=`<div class="srow"><h3>${t().overall}</h3><div class="val">${tot[1]?tp+" %":"—"}</div><div class="meter"><span style="width:${tp}%"></span></div><div class="sub">${t().subAll(tot[1],S.best)}</div></div>${rows}<button class="reset" id="reset">${resetArmed?t().confirmReset:t().reset}</button>${tot[1]?"":`<p class="note">${t().empty}</p>`}`;
+  $("stats").innerHTML=ratingHTML()+`<div class="srow"><h3>${t().overall}</h3><div class="val">${tot[1]?tp+" %":"—"}</div><div class="meter"><span style="width:${tp}%"></span></div><div class="sub">${t().subAll(tot[1],S.best)}</div></div>${rows}<button class="reset" id="reset">${resetArmed?t().confirmReset:t().reset}</button>${tot[1]?"":`<p class="note">${t().empty}</p>`}`;
   $("reset").onclick=()=>{if(!resetArmed){resetArmed=true;paintStats();return}
-    resetArmed=false;S=blank();save();paintStreak();paintStats()};
+    resetArmed=false;S=blank();save();LOG={elo:1000,n:0,h:[]};saveLog();paintElo(0);paintStreak();paintStats()};
 }
 
 /* ---------- language ---------- */
@@ -6093,7 +6125,7 @@ function applyLang(){
   $("set-lang").value=lang;$("set-terms").checked=keepTerms&&lang!=="en";$("set-terms").disabled=lang==="en";
   $("set-terms-row").classList.toggle("off",lang==="en");$("set-terms-hint").textContent=lang==="en"?t().setTermsOff:t().setTermsHint;
   $("open-settings").setAttribute("aria-label",t().settings);$("open-settings").title=t().settings;
-  for(const k in PAINT)PAINT[k]();
+  for(const k in PAINT)PAINT[k]();if(typeof paintElo==="function")paintElo(0);
   paintStudy();paintDStudy();paintDProf();paintPfProf();paintPlProf();if(G)paintPlay();if(current==="stats")paintStats();if(current==="villains")paintVillains();
 }
 $("set-lang").addEventListener("change",e=>{if(!T[e.target.value])return;lang=e.target.value;try{localStorage.setItem(LKEY,lang)}catch(err){}applyLang()});
@@ -6201,8 +6233,15 @@ function gradeHero(kind,cache,to){cache=cache||{};const ctx={value:false,callers
       if(act==="raise"){sc=eq>=vT?95:folders&&eq<.35?75:eq<.35?(callers?15:35):55;why.push(eq>=vT?A.value:folders&&eq<.35?A.bluffOk:eq<.35?(callers?A.bluffBad:A.thin):A.thin)}
       else{sc=eq>=vT+.12?35:eq>=vT?60:85;why.push(eq>=vT+.12?A.missed:eq>=vT?A.thinCheck:A.checkOk)}}
   }
-  if(act==="raise"&&to){const [pen,ideal]=sizePen(to,ctx);if(pen>0){const base=sc;sc=Math.max(5,sc-pen);if(base>=65)why.push(A.size(bb(ideal)))}}
-  return {sc,why}}
+  let cat=null,sizeHit=false;
+  if(act==="raise"&&to){const [pen,ideal]=sizePen(to,ctx);if(pen>0){const base=sc;sc=Math.max(5,sc-pen);if(base>=65){why.push(A.size(bb(ideal)));sizeHit=true}}}
+  if(sc<65){if(sizeHit)cat="size";
+    else if(g.street===0&&g.raiseN===0)cat=act==="call"&&pos!=="SB"?"pf_limp":act==="fold"||act==="check"?"pf_tight":"pf_loose";
+    else if(call>0)cat=act==="fold"?"fold_much":act==="call"?"call_light":ctx.callers?"bluff_callers":"call_light";
+    else cat=act==="raise"?(ctx.callers?"bluff_callers":"thin"):"missed_value"}
+  const vi=g.aggr>0&&!g.P[g.aggr].folded?g.aggr:live[0],vs=vi?g.P[vi].ty:null;
+  const diff=950+(g.street>0?100:0)+(call>0?100:0)+(hidden()?50:0);
+  return {sc,why,cat,vs,diff}}
 /* bet-size quality: penalty in precision points, and the size we would use */
 function sizePen(to,ctx){const g=G,h=g.P[0],pt=potOf(),stk=r2(h.bet+h.stack),allin=to>=stk,pos=plPos(0);
   if(g.street===0&&g.raiseN===0){const limpers=g.P.filter((q,j)=>j&&!q.folded&&q.bet===1&&plPos(j)!=="BB").length,ideal=(ctx.callers?3.5:2.5)+limpers;
@@ -6303,8 +6342,8 @@ function heroAct(kind,to){const g=G;if(!g||g.over||g.toAct!==0)return;
   const {snap,timer,...rest}=g;const snapNew=structuredClone(rest);
   const cache={},opts=heroOpts().map(([k,t2])=>{const r=gradeHero(k,cache,t2);return {k,to:t2||0,sc:r.sc}});
   const gr=gradeHero(kind,cache,to);gr.act=optLabel(kind,to);gr.kind=kind;gr.to=to||0;gr.opts=opts;
-  g.snap=snapNew;(g.grades=g.grades||[]).push(gr.sc);showGrade(gr);doAct(0,kind,to);g.toAct=1%g.n;step()}
-function undoPlay(){const g=G;if(!g||!g.snap)return;clearTimeout(g.timer);const grades=(g.grades||[]).slice(0,-1);
+  g.snap=snapNew;(g.grades=g.grades||[]).push(gr.sc);showGrade(gr);logDecision("play",gr.sc,gr.cat,gr.vs,gr.diff);doAct(0,kind,to);g.toAct=1%g.n;step()}
+function undoPlay(){const g=G;if(!g||!g.snap)return;unlogLast();clearTimeout(g.timer);const grades=(g.grades||[]).slice(0,-1);
   G=structuredClone(g.snap);G.grades=grades;G.snap=null;$("pl-grade").hidden=true;paintPlay()}
 function nextStreet(){const g=G;for(const p of g.P){p.bet=0;p.acted=false;if(!p.folded&&!p.allin){p.last="";p.lastK=""}}
   if(g.street===0)g.P.forEach((p,i)=>{if(p.folded)return;p.rng=i?botRange(i):heroRange();p.rc=combosOf(p.rng)});
@@ -6430,9 +6469,46 @@ $("pl-auto").checked=plAuto;$("pl-auto").addEventListener("change",e=>{plAuto=e.
 $("pl-grade").addEventListener("click",e=>{const r=e.target.closest("[data-retry]");if(r){const k=r.dataset.retry,to=+r.dataset.to;undoPlay();heroAct(k,to);return}if(e.target.closest("[data-undo]"))undoPlay()});
 
 
+
+/* ---------- Rating (ELO) and leak log ----------
+   Every decision moves the rating: expected score from the spot's difficulty, actual score = precision
+   (drills: right 100, GTO-acceptable 75, wrong 0). The last 500 decisions are kept with their leak category
+   and the opponent type, for the leak detector. Stored on this device only. */
+const LOGKEY="holdem-drill-log";
+let LOG={elo:1000,n:0,h:[]};try{const v=JSON.parse(localStorage.getItem(LOGKEY));if(v&&typeof v.elo==="number"&&Array.isArray(v.h))LOG=v}catch(e){}
+function saveLog(){try{localStorage.setItem(LOGKEY,JSON.stringify(LOG))}catch(e){}}
+const RKT=[[0,"fish"],[950,"student"],[1100,"reg"],[1250,"shark"],[1400,"legend"]];
+const tierOf=e=>{let r=RKT[0];for(const x of RKT)if(e>=x[0])r=x;return r};
+function logDecision(m,sc,cat,vs,D){const E=1/(1+Math.pow(10,(D-LOG.elo)/400)),K=LOG.n<50?32:LOG.n<200?20:14,d=Math.round(K*(sc/100-E));
+  LOG.elo=Math.max(100,LOG.elo+d);LOG.n++;LOG.h.push({m,s:Math.round(sc),c:cat||0,v:vs||0,d});if(LOG.h.length>500)LOG.h.splice(0,LOG.h.length-500);saveLog();paintElo(d)}
+function unlogLast(){const x=LOG.h.pop();if(!x)return;LOG.elo-=x.d;LOG.n=Math.max(0,LOG.n-1);saveLog();paintElo(-x.d)}
+function paintElo(d){const el=$("elo");if(!el)return;const k=tierOf(LOG.elo)[1];
+  el.innerHTML=`<img src="ui/rk-${k}.webp" alt=""><b>${LOG.elo}</b>`;el.title=t().tier[k];
+  if(d){const tt=document.createElement("span");tt.className="elo-d "+(d>=0?"up":"down");tt.textContent=(d>0?"+":"")+d;el.appendChild(tt);setTimeout(()=>tt.remove(),1700)}}
+const LEAKGO={pf_loose:"preflop",pf_tight:"preflop",pf_limp:"preflop",def_loose:"defense",def_tight:"defense",def_3bet:"defense",call_light:"potodds",fold_much:"potodds",missed_value:"play",bluff_callers:"play",thin:"play",size:"play",math_eq:"equity",math_odds:"potodds",read_sd:"showdown"};
+function drillCat(mod,st,i){if(good(st,i))return null;
+  if(mod==="preflop")return i===1&&st.pos!=="SB"?"pf_limp":i===0?"pf_tight":"pf_loose";
+  if(mod==="defense")return i===0&&st.correct!==0?"def_tight":st.correct===0?"def_loose":"def_3bet";
+  return {equity:"math_eq",potodds:"math_odds",showdown:"read_sd"}[mod]||null}
+const DRILLD={preflop:950,defense:1050,equity:1100,potodds:1000,showdown:900};
+function leaksHTML(){const h=LOG.h.slice(-300),T=t();
+  if(h.length<15)return `<p class="muted">${T.leaksFew}</p>`;
+  const agg={};for(const x of h)if(x.c){const a=agg[x.c]=agg[x.c]||{n:0,lost:0};a.n++;a.lost+=100-x.s}
+  const top=Object.entries(agg).sort((a,b)=>b[1].lost-a[1].lost).slice(0,3);
+  let out=top.length?top.map(([c,a])=>`<div class="leak"><img src="ui/rk-leak.webp" alt=""><div><b>${T.leak[c][0]}</b><small>${T.leakSeen(a.n)}</small><p>${T.leak[c][1]}</p></div><button class="pill" data-practice="${LEAKGO[c]}"><img class="ic" src="ui/rk-target.webp" alt="">${T.practice}</button></div>`).join(""):`<p class="muted">${T.leaksNone}</p>`;
+  const byv={};for(const x of h)if(x.v){const b=byv[x.v]=byv[x.v]||{n:0,s:0};b.n++;b.s+=x.s}
+  const tough=Object.entries(byv).filter(([,b])=>b.n>=6).map(([v,b])=>[v,b.s/b.n]).sort((a,b)=>a[1]-b[1])[0];
+  if(tough)out+=`<div class="leak tough">${av(styles()?STYREP[famOf(tough[0])]:tough[0],44)}<div><b>${T.toughest(tyName(tough[0]))}</b><small>${T.avgPrec(Math.round(tough[1]))}</small><p>${styles()?T.styExp[famOf(tough[0])]:T.pexp[tough[0]]}</p></div></div>`;
+  return out}
+function ratingHTML(){const T=t(),[lo,k]=tierOf(LOG.elo),nx=RKT.find(x=>x[0]>LOG.elo),pc=nx?Math.max(0,Math.min(100,Math.round((LOG.elo-lo)/(nx[0]-lo)*100))):100;
+  return `<div class="srow rk"><img class="rkimg" src="ui/rk-${k}.webp" alt=""><div class="rkbody"><h3>${T.tier[k]}</h3><div class="val">${LOG.elo}</div><div class="meter"><span style="width:${pc}%"></span></div><div class="sub">${nx?T.toNext(nx[0]-LOG.elo,T.tier[nx[1]]):T.topTier} · ${T.decisions(LOG.n)}</div></div></div>
+  <div class="srow leaks"><h3><img class="ic" src="ui/rk-leak.webp" alt=""> ${T.leaksTitle}</h3>${leaksHTML()}</div>`}
+
 /* ---------- phone navigation ---------- */
 const goView=v=>{if(location.hash!=="#"+v)location.hash=v;else show(v);window.scrollTo({top:0})};
 document.querySelector(".bnav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-more")){$("more-sheet").hidden=false;return}goView(b.dataset.view)});
+$("elo").addEventListener("click",()=>goView("stats"));
+document.addEventListener("click",e=>{const b=e.target.closest("[data-practice]");if(b)goView(b.dataset.practice)});
 $("more-sheet").addEventListener("click",e=>{if(e.target.id==="more-sheet"||e.target.closest("[data-mclose]")){$("more-sheet").hidden=true;return}
   const b=e.target.closest("button");if(!b)return;$("more-sheet").hidden=true;if(b.hasAttribute("data-settings")){$("open-settings").click();return}if(b.dataset.view)goView(b.dataset.view)});
 /* answer feedback is a bottom sheet on phones: tap its header to fold it and look at the table */
