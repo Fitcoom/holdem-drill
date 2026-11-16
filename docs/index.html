@@ -219,6 +219,24 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .pl-speed{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;margin:10px 0}
 .mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
+.pseat.char .cseat{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pseat.char:active .cseat{transform:scale(.96)}
+.sbg{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+.sbg[hidden]{display:none}
+.ssheet{position:relative;background:var(--bg);border-top:2px solid var(--brass);color:var(--ink);width:100%;max-width:560px;max-height:86vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px 26px;box-shadow:0 -8px 30px rgba(0,0,0,.5);animation:sup .22s ease-out}
+@keyframes sup{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.sclose{position:absolute;top:10px;right:12px;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-size:24px;line-height:1;cursor:pointer}
+.shead{display:flex;gap:14px;align-items:center;margin:4px 48px 10px 0}
+.shead .verdict{font-size:22px}
+.sstats{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin:6px 0 12px}
+.sstats div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 8px;display:flex;flex-direction:column}
+.sstats small{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+.sstats b{font-family:var(--f-mono);font-size:16px}
+.sguess{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:6px 0 10px}
+.sguess button{display:flex;align-items:center;gap:8px;min-height:56px;padding:6px 10px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:700;cursor:pointer;text-align:left}
+.sguess button:active{transform:scale(.97);border-color:var(--brass)}
+.ssheet .tried{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px} .ssheet .tried .mid{color:#f5c542} .ssheet .tried .ko{color:#e5484d}
+.pl-rrow[data-open]{cursor:pointer}
 .gtovs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
 .gtovs>div{border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface)}
 .gtovs>div.ex{border-color:var(--brass);background:var(--brass-soft)}
@@ -442,6 +460,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
     </div>
   </div>
 
+  <div class="sbg" id="seat-sheet" hidden><div class="ssheet" role="dialog" aria-modal="true"><button class="sclose" data-sclose aria-label="Close">×</button><div id="seat-body"></div></div></div>
   <div class="modal" id="limp-pop" hidden>
     <div class="sheet" role="alertdialog" aria-modal="true" aria-labelledby="limp-title">
       <h2 id="limp-title" class="verdict ko" data-t="limpPopTitle"></h2>
@@ -499,7 +518,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"Styles (5)",modePers:"All 1
   settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
-  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",plAuto:"Deal the next hand automatically",plSpeed:"Bot speed",plSpeeds:{slow:"Slow",normal:"Normal",fast:"Fast",instant:"Instant"},
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb. Tap a player to see their stats and profile.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",plSess:"This session",plWhoIs:"Who is this player?",plFound:"Identified",plTapHint:"Tap a player to see their stats and profile.",plAuto:"Deal the next hand automatically",plSpeed:"Bot speed",plSpeeds:{slow:"Slow",normal:"Normal",fast:"Fast",instant:"Instant"},
   plRead:"Read the table",plReadHint:"Your opponents are hidden. Watch how they play, even after you fold (their stats build up hand after hand), and identify them one by one.",
   plSeat:n=>`Seat ${n}`,plGuess:"Your read",plCheck:"Check my reads",plNewTable:"New hidden table",plReadScore:s=>`Your reads: ${s}/100`,
   plReadClose:"Guess one seat at a time. ≈ means right family (tight or loose, passive or aggressive) but wrong type; ✘ means wrong family. Each wrong guess costs 10 points.",plTry:"Guess",plTries:n=>`${n} wrong guess${n>1?"es":""}`,plReadDone:(h,w,s)=>`Table read! ${h} hands, ${w} wrong guess${w===1?"":"es"}. Score: ${s}/100.`,plStats:(n,v,p,af)=>`${n} hands · VPIP ${v} · PFR ${p} · AF ${af}`,plAutoNote:"Next hand coming…",plYourAct:"your play",plLv:["Blunder","Mistake","Questionable","Good","Excellent"],
@@ -629,7 +648,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"Styles (5)",modePers:"Les
   settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
-  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",plAuto:"Distribuer la main suivante automatiquement",plSpeed:"Vitesse des bots",plSpeeds:{slow:"Lent",normal:"Normal",fast:"Rapide",instant:"Instantané"},
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb. Touche un joueur pour voir ses stats et son profil.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",plSess:"Cette session",plWhoIs:"Qui est ce joueur ?",plFound:"Identifié",plTapHint:"Touche un joueur pour voir ses stats et son profil.",plAuto:"Distribuer la main suivante automatiquement",plSpeed:"Vitesse des bots",plSpeeds:{slow:"Lent",normal:"Normal",fast:"Rapide",instant:"Instantané"},
   plRead:"Lis la table",plReadHint:"Tes adversaires sont cachés. Observe comment ils jouent, même après ton fold (leurs stats se remplissent main après main), et identifie-les un par un.",
   plSeat:n=>`Siège ${n}`,plGuess:"Ta lecture",plCheck:"Vérifier mes lectures",plNewTable:"Nouvelle table cachée",plReadScore:s=>`Tes lectures : ${s}/100`,
   plReadClose:"Devine un siège à la fois. ≈ veut dire bonne famille (serré ou large, passif ou agressif) mais mauvais type ; ✘ veut dire mauvaise famille. Chaque erreur coûte 10 points.",plTry:"Deviner",plTries:n=>`${n} erreur${n>1?"s":""}`,plReadDone:(h,w,s)=>`Table lue ! ${h} mains, ${w} erreur${w>1?"s":""}. Score : ${s}/100.`,plStats:(n,v,p,af)=>`${n} mains · VPIP ${v} · PFR ${p} · AF ${af}`,plAutoNote:"Main suivante dans un instant…",plYourAct:"ton choix",plLv:["Gaffe","Erreur","Discutable","Bon","Excellent"],
@@ -5558,7 +5577,7 @@ function tableView(o){
       if(a.av){ // character seat: portrait, position, type and bet in one capsule
         const act=a.act!=null?a.act:a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:a.st==="limp"?`Limp ${bb(bet)}`:bet?bb(bet):t().toAct;
         const tx=x<22?-22:x>78?-78:-50;
-        h+=`<div class="pseat char ${a.st}${win}${a.turn?" turn":""}" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${a.anon?`<img class="av anon" src="av/seat-${a.ai}.webp" alt="" style="--sc:${a.ac}">`:av(a.av,52)}${a.cards?`<div class="hc big shown">${cardsHTML(a.cards,"sm")}</div>`:holeCards(a.st==="fold"," big")}<div class="cinfo"${a.ac?` style="--sc:${a.ac}"`:""}><b>${lbl(pos)}<span class="cname"> · ${a.anon||PNAME[a.av]}</span></b>${a.anon?`<span class="ctype anon">${a.guess?PSHORT[a.guess]+" ?":"?"}</span>`:`<span class="ctype" style="background:${tyColor(avType(a.av))}">${tyShort(avType(a.av))}</span>`}<span class="cbet">${act}</span>${a.stack!=null?`<span class="cstk">${bb(a.stack)}</span>`:""}</div></div></div>`;
+        h+=`<div class="pseat char ${a.st}${win}${a.turn?" turn":""}" data-seat="${pos}" data-face="${a.av||""}" role="button" tabindex="0" style="left:${x}%;top:${y}%;transform:translate(${tx}%,-50%)"><div class="cseat">${a.anon?`<img class="av anon" src="av/seat-${a.ai}.webp" alt="" style="--sc:${a.ac}">`:av(a.av,52)}${a.cards?`<div class="hc big shown">${cardsHTML(a.cards,"sm")}</div>`:holeCards(a.st==="fold"," big")}<div class="cinfo"${a.ac?` style="--sc:${a.ac}"`:""}><b>${lbl(pos)}<span class="cname"> · ${a.anon||PNAME[a.av]}</span></b>${a.anon?`<span class="ctype anon">${a.guess?PSHORT[a.guess]+" ?":"?"}</span>`:`<span class="ctype" style="background:${tyColor(avType(a.av))}">${tyShort(avType(a.av))}</span>`}<span class="cbet">${act}</span>${a.stack!=null?`<span class="cstk">${bb(a.stack)}</span>`:""}</div></div></div>`;
       }else{
       h+=`<div class="pseat ${a.st}${win}${a.turn?" turn":""}" style="left:${x}%;top:${y}%"><div class="mini">${cards}</div><div class="pbox">${lbl(pos)}<small>${sub}</small></div></div>`;
       if(bet)h+=`<div class="bet" style="left:${x+(50-x)*.45}%;top:${y+(45-y)*.45}%"><i></i>${bb(bet)}</div>`;}
@@ -6243,15 +6262,42 @@ function paintRead(){const g=G,el=$("pl-read");if(!g||!g.read){el.hidden=true;re
   const rows=g.P.map((p,i)=>{if(!i)return "";const h=p.hs,af=h.calls?(h.agg/h.calls).toFixed(1):h.agg?"∞":"–";
     const near=x=>!STY[x]&&!styles()&&FAMILY[x]===FAMILY[p.ty];const tried=p.tries.length?`<div class="tried">${p.tries.map(x=>`<span class="${near(x)?"mid":"ko"}">${near(x)?"≈":"✘"} ${STY[x]?STYS[x]:PSHORT[x]}</span>`).join(" ")}</div>`:"";
     const right=p.idOK?`<span class="res ok">✔ ${PNAME[p.face]} · ${tyName(p.ty)}${p.tries.length?` <small>(${t().plTries(p.tries.length)})</small>`:""}</span>`
-      :`<span class="gbox"><select data-guess="${i}"><option value="">${t().plGuess}…</option>${OPTS().filter(k=>!p.tries.includes(k)).map(k=>`<option value="${k}">${optName(k)}</option>`).join("")}</select><button class="pill" data-try="${i}">${t().plTry}</button></span>`;
-    return `<div class="pl-rrow" style="--sc:${SEATC[(i-1)%8]}"><b class="stag">${seatTag(i)}</b><span class="stat">${t().plStats(h.n,pc(h.vp,h.n),pc(h.pfr,h.n),af)+` · 3B ${pc(h.tb3||0,h.n)}`}${tried}</span>${right}</div>`}).join("");
+      :`<button class="pill" data-open="${i}">${t().plTry}</button>`;
+    return `<div class="pl-rrow" data-open="${i}" style="--sc:${SEATC[(i-1)%8]}"><b class="stag">${seatTag(i)}</b><span class="stat">${t().plStats(h.n,pc(h.vp,h.n),pc(h.pfr,h.n),af)+` · 3B ${pc(h.tb3||0,h.n)}`}${tried}</span>${right}</div>`}).join("");
   const score=Math.max(0,100-wrong*10);
   el.innerHTML=`<h3>${ic("read")} ${t().plRead} · ${done}/${bots.length}</h3><p class="muted">${all?"":t().plReadHint}</p>${rows}${all?`<div class="pl-readdone"><b>${t().plReadDone(g.done,wrong,score)}</b></div>`:`<p class="muted">${t().plReadClose}</p>`}<div class="pl-rbtns"><button class="pill" data-newread>${t().plNewTable}</button></div>`}
-$("pl-read").addEventListener("click",e=>{const b=e.target.closest("[data-try]");
+$("pl-read").addEventListener("click",e=>{const o=e.target.closest("[data-open]");if(o&&!e.target.closest("[data-newread]")){openSeat({play:+o.dataset.open});return}const b=e.target.closest("[data-try]");
   if(b){const i=+b.dataset.try,p=G.P[i],v=$("pl-read").querySelector(`[data-guess="${i}"]`).value;if(!v)return;if(v===p.ty||STY[v]&&famOf(p.ty)===v)p.idOK=true;else p.tries.push(v);paintPlay();return}
   if(e.target.closest("[data-newread]"))newGame()});
 
-function paintPlay(){const g=G;if(!g)return;paintRead();const seats={};
+
+/* ---------- Player sheet: tap a character at the table ----------
+   Play: session stats, profile and, in Read the table, one-tap guessing. Drills: the profile. */
+let sheetCtx=null;
+function openSeat(ctx){sheetCtx=ctx;paintSeat();$("seat-sheet").hidden=false}
+function closeSeat(){$("seat-sheet").hidden=true;sheetCtx=null}
+function profileHTML(ty){const f=famOf(ty);
+  return `<p>${styles()?t().styDesc[f]:t().pdesc[ty]}</p><p><b>${t().exploitLbl}</b> ${styles()?t().styExp[f]:t().pexp[ty]}</p>${gtoBox(ty)}`}
+function paintSeat(){const c=sheetCtx;if(!c)return;let h="";
+  if(c.play!=null){const g=G;if(!g||!g.P[c.play]){closeSeat();return}const i=c.play,p=g.P[i],hs=p.hs,pc=(a,b)=>b?Math.round(a/b*100)+"%":"–";
+    const af=hs.calls?(hs.agg/hs.calls).toFixed(1):hs.agg?"∞":"–";
+    const stats=`<div class="sstats">${[[t().plHands,hs.n],["VPIP",pc(hs.vp,hs.n)],["PFR",pc(hs.pfr,hs.n)],["3-bet",pc(hs.tb3||0,hs.n)],["AF",af],[t().plStreets[4],pc(hs.sd,hs.n)],["Stack",bb(p.stack)]].map(([k,v])=>`<div><small>${k}</small><b>${v}</b></div>`).join("")}</div>`;
+    if(seatHidden(i)){
+      const tried=p.tries.length?`<div class="tried">${p.tries.map(x=>{const near=!STY[x]&&!styles()&&FAMILY[x]===FAMILY[p.ty];return `<span class="${near?"mid":"ko"}">${near?"≈":"✘"} ${STY[x]?STYS[x]:PSHORT[x]}</span>`}).join(" ")}</div>`:"";
+      h=`<div class="shead"><img class="av anon" src="av/seat-${(i-1)%8+1}.webp" alt="" style="--sc:${SEATC[(i-1)%8]};width:72px;height:72px"><div><div class="verdict">${t().plSeat(i)}</div><div class="vtype">${t().plSess}</div></div></div>${stats}${tried}
+        <p class="lbl">${t().plWhoIs}</p><div class="sguess">${OPTS().filter(k=>!p.tries.includes(k)).map(k=>`<button data-sguess="${k}">${optAv(k,40)}<span>${optName(k)}</span></button>`).join("")}</div><p class="muted">${t().plReadClose}</p>`}
+    else h=`<div class="shead">${av(p.face,72)}<div><div class="verdict">${PNAME[p.face]}</div><span class="ctype" style="background:${tyColor(p.ty)}">${tyShort(p.ty)}</span> <span class="vtype">${styles()?t().styFam[famOf(p.ty)]:t().prof[p.ty]}</span></div></div>${g.read&&p.idOK?`<p class="res ok">✔ ${t().plFound}${p.tries.length?` (${t().plTries(p.tries.length)})`:""}</p>`:""}<p class="lbl">${t().plSess}</p>${stats}${profileHTML(p.ty)}`}
+  else{const ty=avType(c.face);h=`<div class="shead">${av(c.face,72)}<div><div class="verdict">${PNAME[c.face]}</div><span class="ctype" style="background:${tyColor(ty)}">${tyShort(ty)}</span> <span class="vtype">${styles()?t().styFam[famOf(ty)]:t().prof[ty]}</span></div></div>${profileHTML(ty)}`}
+  $("seat-body").innerHTML=h}
+for(const id of ["pl-table","pf-table","df-table"])$(id).addEventListener("click",e=>{const sEl=e.target.closest("[data-seat]");if(!sEl)return;
+  if(id==="pl-table"){if(!G)return;const pos=sEl.dataset.seat,i=G.P.findIndex((q,j)=>j&&plPos(j)===pos);if(i>0)openSeat({play:i})}
+  else if(sEl.dataset.face)openSeat({face:sEl.dataset.face})});
+$("seat-sheet").addEventListener("click",e=>{if(e.target.id==="seat-sheet"||e.target.closest("[data-sclose]")){closeSeat();return}
+  const b=e.target.closest("[data-sguess]");if(!b||!sheetCtx||sheetCtx.play==null)return;const p=G.P[sheetCtx.play],v=b.dataset.sguess;
+  if(v===p.ty||STY[v]&&famOf(p.ty)===v)p.idOK=true;else p.tries.push(v);paintPlay()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("seat-sheet").hidden)closeSeat()});
+
+function paintPlay(){const g=G;if(!g)return;paintRead();if(sheetCtx&&sheetCtx.play!=null)paintSeat();const seats={};
   g.P.forEach((p,i)=>{const pos=plPos(i);
     if(i===0){seats[pos]={bet:p.bet,win:p.win>0};return}
     const st=p.folded?"fold":["raise","bet","allin"].includes(p.lastK)?"raise":p.lastK==="call"?"limp":"wait";
