@@ -467,7 +467,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
     station:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
     whale:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
     live:"Passive players behind rarely raise: raise your good hands bigger, and from late position you can limp speculative hands (small pairs, suited connectors) to see cheap flops.",
-    omc:"An OMC behind only plays strong hands: open wider to steal his blinds, and fold to his rare raises."},
+    omc:"An OMC behind only plays strong hands: open wider to steal his blinds, and fold to his rare raises.",fitfold:"Fit-or-fold players behind call opens but give up on most flops: open a little wider and plan to c-bet.",fakereg:"Fake regs behind defend like regs preflop: play your normal ranges, the profit comes after the flop."},
   sbNote:"From the small blind, only the big blind is left: completing (limping) medium hands is a standard strategy, while strong hands still raise.",
   eqHowTitle:"How to estimate equity",
   eqHow:`<p><b>1. Count your outs.</b> Outs are the cards that put you ahead: a flush draw has 9, an open-ended straight draw 8, a gutshot 4, two overcards about 6.</p>
@@ -501,9 +501,9 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
     callOk:"Calling is right: the price is good.",callBad:"Not enough equity to call.",thin:"Thin: calling or checking is enough here.",
     bluffOk:"Good bluff spot: these players fold too much.",bluffBad:"Don't bluff players who never fold.",value:"Bet for value: they call with worse.",
     missed:"Missed value: bet your strong hands, especially against calling stations.",thinCheck:"Checking is OK, a small value bet was possible.",checkOk:"Checking is right with this hand."},myTable:"My table",tblHint:"Pick the player type at each seat. Your own seat changes every hand: whoever sits there sits out that hand.",otherFaces:"Also at your tables:",gtoPick:(g,b)=>`You picked the GTO play (<b>${g}</b>). It is balanced and can't be exploited, so it counts as right. But these players have leaks: <b>${b}</b> exploits them and earns more. Here is why:`,pfMix:"Mixed table: the most dangerous player behind decides. One LAG or maniac behind tightens your range; open wider only when everyone behind folds too much; limp only when everyone behind is passive and a limper is there.",exploitLbl:"How to play against them:",statsLbl:"Typical VPIP / PFR",
-  prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec",omc:"OMC"},
-  pnick:{gto:"The Solver",tag:"The Grinder",nit:"The Rock",weak:"Second Thoughts",lag:"Pressure",maniac:"All-In",station:"Show Me",whale:"Deep Pockets",live:"Friday Night",omc:"Coffee"},
-  ptag:{gto:"Mixes every frequency. Feels nothing.",tag:"Twelve tables, one plan: value.",nit:"Last bluffed in 1998.",weak:"Wants to win. Hates to lose.",lag:"Bets because you won't.",maniac:"Raises first. Looks at her cards later.",station:"Never folds a pair. Or anything else.",whale:"Here for fun, paying for the whole table.",live:"Limps, calls, tells great stories.",omc:"Raises once a night. Believe him."},
+  prof:{gto:"GTO reg",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Calling station",whale:"Whale",live:"Live 1/2 rec",omc:"OMC",fitfold:"Fit-or-fold",fakereg:"Fake reg"},
+  pnick:{gto:"The Solver",tag:"The Grinder",nit:"The Rock",weak:"Second Thoughts",lag:"Pressure",maniac:"All-In",station:"Show Me",whale:"Deep Pockets",live:"Friday Night",omc:"Coffee",fitfold:"No Fit",fakereg:"Chart Boy"},
+  ptag:{gto:"Mixes every frequency. Feels nothing.",tag:"Twelve tables, one plan: value.",nit:"Last bluffed in 1998.",weak:"Wants to win. Hates to lose.",lag:"Bets because you won't.",maniac:"Raises first. Looks at her cards later.",station:"Never folds a pair. Or anything else.",whale:"Here for fun, paying for the whole table.",live:"Limps, calls, tells great stories.",omc:"Raises once a night. Believe him.",fitfold:"Missed the flop? Gone.",fakereg:"Perfect preflop. Lost after the flop."},
   pdesc:{gto:"A balanced, solver-style regular. Plays the classical charts, so there is no big leak to attack.",
     tag:"Tight-aggressive regular. Plays fewer hands than GTO, mostly pairs, broadways and suited aces, and raises when they play.",
     nit:"Very tight, also called a rock. Opens big pairs and big cards (about TT+ and AQ+ from early seats), rarely bluffs and 3-bets only QQ+ and AK.",
@@ -513,7 +513,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
     station:"Loose-passive online recreational player. Limps a wide range (pairs, suited hands, broadways, connectors), raises only strong hands, then calls down too much.",
     whale:"The loosest recreational player. Plays more than half of their hands, almost always by limping or calling, and rarely folds once they have any piece of the board.",
     live:"The typical live $1/$2 player. Plays about a third of their hands but raises only about 6%, limps the rest, raises big when they do raise and almost never 3-bets.",
-    omc:"Old Man Coffee: the older live regular nursing a coffee. Very tight and passive: limps pairs and big cards hoping for a set, raises only QQ+ and AK, never bluffs. When he stays in the pot, he has it."},
+    omc:"Old Man Coffee: the older live regular nursing a coffee. Very tight and passive: limps pairs and big cards hoping for a set, raises only QQ+ and AK, never bluffs. When he stays in the pot, he has it.",fitfold:"Plays plenty of hands preflop (VPIP about 25, PFR 5–15), mostly by calling, then plays fit-or-fold: continues only when the flop hits, rarely bluffs and rarely reaches showdown. When they bet or raise, they usually have it.",fakereg:"Looks like a solid regular (stats around 25/20) because they follow a memorized preflop chart, but postflop they are lost: they c-bet the flop, then give up, fold too much on the turn and rarely bluff the river."},
   pexp:{gto:"Play your baseline: the classical charts. Deviating against a GTO player only costs you.",
     tag:"Stay close to the classical charts, respect their 3-bets and avoid fancy bluffs.",
     nit:"Steal their blinds, 3-bet their opens light because they fold too much, and fold to their 3-bets and big postflop bets without a strong hand.",
@@ -523,13 +523,13 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modePers:"Personalities",modeHint:"Clas
     station:"Isolate their limps with a raise to about 4bb plus 1bb per limper (5bb from the blinds), bet thin for value, bet bigger with strong hands and never bluff.",
     whale:"Isolate even wider, value-bet every street with any decent made hand and size up. Bluffing is lighting money on fire.",
     live:"Raise bigger than online (about 4bb plus 1bb per limper), isolate limpers with strong hands, and treat their rare raises and 3-bets as very strong.",
-    omc:"Steal his blinds and attack his limps when he folds too much. When he raises, bets big or calls twice, fold everything but a very strong hand: he is almost never bluffing."},
+    omc:"Steal his blinds and attack his limps when he folds too much. When he raises, bets big or calls twice, fold everything but a very strong hand: he is almost never bluffing.",fitfold:"C-bet and barrel wide: they fold everything that missed. Isolate their limps. Fold to their raises unless you are strong, and don't pay off their rare big bets.",fakereg:"Don't respect their preflop stats. Float their flop c-bets and bet the turn when they check, keep barreling when they show weakness, and skip thin value bets: they fold too much."},
   statsLbl:"VPIP / PFR",sizeLbl:"Usual open",limpsLbl:"limps, raises",srcLbl:"Sources:",
   pfacts:{gto:["Bluffs and folds at balanced frequencies"],tag:["3-bet ≈ 5–10%","Fold to 3-bet ≈ 40–50%","Steal ≈ 35% (6-max)"],nit:["3-bets only QQ+ and AK"],
     weak:["C-bet under 50%","Folds to 3-bets without a premium"],lag:["Aggression factor 3+"],maniac:["3-bets very often"],
     station:["Limps ≈ 47% of hands","Limp-raises under 3%"],whale:["Very passive: aggression factor ≈ 2 or less"],
-    live:["Limps ≈ 35% from early and middle seats","After limping, calls a raise ≈ 56%"],
-    omc:["Live archetype, no measured data","Raises only QQ+ and AK"]},
+    live:["VPIP ≈ 35–37, almost all limps (PFR ≈ 6)","3-bets ≈ 0.8%, less than KK+ (Selbrede, 2017)","After limping, calls a raise ≈ 56%"],
+    omc:["Live archetype, no measured data","Raises only QQ+ and AK"],fitfold:["VPIP ≈ 25+, PFR 5–15 (Hand2Note)","Low aggression, low showdown rate"],fakereg:["Stats look like a reg (≈ 25/20)","Archetype from one blog, no measured data"]},
   popTitle:"Why anti-GTO?",
   popText:"GTO is the baseline, not your opponent. Measured data on real players is rare, but what exists shows big, steady deviations:",
   popFacts:[`Online 500NL+ regulars, in 3-bet pots: after raising a flop c-bet and getting re-raised, they fold <b>39%</b> where a solver folds <b>27%</b>. Even good regulars over-fold. <span class="src">(Upswing Poker, author's database of expert players)</span>`,
@@ -591,7 +591,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
     station:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
     whale:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
     live:"Les joueurs passifs derrière relancent rarement : relance plus gros avec tes bonnes mains, et en fin de parole tu peux limper les mains spéculatives (petites paires, connecteurs suited) pour voir des flops pas chers.",
-    omc:"Un OMC derrière ne joue que des mains fortes : ouvre plus large pour voler ses blinds, et fold face à ses rares relances."},
+    omc:"Un OMC derrière ne joue que des mains fortes : ouvre plus large pour voler ses blinds, et fold face à ses rares relances.",fitfold:"Des fit-or-fold derrière paient les ouvertures mais lâchent la plupart des flops : ouvre un peu plus large et prévois de c-bet.",fakereg:"Des faux regs derrière défendent comme des regs préflop : joue tes ranges normales, le profit vient après le flop."},
   sbNote:"De la small blind, il ne reste que la big blind : compléter (limper) les mains moyennes est une stratégie standard, et les mains fortes relancent toujours.",
   eqHowTitle:"Comment estimer ton équité",
   eqHow:`<p><b>1. Compte tes outs.</b> Les outs sont les cartes qui te font passer devant : un tirage couleur en a 9, une quinte ouverte 8, un gutshot 4, deux overcards environ 6.</p>
@@ -625,9 +625,9 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
     callOk:"Payer est correct : le prix est bon.",callBad:"Pas assez d'équité pour payer.",thin:"Limite : payer ou checker suffit ici.",
     bluffOk:"Bon spot de bluff : ces joueurs foldent trop.",bluffBad:"Ne bluffe pas des joueurs qui ne foldent jamais.",value:"Mise pour la value : ils paient avec moins bien.",
     missed:"Value manquée : mise tes grosses mains, surtout contre les calling stations.",thinCheck:"Checker passe, une petite mise de value était possible.",checkOk:"Checker est correct avec cette main."},myTable:"Ma table",tblHint:"Choisis le type de joueur à chaque siège. Ton siège change à chaque main : le joueur qui s'y trouve ne joue pas cette main.",otherFaces:"Aussi à tes tables :",gtoPick:(g,b)=>`Tu as choisi le jeu GTO (<b>${g}</b>). Il est équilibré et inexploitable, donc il compte comme bon. Mais ces joueurs ont des failles : <b>${b}</b> les exploite et rapporte plus. Voici pourquoi :`,pfMix:"Table mixte : c'est le joueur le plus dangereux derrière toi qui décide. Un seul LAG ou maniaque derrière resserre ta range ; ouvre plus large seulement si tout le monde derrière fold trop ; limpe seulement si tout le monde derrière est passif et qu'un limpeur est là.",exploitLbl:"Comment jouer contre lui :",statsLbl:"VPIP / PFR typiques",
-  prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2",omc:"OMC"},
-  pnick:{gto:"La Solveuse",tag:"Le Grinder",nit:"Le Roc",weak:"Mille Doutes",lag:"La Pression",maniac:"Tapis",station:"Montre-moi",whale:"Poches Profondes",live:"Vendredi Soir",omc:"Café"},
-  ptag:{gto:"Mixe chaque fréquence. Ne ressent rien.",tag:"Douze tables, un seul plan : la value.",nit:"Son dernier bluff date de 1998.",weak:"Veut gagner. Déteste perdre.",lag:"Mise parce que toi, tu n'oses pas.",maniac:"Relance d'abord. Regarde ses cartes après.",station:"Ne fold jamais une paire. Ni rien d'autre.",whale:"Là pour s'amuser, paie pour toute la table.",live:"Limpe, paie, raconte de bonnes histoires.",omc:"Relance une fois par soir. Crois-le."},
+  prof:{gto:"Rég GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniaque",station:"Calling station",whale:"Whale",live:"Récréatif live 1/2",omc:"OMC",fitfold:"Fit-or-fold",fakereg:"Faux reg"},
+  pnick:{gto:"La Solveuse",tag:"Le Grinder",nit:"Le Roc",weak:"Mille Doutes",lag:"La Pression",maniac:"Tapis",station:"Montre-moi",whale:"Poches Profondes",live:"Vendredi Soir",omc:"Café",fitfold:"Pas de fit",fakereg:"Monsieur Tableau"},
+  ptag:{gto:"Mixe chaque fréquence. Ne ressent rien.",tag:"Douze tables, un seul plan : la value.",nit:"Son dernier bluff date de 1998.",weak:"Veut gagner. Déteste perdre.",lag:"Mise parce que toi, tu n'oses pas.",maniac:"Relance d'abord. Regarde ses cartes après.",station:"Ne fold jamais une paire. Ni rien d'autre.",whale:"Là pour s'amuser, paie pour toute la table.",live:"Limpe, paie, raconte de bonnes histoires.",omc:"Relance une fois par soir. Crois-le.",fitfold:"Raté le flop ? Partie.",fakereg:"Parfait préflop. Perdu après le flop."},
   pdesc:{gto:"Régulier équilibré, style solveur. Joue les charts classiques : aucune grosse fuite à attaquer.",
     tag:"Régulier serré-agressif. Joue moins de mains que GTO, surtout des paires, des broadways et des as suited, et relance quand il joue.",
     nit:"Très serré, aussi appelé rock. Ouvre les grosses paires et les grosses cartes (environ TT+ et AQ+ en début de parole), bluffe rarement et ne 3-bet que QQ+ et AK.",
@@ -637,7 +637,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
     station:"Récréatif en ligne large-passif. Limpe une large range (paires, mains suited, broadways, connecteurs), ne relance que ses grosses mains, puis paie trop.",
     whale:"Le récréatif le plus large. Joue plus de la moitié de ses mains, presque toujours en limp ou en call, et fold rarement dès qu'il touche le board.",
     live:"Le joueur typique du live 1/2 $. Joue environ un tiers de ses mains mais n'en relance qu'environ 6 %, limpe le reste, relance gros quand il relance et ne 3-bet presque jamais.",
-    omc:"Old Man Coffee : le vieil habitué du live qui sirote son café. Très serré et passif : limpe les paires et les grosses cartes en espérant un brelan, ne relance que QQ+ et AK, ne bluffe jamais. S'il reste dans le coup, il a la main."},
+    omc:"Old Man Coffee : le vieil habitué du live qui sirote son café. Très serré et passif : limpe les paires et les grosses cartes en espérant un brelan, ne relance que QQ+ et AK, ne bluffe jamais. S'il reste dans le coup, il a la main.",fitfold:"Joue beaucoup de mains préflop (VPIP autour de 25, PFR 5–15), surtout en payant, puis joue fit-or-fold : ne continue que si le flop le touche, bluffe rarement et va rarement à l'abattage. Quand il mise ou relance, il a généralement la main.",fakereg:"Ressemble à un régulier solide (stats autour de 25/20) parce qu'il suit un tableau préflop appris par cœur, mais après le flop il est perdu : il c-bet le flop puis abandonne, fold trop au turn et bluffe rarement la river."},
   pexp:{gto:"Joue ta base : les charts classiques. Dévier contre un joueur GTO ne fait que te coûter.",
     tag:"Reste proche des charts classiques, respecte ses 3-bets et évite les bluffs compliqués.",
     nit:"Vole ses blinds, 3-bet ses opens léger car il fold trop, et fold à ses 3-bets et à ses grosses mises postflop sans main forte.",
@@ -647,13 +647,13 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modePers:"Personnalités",modeHint:"C
     station:"Isole ses limps avec une relance à environ 4bb plus 1bb par limper (5bb des blinds), mise fin pour la value, mise plus gros avec tes mains fortes et ne bluffe jamais.",
     whale:"Isole encore plus large, mise pour la value à chaque street avec toute main correcte et augmente tes tailles. Le bluffer, c'est brûler de l'argent.",
     live:"Relance plus gros qu'en ligne (environ 4bb plus 1bb par limper), isole les limpers avec tes mains fortes et considère ses rares relances et 3-bets comme très forts.",
-    omc:"Vole ses blinds et attaque ses limps quand il fold trop. Quand il relance, mise gros ou paie deux fois, fold tout sauf une très grosse main : il ne bluffe presque jamais."},
+    omc:"Vole ses blinds et attaque ses limps quand il fold trop. Quand il relance, mise gros ou paie deux fois, fold tout sauf une très grosse main : il ne bluffe presque jamais.",fitfold:"C-bet et continue large : il fold tout ce qui a raté. Isole ses limps. Fold face à ses relances sauf avec une main forte, et ne paie pas ses rares grosses mises.",fakereg:"Ne respecte pas ses stats préflop. Paie ses c-bets au flop et mise le turn quand il checke, continue de miser quand il montre de la faiblesse, et oublie les petites mises de value : il fold trop."},
   statsLbl:"VPIP / PFR",sizeLbl:"Open habituel",limpsLbl:"limpe, relance",srcLbl:"Sources :",
   pfacts:{gto:["Bluffe et fold à des fréquences équilibrées"],tag:["3-bet ≈ 5–10 %","Fold to 3-bet ≈ 40–50 %","Steal ≈ 35 % (6-max)"],nit:["Ne 3-bet que QQ+ et AK"],
     weak:["C-bet sous 50 %","Fold aux 3-bets sans main premium"],lag:["Facteur d'agression 3+"],maniac:["3-bet très souvent"],
     station:["Limpe ≈ 47 % des mains","Limp-relance moins de 3 %"],whale:["Très passif : facteur d'agression ≈ 2 ou moins"],
-    live:["Limpe ≈ 35 % en début et milieu de parole","Après un limp, paie une relance ≈ 56 %"],
-    omc:["Archétype live, aucune donnée mesurée","Ne relance que QQ+ et AK"]},
+    live:["VPIP ≈ 35–37, presque tout en limp (PFR ≈ 6)","3-bet ≈ 0,8 %, moins que KK+ (Selbrede, 2017)","Après un limp, paie une relance ≈ 56 %"],
+    omc:["Archétype live, aucune donnée mesurée","Ne relance que QQ+ et AK"],fitfold:["VPIP ≈ 25+, PFR 5–15 (Hand2Note)","Peu agressif, va rarement à l'abattage"],fakereg:["Stats de reg (≈ 25/20)","Archétype d'un seul blog, aucune donnée mesurée"]},
   popTitle:"Pourquoi anti-GTO?",
   popText:"GTO est la référence, pas ton adversaire. Les données mesurées sur de vrais joueurs sont rares, mais celles qui existent montrent des écarts nets et constants :",
   popFacts:[`Régs en ligne 500NL+, dans les pots 3-bet : après avoir relancé un c-bet au flop et s'être fait sur-relancer, ils fold <b>39 %</b> là où un solveur fold <b>27 %</b>. Même les bons régs sur-foldent. <span class="src">(Upswing Poker, base de joueurs experts de l'auteur)</span>`,
@@ -5569,9 +5569,9 @@ function preflopRing(id,hero,cards,code,opener,action,tag,oSt,oBet,behindTag,pro
 }
 
 /* ---------- Personality avatars (original SVG characters, 64×64) ---------- */
-const AVC={gto:"#3d6fb6",tag:"#2f7a5c",nit:"#8a8f98",weak:"#7fa3c4",lag:"#b4532d",maniac:"#8e2f7a",station:"#d4a017",whale:"#1f6f8b",live:"#8e5b3a",omc:"#4b5d67"};
-const PSHORT={gto:"GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Station",whale:"Whale",live:"Rec",omc:"OMC"};
-const PNAME={"gto-1":"Kenji","gto-2":"Imani","gto-3":"Lukas","gto-4":"Jace","tag-1":"Sofia","tag-2":"Andre","tag-3":"Kyle","tag-4":"Ravi",
+const AVC={gto:"#3d6fb6",tag:"#2f7a5c",nit:"#8a8f98",weak:"#7fa3c4",lag:"#b4532d",maniac:"#8e2f7a",station:"#d4a017",whale:"#1f6f8b",live:"#8e5b3a",omc:"#4b5d67",fitfold:"#6b8e23",fakereg:"#7a6a9e"};
+const PSHORT={gto:"GTO",tag:"TAG",nit:"Nit",weak:"Weak-tight",lag:"LAG",maniac:"Maniac",station:"Station",whale:"Whale",live:"Rec",omc:"OMC",fitfold:"Fit/fold",fakereg:"Fake reg"};
+const PNAME={fitfold:"Paula","fitfold-1":"Gus","fitfold-2":"Nadia","fitfold-3":"Owen","fitfold-4":"Priya",fakereg:"Brad","fakereg-1":"Elise","fakereg-2":"Tom","fakereg-3":"Yuki","fakereg-4":"Rafael","gto-1":"Kenji","gto-2":"Imani","gto-3":"Lukas","gto-4":"Jace","tag-1":"Sofia","tag-2":"Andre","tag-3":"Kyle","tag-4":"Ravi",
   "nit-1":"Margaret","nit-2":"Gary","nit-3":"Trevor","nit-4":"Mei","weak-1":"Leo","weak-2":"Linda","weak-3":"Tyler","weak-4":"Phil",
   "lag-1":"Jade","lag-2":"Malik","lag-3":"Dante","lag-4":"Silvio","maniac-1":"Spike","maniac-2":"Luna","maniac-3":"Zack","maniac-4":"Bjorn",
   "station-1":"Dot","station-2":"Chad","station-3":"Hank","station-4":"Gloria","whale-1":"Vivienne","whale-2":"Tanner","whale-3":"Boone","whale-4":"Hiro",
@@ -5614,7 +5614,7 @@ function paintTblEd(id){const el=$(id),on=(id==="pf-tbl"?pfProf:id==="df-tbl"?dP
   el.innerHTML=`<p class="muted">${t().tblHint}</p><div class="tbl-grid">${ORDER().map(p=>`<label>${PROFILES.includes(v[p])?av(v[p],28):ic("mixed","rnd-av")}<b>${lbl(p)}</b><select data-tpos="${p}"><option value="random">${t().random}</option>${PROFILES.map(k=>`<option value="${k}"${v[p]===k?" selected":""}>${t().prof[k]}</option>`).join("")}</select></label>`).join("")}</div>`}
 function onTblChange(e){const s=e.target.closest("[data-tpos]");if(!s)return;const v=myTable();v[s.dataset.tpos]=s.value;try{localStorage.setItem(TBKEY(),JSON.stringify(v))}catch(err){}
   paintTblEd("pf-tbl");paintTblEd("df-tbl");const id=e.currentTarget.id;if(id==="pl-tbl"){paintTblEd("pl-tbl");newGame()}else if(id==="pf-tbl")newPreflop();else newDefense()}
-const TIGHT=new Set(["nit","weak","omc"]),PASSIVE=new Set(["nit","weak","omc","station","whale","live"]);
+const TIGHT=new Set(["nit","weak","omc"]),PASSIVE=new Set(["nit","weak","omc","station","whale","live","fitfold"]);
 function heroPlan(pos,prof){
   const P=[].concat(prof);
   let raise=new Set(pos==="SB"?SB_RAISE:rangeFor(pos)),limp=new Set(pos==="SB"?SB_LIMP:[]),trap=new Set();
@@ -5628,7 +5628,7 @@ function heroPlan(pos,prof){
   const key=P.every(x=>x===P[0])?P[0]:mani?"maniac":lagB?"lag":spec?limper:tight?P[0]:"gto";
   return {raise,limp,trap,key}}
 /* realistic mix of players for a mixed table */
-const MIXW={gto:2,tag:3,nit:2,weak:2,lag:1.5,maniac:.5,station:2,whale:.5,live:2,omc:1};
+const MIXW={gto:2,tag:3,fakereg:1.5,nit:2,weak:2,fitfold:2,lag:1.5,maniac:.5,station:2,whale:.5,live:2,omc:1};
 function mixProf(){let r=Math.random()*Object.values(MIXW).reduce((a,b)=>a+b);for(const k in MIXW){r-=MIXW[k];if(r<0)return k}return "gto"}
 const PFKEY="holdem-drill-pfopp";
 let pfProf="mixed";try{pfProf=localStorage.getItem(PFKEY)==="custom"?"custom":"mixed"}catch(e){}
@@ -5681,12 +5681,14 @@ $("study-pos").addEventListener("click",e=>{const b=e.target.closest("[data-pos]
    Limping profiles (calling station, whale, live 1/2 rec) play fixed limp and raise ranges from any seat,
    sized to their sourced VPIP / PFR (station ≈ 49/6, whale ≈ 63/9, live ≈ 35/6).
    Numbers are typical values from coaching sources; the measured ones are listed in the Opponents intro. */
-const PROFILES=["gto","tag","nit","weak","lag","maniac","station","whale","live","omc"];
-const PW={tag:{UTG:15,HJ:19,CO:27,BTN:42,SB:33},nit:{UTG:8,HJ:9.5,CO:12,BTN:16,SB:12},weak:{UTG:7,HJ:8,CO:10,BTN:13,SB:9},
+const PROFILES=["gto","tag","fakereg","nit","weak","fitfold","lag","maniac","station","whale","live","omc"];
+const PW={tag:{UTG:15,HJ:19,CO:27,BTN:42,SB:33},fakereg:{UTG:15,HJ:19,CO:27,BTN:42,SB:33},fitfold:{UTG:7,HJ:8,CO:10,BTN:14,SB:10},nit:{UTG:8,HJ:9.5,CO:12,BTN:16,SB:12},weak:{UTG:7,HJ:8,CO:10,BTN:13,SB:9},
   lag:{UTG:20,HJ:25,CO:35,BTN:55,SB:45},maniac:{UTG:38,HJ:45,CO:55,BTN:75,SB:70}};
-const PSTATS={gto:"≈ 23 / 19",tag:"17–24 / 13–20",nit:"10–15 / 8–12",weak:"< 15 / ≈ VPIP",lag:"26–29 / 23–24",maniac:"≈ 53 / 39",station:"40+ / 5–10",whale:"55+ / ≤ 9",live:"≈ 35 / 6",omc:"≈ 10–14 / 2–5"};
-const PSIZE={gto:2.5,tag:2.5,nit:3,weak:2.5,lag:2.5,maniac:4,station:4,whale:4,live:4,omc:4};
+const PSTATS={gto:"≈ 23 / 19",tag:"17–25 / 15–22",nit:"10–18 / 8–15",weak:"< 15 / ≈ VPIP",lag:"26–35 / 22–30",maniac:"45–70 / 35–55",station:"40+ / 5–10",whale:"55+ / ≤ 9",live:"≈ 35–37 / 6",omc:"≈ 10–14 / 2–5",fitfold:"25+ / 5–15",fakereg:"≈ 25 / 20"};
+const PSIZE={fitfold:2.5,fakereg:2.5,gto:2.5,tag:2.5,nit:3,weak:2.5,lag:2.5,maniac:4,station:4,whale:4,live:4,omc:4};
 const PSRC={
+  fitfold:[["Hand2Note (2024): player types, fit-or-fold","https://hand2note.com/Blog/Features/exploiting-different-types-of-opponents-in-poker"]],
+  fakereg:[["Ferret Stack blog (2025): player profiles, opinion without data","https://ferret-stack.github.io/Player-Profiles"]],
   gto:[["Upswing: 3-bet pots in position","https://upswingpoker.com/in-position-raising-3-bet-pots-part-ii/"]],
   tag:[["PokerCoaching: poker stats","https://pokercoaching.com/blog/poker-stats/"],["Upswing: HUD stats","https://upswingpoker.com/poker-hud-stats/"],["CardPlayer 2012, citing Small Stakes No-Limit Hold'em","https://www.cardplayer.com/?p=1036052"]],
   nit:[["Hand2Note: player types","https://hand2note.com/Blog/Features/exploiting-different-types-of-opponents-in-poker"],["CardPlayer 2012, citing Small Stakes No-Limit Hold'em","https://www.cardplayer.com/?p=1036052"]],
@@ -5696,7 +5698,7 @@ const PSRC={
   station:[["Hand2Note: loose-passive players","https://hand2note.com/Blog/Features/exploiting-loose-passive-players"],["Hand2Note: player types","https://hand2note.com/Blog/Features/exploiting-different-types-of-opponents-in-poker"]],
   whale:[["PokerTracker forum, one user's rule of thumb","https://www.pokertracker.com/forums/viewtopic.php?f=61&t=101871"],["Hand2Note: preflop stats and profiling","https://hand2note.com/Blog/Features/key-preflop-stats-player-profiling-and-basic-adjustments"]],
   omc:[["PokerNews: where the term Old Man Coffee came from","https://www.pokernews.com/strategy/where-did-the-term-old-man-coffee-come-from-52735.htm"],["PokerListings: OMC","https://www.pokerlistings.com/poker-terms/omc"]],
-  live:[["PokerNews: preflop raising in live $1/$2","https://www.pokernews.com/strategy/preflop-raising-in-live-1-2-no-limit-hold-em-cash-games-29209.htm"]]};
+  live:[["PokerNews (Selbrede, 2017): live vs online stats","https://www.pokernews.com/strategy/donkey-poker-low-stakes-live-games-differ-online-27134.htm"],["PokerNews: preflop raising in live $1/$2","https://www.pokernews.com/strategy/preflop-raising-in-live-1-2-no-limit-hold-em-cash-games-29209.htm"]]};
 const NIT_TIERS=["QQ+,AK","JJ,TT,AQ","99,88,AJs,KQs,AJo","77,66,ATs,KJs,QJs,KQo,ATo","55-22,A9s,KTs,QTs,JTs,KJo","A8s-A2s,T9s,QJo,K9s"];
 const PTIERS={nit:NIT_TIERS,weak:NIT_TIERS};
 const LIMPERS={
@@ -5965,9 +5967,9 @@ $("size").addEventListener("click",e=>{const b=e.target.closest("[data-size]");i
    bet/raise keeps strong hands + a type-sized share of bluffs (draws first); call keeps medium+ hands
    (stations keep much more); check mostly removes strong hands (passive types slow-play some). */
 const ALLC=[];for(let a=1;a<52;a++)for(let b=0;b<a;b++)ALLC.push([a,b]);
-const VALT={gto:.6,tag:.62,nit:.75,weak:.72,lag:.5,maniac:.35,station:.7,whale:.6,live:.65,omc:.8};
-const CALLT={gto:.4,tag:.45,nit:.6,weak:.55,lag:.35,maniac:.25,station:.15,whale:.2,live:.3,omc:.6};
-const SLOW={station:.6,whale:.6,live:.5,omc:.5,weak:.5};
+const VALT={fitfold:.7,fakereg:.64,gto:.6,tag:.62,nit:.75,weak:.72,lag:.5,maniac:.35,station:.7,whale:.6,live:.65,omc:.8};
+const CALLT={fitfold:.58,fakereg:.5,gto:.4,tag:.45,nit:.6,weak:.55,lag:.35,maniac:.25,station:.15,whale:.2,live:.3,omc:.6};
+const SLOW={fitfold:.3,station:.6,whale:.6,live:.5,omc:.5,weak:.5};
 const SENS={maniac:.4,whale:.5,station:.45,live:.7};
 function combosOf(codes){if(!codes)return ALLC.map(([a,b])=>({a,b,w:1}));const set=new Set(codes);return ALLC.filter(([a,b])=>set.has(handCode(a,b))).map(([a,b])=>({a,b,w:1}))}
 function heroRange(){const p=G.P[0],pos=plPos(0);switch(p.pf){case "open":return pos==="BB"?[...topShare(12)]:[...rangeFor(pos)];case "3bet":return [...topShare(6)];case "call":return [...topShare(20)];case "limp":return [...topShare(45)];default:return null}}
@@ -5984,7 +5986,7 @@ function narrow(i,act,facing,f=.66,price=.25){const g=G,p=g.P[i];if(!p.rc||!g.bo
   const sens=SENS[ty]??1,big=Math.max(-.4,Math.min(1.6,f-.66));
   const vt=Math.min(.97,Math.max(.2,(VALT[ty]??.6)+(facing&&act==="raise"?.1:0)+big*.12*sens));
   const ct=Math.min(.95,Math.max(.05,(CALLT[ty]??.4)+(price-.25)*.6*sens));
-  const bw=Math.min(1,st.bluff*.5*(1-Math.max(-.5,Math.min(.6,big*.45))*sens)),before=p.rc.map(c=>c.w);
+  const bw=Math.min(1,st.bluff*.5*streetBluff(ty,g.street)*(1-Math.max(-.5,Math.min(.6,big*.45))*sens)),before=p.rc.map(c=>c.w);
   for(const c of p.rc){if(!c.w)continue;if(g.board.includes(c.a)||g.board.includes(c.b)){c.w=0;continue}
     const q=pc(evalH([c.a,c.b,...g.board])),dr=g.street<3&&isDraw(c.a,c.b,g.board);
     if(act==="raise"||act==="bet")c.w*=q>=vt?1:dr?Math.min(1,bw*2.5):bw;
@@ -5998,7 +6000,10 @@ function sampleRc(rc,used){let tot=0;for(const c of rc)if(c.w&&!used.has(c.a)&&!
    Preflop unopened: same logic as the Preflop drill (players behind decide); the GTO play scores 75.
    Otherwise: equity vs the bots' likely ranges (from what they did preflop), against the price,
    adjusted for who is betting (a nit's bet is strong, a maniac's is not). */
-const BETADJ={nit:.08,weak:.08,omc:.1,station:.1,whale:.05,live:.06,gto:0,tag:.02,lag:-.05,maniac:-.1};
+/* how much of a type's bluffing happens on each street. Population tendency (Galfond 2023):
+   low-stakes players under-bluff the river, so all but LAGs and maniacs bluff it much less. */
+function streetBluff(ty,st){const s=SIMP[ty]||SIMP.gto;if(s.bluffS)return s.bluffS[st-1]??1;return st===1?1:st===2?.6:["lag","maniac"].includes(ty)?.6:.25}
+const BETADJ={fitfold:.08,fakereg:.03,nit:.08,weak:.08,omc:.1,station:.1,whale:.05,live:.06,gto:0,tag:.02,lag:-.05,maniac:-.1};
 function botRange(i){const p=G.P[i],s=SIMP[p.ty]||SIMP.gto,pos=plPos(i),L=LIMPERS[p.ty];
   switch(p.pf){case "open":return [...(L?L.raise:pos==="BB"?topShare(s.tb*1.5):openRange(p.ty,pos))];
     case "3bet":return [...topShare(Math.max(2,s.tb))];
@@ -6068,7 +6073,7 @@ function showGrade(gr){const ok=gr.sc>=65,L=t().plLv,lv=gr.sc>=85?L[4]:gr.sc>=65
    Every street, the button moves each hand, stacks carry over, busted players rebuy 100bb.
    Bots: preflop from their own ranges (openRange / LIMPERS) and a hand ranking; postflop from a quick
    Monte Carlo equity vs random hands, with thresholds per type (value bet, bluff, call looseness, raise). */
-const SIMP={gto:{cont:18,tb:6,val:.6,bluff:.25,loose:1,rz:.8,size:.66},tag:{cont:15,tb:5,val:.62,bluff:.18,loose:1.05,rz:.8,size:.66},
+const SIMP={fitfold:{cont:22,tb:2.5,val:.68,bluff:.06,loose:1.35,rz:.9,size:.5,limp:25},fakereg:{cont:15,tb:6,val:.64,bluff:.2,loose:1.2,rz:.85,size:.66,bluffS:[1.3,.3,.25]},gto:{cont:18,tb:6,val:.6,bluff:.25,loose:1,rz:.8,size:.66},tag:{cont:15,tb:5,val:.62,bluff:.18,loose:1.05,rz:.8,size:.66},
   nit:{cont:8,tb:2.5,val:.72,bluff:.04,loose:1.3,rz:.88,size:.6},weak:{cont:11,tb:2,val:.7,bluff:.06,loose:1.25,rz:.9,size:.5},
   lag:{cont:26,tb:10,val:.55,bluff:.35,loose:.95,rz:.72,size:.75},maniac:{cont:45,tb:22,val:.45,bluff:.6,loose:.8,rz:.62,size:1},
   station:{cont:45,tb:2,val:.7,bluff:.05,loose:.55,rz:.9,size:.5},whale:{cont:55,tb:3,val:.65,bluff:.12,loose:.6,rz:.88,size:.6},
@@ -6174,6 +6179,7 @@ function botAct(i){const g=G,p=g.P[i],s=SIMP[p.ty]||SIMP.gto,call=r2(g.curBet-p.
       if(L){if(L.raise.has(code))return doAct(i,"raise",4+limpers);if(L.limp.has(code))return doAct(i,"call");return doAct(i,call>0?"fold":"check")}
       if(pos==="BB")return r<=s.tb*1.5&&limpers?doAct(i,"raise",4+limpers):doAct(i,"check");
       if(openRange(p.ty,pos).has(code))return doAct(i,"raise",(PSIZE[p.ty]||2.5)+limpers);
+      if(s.limp&&r<=s.limp)return doAct(i,"call");
       return doAct(i,"fold")}
     const lvl=g.raiseN,big=call>Math.max(20,p.stack*.4);
     if(r<=(lvl>1?s.tb/2.5:s.tb)&&!(lvl>=3&&r>2.5))return doAct(i,"raise",r2(g.curBet*(lvl>1?2.3:3)));
@@ -6185,7 +6191,7 @@ function botAct(i){const g=G,p=g.P[i],s=SIMP[p.ty]||SIMP.gto,call=r2(g.curBet-p.
     if(eq>=Math.min(.95,odds*s.loose+.03))return doAct(i,"call");
     if(p.ty==="maniac"&&Math.random()<.12)return doAct(i,"raise",r2(g.curBet*2.8));
     return doAct(i,"fold")}
-  if(eq>=s.val||Math.random()<s.bluff*(g.street===1?1:.6)*(opp>1?.5:1))return doAct(i,"bet",Math.max(1,r2(pt*s.size)));
+  if(eq>=s.val||Math.random()<s.bluff*streetBluff(p.ty,g.street)*(opp>1?.5:1))return doAct(i,"bet",Math.max(1,r2(pt*s.size)));
   return doAct(i,"check")}
 function heroOpts(){const g=G,p=g.P[0],call=r2(Math.min(g.curBet-p.bet,p.stack)),maxTo=r2(p.bet+p.stack),pt=potOf(),o=[];
   if(call>0)o.push(["fold"]);o.push(call>0?["call"]:["check"]);
@@ -6196,7 +6202,7 @@ function heroOpts(){const g=G,p=g.P[0],call=r2(Math.min(g.curBet-p.bet,p.stack))
   if(maxTo>g.curBet&&call<p.stack)o.push(["allin",maxTo]);return o}
 
 /* Read the table: hidden opponents, observed stats, your read per seat, then reveal and score. */
-const FAMILY={nit:"tp",weak:"tp",omc:"tp",tag:"ta",gto:"ta",station:"lp",whale:"lp",live:"lp",lag:"la",maniac:"la"};
+const FAMILY={fitfold:"lp",fakereg:"ta",nit:"tp",weak:"tp",omc:"tp",tag:"ta",gto:"ta",station:"lp",whale:"lp",live:"lp",lag:"la",maniac:"la"};
 function paintRead(){const g=G,el=$("pl-read");if(!g||!g.read){el.hidden=true;return}el.hidden=false;const pc=(a,b)=>b?Math.round(a/b*100)+"%":"–";
   const bots=g.P.filter((p,i)=>i),done=bots.filter(p=>p.idOK).length,wrong=bots.reduce((a,p)=>a+p.tries.length,0),all=done===bots.length;
   const rows=g.P.map((p,i)=>{if(!i)return "";const h=p.hs,af=h.calls?(h.agg/h.calls).toFixed(1):h.agg?"∞":"–";
