@@ -11,7 +11,7 @@ APP = ROOT / "docs"
 APP.mkdir(exist_ok=True)
 import hashlib
 # Version = empreinte du contenu : chaque build modifié change sw.js, donc le navigateur voit la mise à jour.
-VERSION = hashlib.sha1((ROOT / "index.html").read_bytes() + b"".join(f.read_bytes() for f in sorted((ROOT / "av").glob("*.webp")))).hexdigest()[:10]
+VERSION = hashlib.sha1((ROOT / "index.html").read_bytes() + b"".join(f.read_bytes() for f in sorted((ROOT / "av").glob("*.webp")) + sorted((ROOT / "ui").glob("*.webp")))).hexdigest()[:10]
 
 FELT, FELT2, CARD, BRASS = (30, 90, 68), (20, 66, 50), (251, 251, 248), (216, 167, 72)
 
@@ -86,7 +86,11 @@ import shutil
 AV = sorted((ROOT / "av").glob("*.webp"))
 for f in AV:
     shutil.copy2(f, APP / "av" / f.name)
-AVS = ", ".join(f'"av/{f.name}"' for f in AV)
+UI = sorted((ROOT / "ui").glob("*.webp"))
+(APP / "ui").mkdir(exist_ok=True)
+for f in UI:
+    shutil.copy2(f, APP / "ui" / f.name)
+AVS = ", ".join([f'"av/{f.name}"' for f in AV] + [f'"ui/{f.name}"' for f in UI])
 
 # ---------- service worker (hors ligne) ----------
 (APP / "sw.js").write_text(f"""const CACHE = "holdem-drill-{VERSION}";
