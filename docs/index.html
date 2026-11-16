@@ -219,6 +219,41 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .pl-speed{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;margin:10px 0}
 .mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
+.bnav{display:none}
+.moregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:36px}
+.moregrid button,.bnav button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.moregrid button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;font-size:13px}
+.moregrid img{width:52px;height:52px;border-radius:50%;border:2px solid #22182a}
+.tbl-grid .tseat{display:flex;align-items:center;gap:8px;text-align:left;min-height:52px;padding:6px 10px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;cursor:pointer}
+.tbl-grid .tseat span{display:flex;flex-direction:column;line-height:1.15} .tbl-grid .tseat small{color:var(--muted);font-size:12px}
+.tbl-grid .tseat img.av,.tbl-grid .tseat .ic{width:34px;height:34px}
+.sguess button.on{border-color:var(--brass);box-shadow:0 0 0 2px var(--brass)}
+.pl-info summary{cursor:pointer;color:var(--muted);font-size:13px}
+@media (max-width:760px){
+  .tabs{display:none}
+  .bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--bg);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));justify-content:space-around;box-shadow:0 -6px 18px rgba(0,0,0,.35)}
+  .bnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:var(--muted);font-size:11px;font-weight:600;padding:2px 0}
+  .bnav button[hidden]{display:none}
+  .bnav img{width:32px;height:32px;border-radius:50%;border:2px solid #22182a;opacity:.75}
+  .bnav button[aria-current="true"]{color:var(--ink)} .bnav button[aria-current="true"] img{opacity:1;box-shadow:0 0 0 2.5px var(--brass)}
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  #pf-fb:not([hidden]),#df-fb:not([hidden]),#eq-fb:not([hidden]),#po-fb:not([hidden]),#sd-fb:not([hidden]){position:fixed;left:0;right:0;bottom:calc(62px + env(safe-area-inset-bottom));z-index:44;max-height:58vh;overflow:auto;margin:0;border-radius:18px 18px 0 0;border:0;border-top:2px solid var(--brass);background:var(--bg);box-shadow:0 -8px 24px rgba(0,0,0,.45);padding-bottom:0;animation:sup .2s ease-out}
+  .fb > .verdict{cursor:pointer;position:relative;padding-right:28px}
+  .fb > .verdict::after{content:"⌄";position:absolute;right:4px;top:-2px;font-size:20px;opacity:.6}
+  .fb.min{max-height:64px!important;overflow:hidden!important}
+  .fb.min > .verdict::after{content:"⌃"}
+  .fb .next{position:sticky;bottom:0;align-self:stretch;width:100%;padding:14px;font-size:16px;margin:4px 0 12px;box-shadow:0 -10px 14px var(--bg)}
+  .pl-ans{grid-template-columns:repeat(3,1fr)!important;gap:6px} .pl-ans .ans{padding:11px 4px;font-size:14px}
+  #pl-ctrl .q{margin:4px 0 6px;font-size:14px}
+  #pl-prof .pill,#pf-prof .pill,#df-prof .pill{padding:5px 10px;font-size:13px}
+  .pl-sess{gap:8px;font-size:12px}
+  #mode{display:grid!important;grid-template-columns:repeat(3,1fr);gap:4px} #mode button{white-space:normal;font-size:13px;padding:8px 4px}
+  #mode{flex-wrap:wrap}
+  .tbl-ed .tbl-grid{grid-template-columns:repeat(3,1fr);gap:6px}
+  .tbl-ed .tbl-grid .tseat{flex-direction:column;align-items:center;text-align:center;gap:3px;padding:6px 4px;min-height:0}
+  .tbl-grid .tseat span{align-items:center} .tbl-grid .tseat small{font-size:11px}
+  .tbl-ed .muted{font-size:12px;margin:2px 0 6px}
+}
 .pseat.char .cseat{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .pseat.char:active .cseat{transform:scale(.96)}
 .sbg{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
@@ -324,6 +359,21 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
     <button class="tab" role="tab" data-view="play" data-t="tabPlay"></button>
     <button class="tab" role="tab" data-view="stats" data-t="tabStats"></button>
   </nav>
+  <nav class="bnav" aria-label="Navigation">
+    <button data-view="play"><img src="ui/ic-nav-play.webp" alt=""><span data-t="tabPlay"></span></button>
+    <button data-view="preflop"><img src="ui/ic-nav-preflop.webp" alt=""><span data-t="tabPreflop"></span></button>
+    <button data-view="defense"><img src="ui/ic-nav-defense.webp" alt=""><span data-t="tabDefense"></span></button>
+    <button data-view="villains"><img src="ui/ic-nav-villains.webp" alt=""><span data-t="tabVillains"></span></button>
+    <button data-more><img src="ui/ic-nav-more.webp" alt=""><span data-t="tabMore"></span></button>
+  </nav>
+  <div class="sbg" id="more-sheet" hidden><div class="ssheet"><button class="sclose" data-mclose aria-label="Close">×</button>
+    <div class="moregrid">
+      <button data-view="equity"><img src="ui/ic-nav-equity.webp" alt=""><span data-t="tabEquity"></span></button>
+      <button data-view="potodds"><img src="ui/ic-nav-potodds.webp" alt=""><span data-t="tabPotodds"></span></button>
+      <button data-view="showdown"><img src="ui/ic-nav-showdown.webp" alt=""><span data-t="tabShowdown"></span></button>
+      <button data-view="stats"><img src="ui/ic-nav-stats.webp" alt=""><span data-t="tabStats"></span></button>
+      <button data-settings><img src="ui/ic-gear.webp" alt=""><span data-t="settings"></span></button>
+    </div></div></div>
 
   <section id="v-preflop" hidden>
     <div class="bar" id="pf-prof"></div>
@@ -380,7 +430,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
   </section>
 
   <section id="v-play" hidden>
-    <p class="muted" data-t="plIntro"></p>
+    <details class="pl-info"><summary data-t="plHow"></summary><p class="muted" data-t="plIntro"></p></details>
     <div class="bar" id="pl-prof"></div>
     <div class="tbl-ed" id="pl-tbl" hidden></div>
     <div class="bar pl-sess" id="pl-sess"></div>
@@ -478,7 +528,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 "use strict";
 /* ---------- i18n ---------- */
 const T={
-en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"Styles (5)",modePers:"All 12 personalities",modeHint:"Classic: GTO-style charts only. Styles: 5 easy-to-spot player families. All 12 personalities: every nuance, for advanced study.",
+en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"5 styles",modePers:"All 12",modeHint:"Classic: GTO-style charts only. Styles: 5 easy-to-spot player families. All 12 personalities: every nuance, for advanced study.",
   sty:{rock:"Rock",reg:"Reg",pro:"Pro",station:"Station",lag:"LAG"},styFam:{rock:"Tight-passive",reg:"Tight-aggressive",pro:"Balanced (GTO)",station:"Loose-passive",lag:"Loose-aggressive"},styIncl:"Includes:",
   styMore:"Switch Settings › Mode to All 12 personalities to study each one in detail.",
   styDesc:{rock:"Plays few hands and rarely takes the lead. When a Rock bets or raises, it is almost always a strong hand.",reg:"Solid regular: plays a tight range aggressively. Some have real leaks after the flop.",pro:"Plays GTO perfectly: balanced and unexploitable, so bluffs and tricks don't work against them. Their weakness: GTO never adapts to the players at the table.",station:"Plays lots of hands, calls a lot and rarely raises. Hates to fold once they have any piece of the board.",lag:"Plays lots of hands and attacks: raises, 3-bets and keeps betting with weak hands as well as strong ones."},
@@ -518,7 +568,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"Styles (5)",modePers:"All 1
   settings:"Settings",setLang:"Language",setTerms:"Keep poker terms in English",
   setTermsHint:"Hand names, positions and actions stay in English (Flush, Full house, Button, Raise…); everything else uses your language.",
   setTermsOff:"Available when the app is set to another language.",setTable:"Table",done:"Done",
-  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb. Tap a player to see their stats and profile.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",plSess:"This session",plWhoIs:"Who is this player?",plFound:"Identified",plTapHint:"Tap a player to see their stats and profile.",plAuto:"Deal the next hand automatically",plSpeed:"Bot speed",plSpeeds:{slow:"Slow",normal:"Normal",fast:"Fast",instant:"Instant"},
+  tabVillains:"Opponents",oppLbl:"Opponent",random:"Random",mixed:"Mixed table",tabPlay:"Play",plIntro:"Play full hands against the personalities: every street, the button moves each hand and stacks carry over. Busted players rebuy 100bb. Tap a player to see their stats and profile.",plStreets:["Preflop","Flop","Turn","River","Showdown"],plAct:{fold:"Fold",check:"Check",call:"Call",bet:"Bet",raise:"Raise",allin:"All-in"},plNext:"Next hand",plNew:"New game",plHands:"Hands",plNet:"Net",plToCall:"To call",plWait:n=>`${n} is thinking…`,plWins:(n,x,h)=>`${n} wins ${x}${h?` with ${h}`:""}`,plYouWin:(x,h)=>`You win ${x}${h?` with ${h}`:""}`,plCoach:"Coach: show my equity and the pot odds",plEq:(e,o)=>`Your equity vs their likely ranges ≈ ${e}%${o?` · you need ${o}% to call`:""}.`,plLog:"Hand history",plRight:"Right",plWrong:"Wrong",plScore:"Avg. precision",plPrec:"Precision",plOpts:"Every option:",plUndo:"Undo and choose again",tabMore:"More",plHow:"How Play works",tblPick:"Choose the player at this seat",plSess:"This session",plWhoIs:"Who is this player?",plFound:"Identified",plTapHint:"Tap a player to see their stats and profile.",plAuto:"Deal the next hand automatically",plSpeed:"Bot speed",plSpeeds:{slow:"Slow",normal:"Normal",fast:"Fast",instant:"Instant"},
   plRead:"Read the table",plReadHint:"Your opponents are hidden. Watch how they play, even after you fold (their stats build up hand after hand), and identify them one by one.",
   plSeat:n=>`Seat ${n}`,plGuess:"Your read",plCheck:"Check my reads",plNewTable:"New hidden table",plReadScore:s=>`Your reads: ${s}/100`,
   plReadClose:"Guess one seat at a time. ≈ means right family (tight or loose, passive or aggressive) but wrong type; ✘ means wrong family. Each wrong guess costs 10 points.",plTry:"Guess",plTries:n=>`${n} wrong guess${n>1?"es":""}`,plReadDone:(h,w,s)=>`Table read! ${h} hands, ${w} wrong guess${w===1?"":"es"}. Score: ${s}/100.`,plStats:(n,v,p,af)=>`${n} hands · VPIP ${v} · PFR ${p} · AF ${af}`,plAutoNote:"Next hand coming…",plYourAct:"your play",plLv:["Blunder","Mistake","Questionable","Good","Excellent"],
@@ -608,7 +658,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"Styles (5)",modePers:"All 1
   reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device.",
   pgto:{gto:["Mixes bluffs and value at balanced frequencies everywhere.","You can't out-trick a perfect strategy: play close to GTO when they are in the pot, and make your profit from the other players."],tag:["After raising a flop c-bet in a 3-bet pot, a solver folds 27% when re-raised.","Real 500NL+ regs fold 39% there (Upswing): re-raise them as a bluff more often than GTO would."],fakereg:["Checks back the turn with many weak hands after the flop is checked through.","A fake reg gives up on the turn: bet every time he checks the turn, and keep barreling when he shows weakness."],nit:["Calls a river bet with enough bluff-catchers to stop the bettor from bluffing profitably.","A nit almost never bluffs the river: fold one pair to his river bet, and steal his blinds far more often."],weak:["C-bets a balanced range and gives up some flops.","A weak-tight player folds too much: c-bet almost every flop, and fold when he finally raises."],fitfold:["Defends against c-bets with enough hands to keep the bettor honest.","A fit-or-fold player folds every flop he misses: c-bet nearly always, small; fold to his check-raise."],lag:["Folds a share of medium hands to 3-bets and to big turn and river bets.","A LAG 3-bets and barrels with many weak hands: call his 3-bets wider, 4-bet more for value, and call down lighter."],maniac:["Folds top pair to heavy multi-street pressure some of the time.","A maniac bets with almost anything: call down with top pair, and limp-trap AA/KK to let him raise for you."],station:["Bluffs the river at a balanced frequency so its bets can't be read.","A station never folds: river bluffs just lose money. Don't bluff, and value-bet thinner and bigger."],whale:["Uses mostly small and medium bet sizes.","A whale calls almost any size: bet big for value, even overbet your strong hands."],live:["Opens to about 2.5bb and continues against 3-bets with hands like QQ and AK.","A live 1/2 rec 3-bets about 0.8%, less than KK+ (Selbrede, 2017): fold QQ and AK to his 3-bet unless you have seen this player 3-bet wider, and isolate limpers to 4bb + 1bb each."],omc:["Stacks off KK preflop against a balanced 4-bet or shove.","An OMC shoves only AA or KK, and you hold one of the kings: fold KK."]},gtoVs:"GTO would",exploitVs:"Against them"
 },
-fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"Styles (5)",modePers:"Les 12 personnalités",modeHint:"Classique : seulement les charts de style GTO. Styles : 5 familles de joueurs faciles à repérer. Les 12 personnalités : toutes les nuances, pour étudier en profondeur.",
+fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 12",modeHint:"Classique : seulement les charts de style GTO. Styles : 5 familles de joueurs faciles à repérer. Les 12 personnalités : toutes les nuances, pour étudier en profondeur.",
   sty:{rock:"Rock",reg:"Reg",pro:"Pro",station:"Station",lag:"LAG"},styFam:{rock:"Serré-passif",reg:"Serré-agressif",pro:"Équilibré (GTO)",station:"Large-passif",lag:"Large-agressif"},styIncl:"Comprend :",
   styMore:"Passe Réglages › Mode sur Les 12 personnalités pour étudier chacune en détail.",
   styDesc:{rock:"Joue peu de mains et prend rarement l'initiative. Quand un Rock mise ou relance, c'est presque toujours une main forte.",reg:"Régulier solide : joue une range serrée de façon agressive. Certains ont de vraies failles après le flop.",pro:"Joue le GTO parfaitement : équilibré et inexploitable, donc bluffs et pièges ne marchent pas contre lui. Sa faiblesse : le GTO ne s'adapte jamais aux joueurs de la table.",station:"Joue beaucoup de mains, paie beaucoup et relance rarement. Déteste folder dès qu'il touche quelque chose.",lag:"Joue beaucoup de mains et attaque : relance, 3-bet et continue de miser avec des mains faibles comme fortes."},
@@ -648,7 +698,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"Styles (5)",modePers:"Les
   settings:"Réglages",setLang:"Langue",setTerms:"Garder les termes de poker en anglais",
   setTermsHint:"Les noms de mains, positions et actions restent en anglais (Flush, Full house, Button, Raise…) ; le reste est en français.",
   setTermsOff:"Disponible quand l'app est dans une autre langue.",setTable:"Table",done:"OK",
-  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb. Touche un joueur pour voir ses stats et son profil.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",plSess:"Cette session",plWhoIs:"Qui est ce joueur ?",plFound:"Identifié",plTapHint:"Touche un joueur pour voir ses stats et son profil.",plAuto:"Distribuer la main suivante automatiquement",plSpeed:"Vitesse des bots",plSpeeds:{slow:"Lent",normal:"Normal",fast:"Rapide",instant:"Instantané"},
+  tabVillains:"Adversaires",oppLbl:"Adversaire",random:"Au hasard",mixed:"Table mixte",tabPlay:"Jouer",plIntro:"Joue des mains complètes contre les personnalités : toutes les streets, le bouton tourne à chaque main et les stacks sont conservés. Un joueur ruiné se recave à 100bb. Touche un joueur pour voir ses stats et son profil.",plStreets:["Préflop","Flop","Turn","River","Abattage"],plAct:{fold:"Fold",check:"Check",call:"Paie",bet:"Mise",raise:"Relance",allin:"Tapis"},plNext:"Main suivante",plNew:"Nouvelle partie",plHands:"Mains",plNet:"Bilan",plToCall:"À payer",plWait:n=>`${n} réfléchit…`,plWins:(n,x,h)=>`${n} gagne ${x}${h?` avec ${h}`:""}`,plYouWin:(x,h)=>`Tu gagnes ${x}${h?` avec ${h}`:""}`,plCoach:"Coach : afficher mon équité et la cote du pot",plEq:(e,o)=>`Ton équité contre leurs ranges probables ≈ ${e} %${o?` · il te faut ${o} % pour payer`:""}.`,plLog:"Historique de la main",plRight:"Bonne décision",plWrong:"Mauvaise décision",plScore:"Précision moyenne",plPrec:"Précision",plOpts:"Toutes les options :",plUndo:"Annuler et rejouer",tabMore:"Plus",plHow:"Comment marche le mode Jouer",tblPick:"Choisis le joueur à ce siège",plSess:"Cette session",plWhoIs:"Qui est ce joueur ?",plFound:"Identifié",plTapHint:"Touche un joueur pour voir ses stats et son profil.",plAuto:"Distribuer la main suivante automatiquement",plSpeed:"Vitesse des bots",plSpeeds:{slow:"Lent",normal:"Normal",fast:"Rapide",instant:"Instantané"},
   plRead:"Lis la table",plReadHint:"Tes adversaires sont cachés. Observe comment ils jouent, même après ton fold (leurs stats se remplissent main après main), et identifie-les un par un.",
   plSeat:n=>`Siège ${n}`,plGuess:"Ta lecture",plCheck:"Vérifier mes lectures",plNewTable:"Nouvelle table cachée",plReadScore:s=>`Tes lectures : ${s}/100`,
   plReadClose:"Devine un siège à la fois. ≈ veut dire bonne famille (serré ou large, passif ou agressif) mais mauvais type ; ✘ veut dire mauvaise famille. Chaque erreur coûte 10 points.",plTry:"Deviner",plTries:n=>`${n} erreur${n>1?"s":""}`,plReadDone:(h,w,s)=>`Table lue ! ${h} mains, ${w} erreur${w>1?"s":""}. Score : ${s}/100.`,plStats:(n,v,p,af)=>`${n} mains · VPIP ${v} · PFR ${p} · AF ${af}`,plAutoNote:"Main suivante dans un instant…",plYourAct:"ton choix",plLv:["Gaffe","Erreur","Discutable","Bon","Excellent"],
@@ -5661,7 +5711,10 @@ const TBKEY=()=>"holdem-drill-table-"+size;
 function myTable(){let v={};try{v=JSON.parse(localStorage.getItem(TBKEY())||"{}")||{}}catch(e){}return v}
 function seatType(p){const v=myTable()[p];return validOpt(v)?resolve(v):mixProf()}
 function paintTblEd(id){const el=$(id),on=(id==="pf-tbl"?pfProf:id==="df-tbl"?dProf:plProf)==="custom"&&pers();el.hidden=!on;if(!on)return;const v=myTable();
-  el.innerHTML=`<p class="muted">${t().tblHint}</p><div class="tbl-grid">${ORDER().map(p=>`<label>${validOpt(v[p])?optAv(optOf(v[p]),28):ic("mixed","rnd-av")}<b>${lbl(p)}</b><select data-tpos="${p}"><option value="random">${t().random}</option>${OPTS().map(k=>`<option value="${k}"${optOf(v[p])===k?" selected":""}>${optName(k)}</option>`).join("")}</select></label>`).join("")}</div>`}
+  el.innerHTML=`<p class="muted">${t().tblHint}</p><div class="tbl-grid">${ORDER().map(p=>`<button class="tseat" data-tseat="${p}" data-ed="${id}">${validOpt(v[p])?optAv(optOf(v[p]),34):ic("mixed","rnd-av")}<span><b>${lbl(p)}</b><small>${validOpt(v[p])?optName(optOf(v[p])):t().random}</small></span></button>`).join("")}</div>`}
+function setTbl(pos,val,ed){const v=myTable();v[pos]=val;try{localStorage.setItem(TBKEY(),JSON.stringify(v))}catch(err){}
+  paintTblEd("pf-tbl");paintTblEd("df-tbl");paintTblEd("pl-tbl");if(ed==="pl-tbl")newGame();else if(ed==="pf-tbl")newPreflop();else newDefense()}
+for(const id of ["pf-tbl","df-tbl","pl-tbl"])document.addEventListener("click",e=>{const b=e.target.closest(`#${id} [data-tseat]`);if(b)openSeat({pick:{pos:b.dataset.tseat,ed:id}})});
 function onTblChange(e){const s=e.target.closest("[data-tpos]");if(!s)return;const v=myTable();v[s.dataset.tpos]=s.value;try{localStorage.setItem(TBKEY(),JSON.stringify(v))}catch(err){}
   paintTblEd("pf-tbl");paintTblEd("df-tbl");const id=e.currentTarget.id;if(id==="pl-tbl"){paintTblEd("pl-tbl");newGame()}else if(id==="pf-tbl")newPreflop();else newDefense()}
 const TIGHT=new Set(["nit","weak","omc"]),PASSIVE=new Set(["nit","weak","omc","station","whale","live","fitfold"]);
@@ -6279,6 +6332,8 @@ function closeSeat(){$("seat-sheet").hidden=true;sheetCtx=null}
 function profileHTML(ty){const f=famOf(ty);
   return `<p>${styles()?t().styDesc[f]:t().pdesc[ty]}</p><p><b>${t().exploitLbl}</b> ${styles()?t().styExp[f]:t().pexp[ty]}</p>${gtoBox(ty)}`}
 function paintSeat(){const c=sheetCtx;if(!c)return;let h="";
+  if(c.pick){const cur=optOf(myTable()[c.pick.pos]);
+    $("seat-body").innerHTML=`<div class="shead"><div><div class="verdict">${lbl(c.pick.pos)}</div><div class="vtype">${t().tblPick}</div></div></div><div class="sguess"><button data-pickv="random"${!validOpt(cur)?' class="on"':""}>${ic("mixed","rnd-av")}<span>${t().random}</span></button>${OPTS().map(k=>`<button data-pickv="${k}"${cur===k?' class="on"':""}>${optAv(k,40)}<span>${optName(k)}</span></button>`).join("")}</div>`;return}
   if(c.play!=null){const g=G;if(!g||!g.P[c.play]){closeSeat();return}const i=c.play,p=g.P[i],hs=p.hs,pc=(a,b)=>b?Math.round(a/b*100)+"%":"–";
     const af=hs.calls?(hs.agg/hs.calls).toFixed(1):hs.agg?"∞":"–";
     const stats=`<div class="sstats">${[[t().plHands,hs.n],["VPIP",pc(hs.vp,hs.n)],["PFR",pc(hs.pfr,hs.n)],["3-bet",pc(hs.tb3||0,hs.n)],["AF",af],[t().plStreets[4],pc(hs.sd,hs.n)],["Stack",bb(p.stack)]].map(([k,v])=>`<div><small>${k}</small><b>${v}</b></div>`).join("")}</div>`;
@@ -6293,6 +6348,7 @@ for(const id of ["pl-table","pf-table","df-table"])$(id).addEventListener("click
   if(id==="pl-table"){if(!G)return;const pos=sEl.dataset.seat,i=G.P.findIndex((q,j)=>j&&plPos(j)===pos);if(i>0)openSeat({play:i})}
   else if(sEl.dataset.face)openSeat({face:sEl.dataset.face})});
 $("seat-sheet").addEventListener("click",e=>{if(e.target.id==="seat-sheet"||e.target.closest("[data-sclose]")){closeSeat();return}
+  const pk=e.target.closest("[data-pickv]");if(pk&&sheetCtx&&sheetCtx.pick){const {pos,ed}=sheetCtx.pick;closeSeat();setTbl(pos,pk.dataset.pickv,ed);return}
   const b=e.target.closest("[data-sguess]");if(!b||!sheetCtx||sheetCtx.play==null)return;const p=G.P[sheetCtx.play],v=b.dataset.sguess;
   if(v===p.ty||STY[v]&&famOf(p.ty)===v)p.idOK=true;else p.tries.push(v);paintPlay()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("seat-sheet").hidden)closeSeat()});
@@ -6322,6 +6378,15 @@ $("pl-auto").checked=plAuto;$("pl-auto").addEventListener("change",e=>{plAuto=e.
   const g=G;if(!g)return;if(g.over){clearTimeout(g.timer);g.autoAt=0;if(plAuto){g.autoAt=Date.now()+1500;g.timer=setTimeout(newHand,1500)}paintPlay()}});
 $("pl-grade").addEventListener("click",e=>{const r=e.target.closest("[data-retry]");if(r){const k=r.dataset.retry,to=+r.dataset.to;undoPlay();heroAct(k,to);return}if(e.target.closest("[data-undo]"))undoPlay()});
 
+
+/* ---------- phone navigation ---------- */
+const goView=v=>{if(location.hash!=="#"+v)location.hash=v;else show(v);window.scrollTo({top:0})};
+document.querySelector(".bnav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-more")){$("more-sheet").hidden=false;return}goView(b.dataset.view)});
+$("more-sheet").addEventListener("click",e=>{if(e.target.id==="more-sheet"||e.target.closest("[data-mclose]")){$("more-sheet").hidden=true;return}
+  const b=e.target.closest("button");if(!b)return;$("more-sheet").hidden=true;if(b.hasAttribute("data-settings")){$("open-settings").click();return}if(b.dataset.view)goView(b.dataset.view)});
+/* answer feedback is a bottom sheet on phones: tap its header to fold it and look at the table */
+document.addEventListener("click",e=>{const v=e.target.closest(".fb > .verdict");if(v)v.parentElement.classList.toggle("min")});
+
 /* ---------- navigation ---------- */
 const VIEWS=["play","preflop","defense","equity","potodds","showdown","villains","stats"];
 const INIT={preflop:newPreflop,defense:newDefense,equity:newEquity,potodds:newPotOdds,showdown:newShowdown};
@@ -6331,7 +6396,7 @@ let current="preflop";const started={};
 function paintMode(){
   document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===mode));
   $("pf-prof").hidden=$("df-prof").hidden=!pers();paintTblEd("pf-tbl");paintTblEd("df-tbl");
-  document.querySelector('.tab[data-view="villains"]').hidden=!pers();
+  document.querySelector('.tab[data-view="villains"]').hidden=!pers();document.querySelector('.bnav [data-view="villains"]').hidden=!pers();
 }
 $("mode").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b||b.dataset.mode===mode)return;
   mode=b.dataset.mode;try{localStorage.setItem(MKEY,mode)}catch(err){}paintMode();
@@ -6346,6 +6411,10 @@ function show(v){
   if(INIT[v]&&!started[v]){started[v]=true;INIT[v]()}
   if(v==="stats")paintStats();
   if(v==="villains")paintVillains();
+  if(!$("seat-sheet").hidden)closeSeat();$("more-sheet").hidden=true;
+  const MORE=["equity","potodds","showdown","stats"];
+  document.querySelectorAll(".bnav [data-view]").forEach(b=>b.setAttribute("aria-current",b.dataset.view===v));
+  document.querySelector(".bnav [data-more]").setAttribute("aria-current",MORE.includes(v));
   if(v==="play"){paintPlProf();if(!G)newGame();else paintPlay()}
 }
 document.querySelector(".tabs").addEventListener("click",e=>{const tb=e.target.closest(".tab");if(!tb)return;
