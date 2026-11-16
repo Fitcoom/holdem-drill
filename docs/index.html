@@ -219,6 +219,12 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .pl-speed{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;margin:10px 0}
 .mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
+.gtovs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
+.gtovs>div{border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface)}
+.gtovs>div.ex{border-color:var(--brass);background:var(--brass-soft)}
+.gtovs p{margin:4px 0 0;font-size:13.5px}
+.gtofor{display:flex;gap:8px;align-items:center;margin-top:10px}
+@media (max-width:420px){.gtovs{grid-template-columns:1fr}}
 .ic.gear-ic{width:30px;height:30px;margin:0;vertical-align:middle}
 .pseat.turn .cinfo,.pseat.turn .pbox{box-shadow:0 0 0 2px var(--brass),0 0 14px var(--brass)}
 .pseat.win .cinfo{border-color:var(--brass);box-shadow:0 0 0 3px var(--brass)}
@@ -580,7 +586,9 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"Styles (5)",modePers:"All 1
   cat:["High card","Pair","Two pair","Three of a kind","Straight","Flush","Full house","Four of a kind","Straight flush"],royal:"Royal flush",
   mods:{preflop:"Preflop — opening ranges",defense:"Defense — facing an open",equity:"Hand vs hand equity",potodds:"Pot odds and outs",showdown:"Showdown — reading the board"},
   overall:"Overall",sub:(ok,n)=>`${ok} right out of ${n}`,subAll:(n,b)=>`${n} questions · best streak ${b}`,
-  reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device."},
+  reset:"Reset stats",confirmReset:"Confirm reset",empty:"Your results will show here after your first hands. They stay on this device.",
+  pgto:{gto:["Mixes bluffs and value at balanced frequencies everywhere.","You can't out-trick a perfect strategy: play close to GTO when they are in the pot, and make your profit from the other players."],tag:["After raising a flop c-bet in a 3-bet pot, a solver folds 27% when re-raised.","Real 500NL+ regs fold 39% there (Upswing): re-raise them as a bluff more often than GTO would."],fakereg:["Checks back the turn with many weak hands after the flop is checked through.","A fake reg gives up on the turn: bet every time he checks the turn, and keep barreling when he shows weakness."],nit:["Calls a river bet with enough bluff-catchers to stop the bettor from bluffing profitably.","A nit almost never bluffs the river: fold one pair to his river bet, and steal his blinds far more often."],weak:["C-bets a balanced range and gives up some flops.","A weak-tight player folds too much: c-bet almost every flop, and fold when he finally raises."],fitfold:["Defends against c-bets with enough hands to keep the bettor honest.","A fit-or-fold player folds every flop he misses: c-bet nearly always, small; fold to his check-raise."],lag:["Folds a share of medium hands to 3-bets and to big turn and river bets.","A LAG 3-bets and barrels with many weak hands: call his 3-bets wider, 4-bet more for value, and call down lighter."],maniac:["Folds top pair to heavy multi-street pressure some of the time.","A maniac bets with almost anything: call down with top pair, and limp-trap AA/KK to let him raise for you."],station:["Bluffs the river at a balanced frequency so its bets can't be read.","A station never folds: river bluffs just lose money. Don't bluff, and value-bet thinner and bigger."],whale:["Uses mostly small and medium bet sizes.","A whale calls almost any size: bet big for value, even overbet your strong hands."],live:["Opens to about 2.5bb and continues against 3-bets with hands like QQ and AK.","A live 1/2 rec 3-bets about 0.8%, less than KK+ (Selbrede, 2017): fold QQ and AK to his 3-bet, and isolate limpers to 4bb + 1bb each."],omc:["Stacks off KK preflop against a balanced 4-bet or shove.","An OMC shoves only AA or KK, and you hold one of the kings: fold KK."]},gtoVs:"GTO would",exploitVs:"Against them"
+},
 fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"Styles (5)",modePers:"Les 12 personnalités",modeHint:"Classique : seulement les charts de style GTO. Styles : 5 familles de joueurs faciles à repérer. Les 12 personnalités : toutes les nuances, pour étudier en profondeur.",
   sty:{rock:"Rock",reg:"Reg",pro:"Pro",station:"Station",lag:"LAG"},styFam:{rock:"Serré-passif",reg:"Serré-agressif",pro:"Équilibré (GTO)",station:"Large-passif",lag:"Large-agressif"},styIncl:"Comprend :",
   styMore:"Passe Réglages › Mode sur Les 12 personnalités pour étudier chacune en détail.",
@@ -708,7 +716,9 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"Styles (5)",modePers:"Les
   cat:["Carte haute","Paire","Deux paires","Brelan","Quinte","Couleur","Full","Carré","Quinte flush"],royal:"Quinte flush royale",
   mods:{preflop:"Préflop — ranges d'ouverture",defense:"Défense — face à une relance",equity:"Équité main contre main",potodds:"Pot odds et outs",showdown:"Showdown — lecture du board"},
   overall:"Global",sub:(ok,n)=>`${ok} bonnes sur ${n}`,subAll:(n,b)=>`${n} questions · meilleure série ${b}`,
-  reset:"Remettre les stats à zéro",confirmReset:"Confirmer la remise à zéro",empty:"Tes résultats apparaîtront ici après tes premières mains. Ils restent sur cet appareil."},
+  reset:"Remettre les stats à zéro",confirmReset:"Confirmer la remise à zéro",empty:"Tes résultats apparaîtront ici après tes premières mains. Ils restent sur cet appareil.",
+  pgto:{gto:["Mélange bluffs et value à des fréquences équilibrées partout.","On ne piège pas une stratégie parfaite : joue près du GTO quand il est dans le coup, et fais ton profit sur les autres joueurs."],tag:["Après avoir relancé un c-bet au flop dans un pot 3-bet, un solveur fold 27 % quand on le sur-relance.","Les vrais regs 500NL+ y foldent 39 % (Upswing) : sur-relance-les en bluff plus souvent que le GTO."],fakereg:["Checke derrière au turn avec beaucoup de mains faibles quand le flop a été checké.","Un faux reg abandonne au turn : mise chaque fois qu'il checke le turn, et continue tant qu'il montre de la faiblesse."],nit:["Paie une mise river avec assez de mains bluff-catcher pour empêcher le bluff d'être rentable.","Un nit ne bluffe presque jamais la river : fold ta paire face à sa mise river, et vole ses blinds beaucoup plus souvent."],weak:["C-bet une range équilibrée et abandonne certains flops.","Un weak-tight fold trop : c-bet presque tous les flops, et fold quand il relance enfin."],fitfold:["Défend contre les c-bets avec assez de mains pour garder le miseur honnête.","Un fit-or-fold lâche tous les flops qu'il rate : c-bet presque toujours, petit ; fold face à son check-raise."],lag:["Fold une partie des mains moyennes face aux 3-bets et aux grosses mises turn et river.","Un LAG 3-bet et continue avec beaucoup de mains faibles : paie ses 3-bets plus large, 4-bet plus pour la value, et paie plus léger jusqu'à la river."],maniac:["Fold top paire sous une forte pression sur plusieurs streets une partie du temps.","Un maniaque mise avec presque tout : paie jusqu'au bout avec top paire, et limpe AA/KK pour le laisser relancer à ta place."],station:["Bluffe la river à une fréquence équilibrée pour que ses mises soient illisibles.","Une station ne fold jamais : les bluffs river perdent de l'argent. Ne bluffe pas, et mise pour la value plus fin et plus gros."],whale:["Utilise surtout des petites et moyennes tailles de mise.","Une whale paie presque n'importe quelle taille : mise gros pour la value, et overbet tes mains fortes."],live:["Ouvre à environ 2,5bb et continue face aux 3-bets avec des mains comme QQ et AK.","Un rec live 1/2 3-bet environ 0,8 %, moins que KK+ (Selbrede, 2017) : fold QQ et AK face à son 3-bet, et isole les limpeurs à 4bb + 1bb chacun."],omc:["Met KK à tapis préflop face à un 4-bet ou un tapis équilibré.","Un OMC ne met tapis qu'avec AA ou KK, et tu tiens un des rois : fold KK."]},gtoVs:"Le GTO ferait",exploitVs:"Contre lui"
+},
 es:{eqHowTitle:"Cómo estimar tu equity",
   eqHow:`<p><b>1. Cuenta tus outs.</b> Los outs son las cartas que te ponen por delante: un proyecto de color tiene 9, un proyecto de escalera abierta 8, un gutshot 4, dos overcards unos 6.</p>
 <p><b>2. Regla del 4 y del 2.</b> En el flop, con dos cartas por salir: outs × 4. En el turn, con una carta por salir: outs × 2. Con más de 8 outs en el flop, resta los outs que sobran: 15 outs ≈ 15 × 4 − 7 = 53 %.</p>
@@ -5827,15 +5837,16 @@ function paintDStudy(){
 $("dstudy-spot").addEventListener("click",e=>{const b=e.target.closest("[data-spot]");if(b){dStudy=b.dataset.spot;paintDStudy()}});
 
 /* ---------- Opponents: study each profile's opening ranges ---------- */
+const gtoBox=k=>`<div class="gtovs"><div><span class="lbl">${t().gtoVs}</span><p>${t().pgto[k][0]}</p></div><div class="ex"><span class="lbl">${t().exploitVs}</span><p>${t().pgto[k][1]}</p></div></div>`;
 let vProf="nit",vPos="BTN",vFam="rock";
 function paintVillains(){
   if(!OPENERS().includes(vPos))vPos="BTN";
   $("vp-intro").innerHTML=`<div class="verdict">${t().popTitle}</div><p>${t().popText}</p><ul class="poplist">${t().popFacts.map(f=>`<li>${f}</li>`).join("")}</ul><p class="muted">${t().popSrc}</p>`;
   if(styles()){$("vp-prof").innerHTML=STYK.map(k=>`<button class="pill" aria-pressed="${k===vFam}" data-vfam="${k}">${optAv(k,22)}${t().sty[k]}</button>`).join("");vProf=STYREP[vFam];
-    $("vp-card").innerHTML=`<div class="vhead">${av(STYREP[vFam],84)}<div><div class="verdict">${t().sty[vFam]}</div><div class="vtype">${t().styFam[vFam]}</div></div></div><div class="vfaces"><span class="lbl">${t().styIncl}</span>${STY[vFam].map(k=>`<span>${av(k,44)}<small>${t().prof[k]}</small></span>`).join("")}</div><div class="facts"><span>${t().statsLbl}: ${STYSTAT[vFam]}</span></div><p>${t().styDesc[vFam]}</p><p><b>${t().exploitLbl}</b> ${t().styExp[vFam]}</p><p class="muted">${t().styMore}</p>`}
+    $("vp-card").innerHTML=`<div class="vhead">${av(STYREP[vFam],84)}<div><div class="verdict">${t().sty[vFam]}</div><div class="vtype">${t().styFam[vFam]}</div></div></div><div class="vfaces"><span class="lbl">${t().styIncl}</span>${STY[vFam].map(k=>`<span>${av(k,44)}<small>${t().prof[k]}</small></span>`).join("")}</div><div class="facts"><span>${t().statsLbl}: ${STYSTAT[vFam]}</span></div><p>${t().styDesc[vFam]}</p><p><b>${t().exploitLbl}</b> ${t().styExp[vFam]}</p>${STY[vFam].map(k=>`<div class="gtofor">${av(k,26)}<b>${t().prof[k]}</b></div>${gtoBox(k)}`).join("")}<p class="muted">${t().styMore}</p>`}
   else $("vp-prof").innerHTML=PROFILES.map(k=>`<button class="pill" aria-pressed="${k===vProf}" data-vprof="${k}">${av(k,22)}${t().prof[k]}</button>`).join("");
   const sz=LIMPERS[vProf]?`${t().limpsLbl} ${bb(PSIZE[vProf])}`:bb(PSIZE[vProf]);
-  if(!styles())$("vp-card").innerHTML=`<div class="vhead">${av(vProf,84)}<div><div class="verdict">${PNAME[vProf]} « ${t().pnick[vProf]} »</div><div class="vtype">${t().prof[vProf]}</div><div class="vtag">${t().ptag[vProf]}</div></div></div><div class="vfaces"><span class="lbl">${t().otherFaces}</span>${FACES(vProf).slice(1).map(f=>`<span>${av(f,44)}<small>${PNAME[f]}</small></span>`).join("")}</div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span>${t().pfacts[vProf].map(f=>`<span>${f}</span>`).join("")}</div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p><p class="src">${t().srcLbl} ${PSRC[vProf].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(" · ")}</p>`;
+  if(!styles())$("vp-card").innerHTML=`<div class="vhead">${av(vProf,84)}<div><div class="verdict">${PNAME[vProf]} « ${t().pnick[vProf]} »</div><div class="vtype">${t().prof[vProf]}</div><div class="vtag">${t().ptag[vProf]}</div></div></div><div class="vfaces"><span class="lbl">${t().otherFaces}</span>${FACES(vProf).slice(1).map(f=>`<span>${av(f,44)}<small>${PNAME[f]}</small></span>`).join("")}</div><div class="facts"><span>${t().statsLbl}: ${PSTATS[vProf]}</span><span>${t().sizeLbl}: ${sz}</span>${t().pfacts[vProf].map(f=>`<span>${f}</span>`).join("")}</div><p>${t().pdesc[vProf]}</p><p><b>${t().exploitLbl}</b> ${t().pexp[vProf]}</p>${gtoBox(vProf)}<p class="src">${t().srcLbl} ${PSRC[vProf].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join(" · ")}</p>`;
   $("vp-pos").hidden=!!LIMPERS[vProf];
   $("vp-pos").innerHTML=OPENERS().map(p=>`<button class="pill" aria-pressed="${p===vPos}" data-vpos="${p}">${lbl(p)}</button>`).join("");
   if(LIMPERS[vProf]){const L=LIMPERS[vProf];$("vp-grid").innerHTML=grid3({tb:L.raise,call:L.limp},"");$("vp-pct").textContent=t().vpLimper(pct(L.raise),pct(L.limp));return}
@@ -6029,7 +6040,7 @@ function streetBluff(ty,st){const s=SIMP[ty]||SIMP.gto;if(s.bluffS)return s.bluf
 const BETADJ={fitfold:.08,fakereg:.03,nit:.08,weak:.08,omc:.1,station:.1,whale:.05,live:.06,gto:0,tag:.02,lag:-.05,maniac:-.1};
 function botRange(i){const p=G.P[i],s=SIMP[p.ty]||SIMP.gto,pos=plPos(i),L=LIMPERS[p.ty];
   switch(p.pf){case "open":return [...(L?L.raise:pos==="BB"?topShare(s.tb*1.5):openRange(p.ty,pos))];
-    case "3bet":return p.ty==="omc"?["AA","KK"]:[...topShare(Math.max(2,s.tb))];
+    case "3bet":return s.tb<=1.2?["AA","KK"]:[...topShare(Math.max(2,s.tb))];
     case "limp":return L?[...L.limp,...L.raise]:[...topShare(Math.min(60,s.cont*1.5))];
     case "call":return [...topShare(s.cont)];default:return null}}
 function pairFrom(r,used){for(let k=0;k<30;k++){const c=r[rnd(r.length)],a=R.indexOf(c[0]),b=R.indexOf(c[1]),s1=rnd(4);let s2=rnd(4);
@@ -6057,7 +6068,7 @@ function gradeHero(kind,cache,to){cache=cache||{};const ctx={value:false,callers
   }else{
     const opp=g.street===0?[g.aggr]:live.slice(0,3),eq=cache.eq??(cache.eq=rangeEq(h.cards,g.board,opp.filter(i=>i>0&&i<g.n),g.street===0?400:300));
     const ag=g.aggr>0?g.P[g.aggr]:null,adj=call>0&&ag?BETADJ[ag.ty]||0:0,need=call>0?call/(pt+call):0,need2=need+adj;
-    const types=live.map(i=>g.P[i].ty),callers=ctx.callers=types.some(x=>["station","whale","live"].includes(x)),folders=types.every(x=>["nit","weak","omc"].includes(x));
+    const types=live.map(i=>g.P[i].ty),callers=ctx.callers=types.some(x=>["station","whale","live"].includes(x)),folders=types.every(x=>["nit","weak","omc","fitfold"].includes(x)||x==="fakereg"&&g.street>=2);
     why.push(call>0?A.eqNeed(pctS(eq),pctS(Math.max(0,need2))):A.eq(pctS(eq)));
     if(ag&&call>0&&!hidden()&&(adj>=.06||adj<=-.05)){const ok=eq-need2>=0,pn=tyName(ag.ty);why.push(adj>0?(ok?A.strongBut(pn):A.strongBet(pn)):(ok?A.lightBet(pn):A.lightBut(pn)))}
     if(call>0){const m=eq-need2;
@@ -6100,7 +6111,7 @@ const SIMP={fitfold:{cont:22,tb:2.5,val:.68,bluff:.06,loose:1.35,rz:.9,size:.5,l
   nit:{cont:8,tb:2.5,val:.72,bluff:.04,loose:1.3,rz:.88,size:.6},weak:{cont:11,tb:2,val:.7,bluff:.06,loose:1.25,rz:.9,size:.5},
   lag:{cont:26,tb:10,val:.55,bluff:.35,loose:.95,rz:.72,size:.75},maniac:{cont:45,tb:22,val:.45,bluff:.6,loose:.8,rz:.62,size:1},
   station:{cont:45,tb:2,val:.7,bluff:.05,loose:.55,rz:.9,size:.5},whale:{cont:55,tb:3,val:.65,bluff:.12,loose:.6,rz:.88,size:.6},
-  live:{cont:32,tb:3,val:.66,bluff:.08,loose:.75,rz:.88,size:.6},omc:{cont:12,tb:1,val:.78,bluff:.02,loose:1.2,rz:.92,size:.5}};
+  live:{cont:32,tb:1,val:.66,bluff:.08,loose:.75,rz:.88,size:.6},omc:{cont:12,tb:1,val:.78,bluff:.02,loose:1.2,rz:.92,size:.5}};
 const SRANK={};{let n=0;for(const c of ranked("tag")){n+=combos(c);SRANK[c]=n/1326*100}}
 const r2=x=>Math.round(x*100)/100;
 function mcEq(h,board,nOpp,it){const used=new Set([...h,...board]),rest=[];for(let c=0;c<52;c++)if(!used.has(c))rest.push(c);
