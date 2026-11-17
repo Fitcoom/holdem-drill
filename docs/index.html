@@ -832,6 +832,8 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"5 styles",modePers:"All 13"
   tagNote:"TAGs fold too much to 3-bets: 3-bet your best calling hands instead of just calling.",pfNoteStd:"Nobody behind changes the plan here: play the classical chart, raise or fold."
 ,
   muSame:"Same ranks: the pot is usually split. Only a flush can break the tie.",eqTie:"You're splitting the pot right now: the cards to come decide who wins."
+,
+  sdHigh:r=>`${r} high`,sdKick:c=>`Same hand type (${c}): compare the cards in order, the first higher card wins. The kickers count too.`
 },
 fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 13",modeHint:"Classique : seulement les charts de style GTO. Styles : 5 familles de joueurs faciles à repérer. Les 13 personnalités : toutes les nuances, pour étudier en profondeur.",
   sty:{rock:"Rock",reg:"Reg",pro:"Pro",station:"Station",lag:"LAG"},styFam:{rock:"Serré-passif",reg:"Serré-agressif",pro:"Équilibré (GTO)",station:"Large-passif",lag:"Large-agressif"},styIncl:"Comprend :",
@@ -1012,6 +1014,8 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 1
   tagNote:"Les TAG foldent trop face aux 3-bets : 3-bette tes meilleures mains de call au lieu de seulement payer.",pfNoteStd:"Personne derrière ne change le plan ici : joue la chart classique, relance ou fold."
 ,
   muSame:"Mêmes valeurs : le pot est en général partagé. Seule une couleur peut faire la différence.",eqTie:"Vous partagez le pot pour l'instant : les cartes à venir décident qui gagne."
+,
+  sdHigh:r=>`hauteur ${r}`,sdKick:c=>`Même type de main (${c}) : compare les cartes dans l'ordre, la première carte plus haute gagne. Les kickers comptent aussi.`
 },
 es:{eqHowTitle:"Cómo estimar tu equity",
   eqHow:`<p><b>1. Cuenta tus outs.</b> Los outs son las cartas que te ponen por delante: un proyecto de color tiene 9, un proyecto de escalera abierta 8, un gutshot 4, dos overcards unos 6.</p>
@@ -7661,6 +7665,13 @@ function evalH(cs){
   if(p.length===1)return sc5(1,[p[0],x[0],x[1],x[2]]);
   return sc5(0,x.slice(0,5));
 }
+/* hand type plus its cards, e.g. "Two pair (K-K & 7-7 + A)" */
+function handDesc(sc){const c=Math.floor(sc/B[0]),k=[];let v=sc%B[0];for(let i=1;i<6;i++){k.push(Math.floor(v/B[i]));v%=B[i]}
+  const r=i=>R[i]==="T"?"10":R[i];let d;
+  switch(c){case 0:case 5:d=k.map(r).join(" ");break;case 1:d=`${r(k[0])}-${r(k[0])} + ${k.slice(1,4).map(r).join(" ")}`;break;
+    case 2:d=`${r(k[0])}-${r(k[0])} & ${r(k[1])}-${r(k[1])} + ${r(k[2])}`;break;case 3:d=`${r(k[0])}×3 + ${r(k[1])} ${r(k[2])}`;break;
+    case 6:d=`${r(k[0])}×3 + ${r(k[1])}×2`;break;case 7:d=`${r(k[0])}×4 + ${r(k[1])}`;break;default:d=t().sdHigh(r(k[0]))}
+  return `${handName(sc)} <span class="mono">(${d})</span>`}
 function handName(score){const c=Math.floor(score/B[0]);if(c===8&&Math.floor(score%B[0]/B[1])===12)return t().royal;return t().cat[c]}
 
 function equity(h,v,board){
@@ -8150,7 +8161,8 @@ function paintShowdown(){
   paintRing("sd-table",{bottom:b,bottomCards:sd.hands[0],bottomLabel:lbl(b),bottomSub:done?handName(sd.scores[0]):"",seats,
     center:boardCenter(t().showdownCtx,sd.board)});
   paintAnswers($("sd-ans"),sd.players.map(lbl).concat([t().split]),sd);
-  paintFb($("sd-fb"),sd,()=>sd.players.map((p,k)=>`<p>${lbl(p)}${lang==="fr"?" :":":"} <b>${handName(sd.scores[k])}</b>${sd.win.includes(k)?t().wins:""}</p>`).join("")+(sd.win.length>1?`<p class="muted">${t().splitNote}</p>`:""));
+  paintFb($("sd-fb"),sd,()=>{const cat=x=>Math.floor(x/B[0]),w=sd.win[0],ru=sd.scores.map((x,i)=>i).filter(i=>!sd.win.includes(i)).sort((a,b)=>sd.scores[b]-sd.scores[a])[0];
+    return sd.players.map((p,k)=>`<p>${lbl(p)}${lang==="fr"?" :":":"} <b>${handDesc(sd.scores[k])}</b>${sd.win.includes(k)?t().wins:""}</p>`).join("")+(sd.win.length>1?`<p class="muted">${t().splitNote}</p>`:ru!=null&&cat(sd.scores[w])===cat(sd.scores[ru])?`<p class="muted">${t().sdKick(handName(sd.scores[w]))}</p>`:"")});
 }
 $("sd-ans").addEventListener("click",e=>{const b=e.target.closest(".ans");if(b)answer("showdown",sd,+b.dataset.i,paintShowdown)});
 
