@@ -800,6 +800,8 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"5 styles",modePers:"All 12"
   plTrap:"Against a hyper-aggressive player, check your strong hands: he will bet for you.",plFoldBluff:"This player folds too much: a bet takes the pot."
 ,
   plFpBluff:"A fake pro folds too much against big bets: a pot-size bet or an overbet takes this pot.",plFpSmall:"Against a fake pro, bluff big: small bluffs get called, big ones get folds."
+,
+  plFloat:"Fake regs c-bet the flop and give up on the turn: call (float) and take the pot later.",plManiacCall:"Against a maniac, just call with your strong hand: let him keep bluffing into you.",plFoldMid:"This player folds too much: bet your medium hands too, he gives up without a strong hand."
 },
 fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 12",modeHint:"Classique : seulement les charts de style GTO. Styles : 5 familles de joueurs faciles à repérer. Les 12 personnalités : toutes les nuances, pour étudier en profondeur.",
   sty:{rock:"Rock",reg:"Reg",pro:"Pro",station:"Station",lag:"LAG"},styFam:{rock:"Serré-passif",reg:"Serré-agressif",pro:"Équilibré (GTO)",station:"Large-passif",lag:"Large-agressif"},styIncl:"Comprend :",
@@ -970,6 +972,8 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 1
   plTrap:"Contre un joueur hyper-agressif, checke tes mains fortes : il misera pour toi.",plFoldBluff:"Ce joueur fold trop : une mise prend le pot."
 ,
   plFpBluff:"Un faux pro fold trop contre les grosses mises : une mise de la taille du pot ou un overbet prend ce pot.",plFpSmall:"Contre un faux pro, bluffe gros : les petits bluffs se font payer, les gros font folder."
+,
+  plFloat:"Les faux regs c-bettent le flop puis abandonnent au turn : paie (float) et prends le pot plus tard.",plManiacCall:"Contre un maniaque, paie simplement avec ta main forte : laisse-le continuer à bluffer.",plFoldMid:"Ce joueur fold trop : mise aussi tes mains moyennes, il abandonne sans main forte."
 },
 es:{eqHowTitle:"Cómo estimar tu equity",
   eqHow:`<p><b>1. Cuenta tus outs.</b> Los outs son las cartas que te ponen por delante: un proyecto de color tiene 9, un proyecto de escalera abierta 8, un gutshot 4, dos overcards unos 6.</p>
@@ -8327,17 +8331,17 @@ function gradeHero(kind,cache,to){cache=cache||{};const ctx={value:false,callers
     const types=live.map(i=>g.P[i].ty),callers=ctx.callers=types.some(x=>["station","whale","live"].includes(x)),folders=types.every(x=>["nit","weak","omc","fitfold"].includes(x)||x==="fakereg"&&g.street>=2);
     why.push(call>0?A.eqNeed(pctS(eq),pctS(Math.max(0,need2))):A.eq(pctS(eq)));
     if(ag&&call>0&&!hidden()&&(adj>=.06||adj<=-.05)){const ok=eq-need2>=0,pn=tyName(ag.ty);why.push(adj>0?(ok?A.strongBut(pn):A.strongBet(pn)):(ok?A.lightBet(pn):A.lightBut(pn)))}
-    if(call>0){const m=eq-need2;
+    if(call>0){const m=eq-need2,fl=g.street===1&&ag&&ag.ty==="fakereg"&&m>=-.12&&m<0,mh=g.street>0&&g.street<3&&ag&&ag.ty==="maniac"&&eq>=.65;
       if(g.street===0){const val=r<=(ag&&["lag","maniac"].includes(ag.ty)?9:4.5)&&m>=0;
         if(act==="fold")sc=m<.05?(val?30:90):m<.12?55:25;else if(act==="call")sc=m>=.05?(val?70:90):m>=0?55:25;else sc=val?95:m>=.05?55:25;
         if(act!=="raise"&&val)why.push(A.valRaise);}
-      else if(act==="fold"){sc=m<0?90:m<.05?60:25;why.push(m<0?A.foldOk:A.foldBad)}
-      else if(act==="call"){sc=m>=0?(eq>=.7&&callers?75:90):m>-.05?55:20;why.push(m>=0?(eq>=.7&&callers?A.valRaise:A.callOk):A.callBad)}
-      else{sc=eq>=.65?95:eq>=need2?60:folders&&g.street<3?50:20;why.push(eq>=.65?A.valRaise:eq>=need2?A.thin:folders?A.bluffOk:A.bluffBad)}}
+      else if(act==="fold"){sc=fl?50:m<0?90:m<.05?60:25;why.push(fl?t().plFloat:m<0?A.foldOk:A.foldBad)}
+      else if(act==="call"){sc=fl?88:mh?92:m>=0?(eq>=.7&&callers?75:90):m>-.05?55:20;why.push(fl?t().plFloat:mh?t().plManiacCall:m>=0?(eq>=.7&&callers?A.valRaise:A.callOk):A.callBad)}
+      else{sc=mh?78:eq>=.65?95:eq>=need2?60:folders&&g.street<3?50:20;why.push(mh?t().plManiacCall:eq>=.65?A.valRaise:eq>=need2?A.thin:folders?A.bluffOk:A.bluffBad)}}
     else{const vT=callers?.5:.58;ctx.value=eq>=vT;
-      const trap=types.length&&types.every(x=>["maniac","lag"].includes(x))&&eq>=vT+.12&&g.P.every(q=>!q.acted),fb=folders&&eq<.35,fp=types.length&&types.every(x=>x==="fakepro")&&g.street>=2&&eq<.35,fpBig=fp&&to&&to>=pt*.9;
-      if(act==="raise"){sc=trap?75:eq>=vT?95:fpBig?92:fp?50:fb?92:eq<.35?(callers?15:35):55;why.push(trap?t().plTrap:eq>=vT?A.value:fpBig?t().plFpBluff:fp?t().plFpSmall:fb?A.bluffOk:eq<.35?(callers?A.bluffBad:A.thin):A.thin)}
-      else{sc=trap?92:eq>=vT+.12?35:eq>=vT?60:fb||fp?55:85;why.push(trap?t().plTrap:eq>=vT+.12?A.missed:eq>=vT?A.thinCheck:fp?t().plFpBluff:fb?t().plFoldBluff:A.checkOk)}}
+      const trap=types.length&&types.every(x=>["maniac","lag"].includes(x))&&eq>=vT+.12&&g.P.every(q=>!q.acted),fb=folders&&eq<.35,fm=folders&&!fb&&eq<vT&&g.street<3,fp=types.length&&types.every(x=>x==="fakepro")&&g.street>=2&&eq<.35,fpBig=fp&&to&&to>=pt*.9;
+      if(act==="raise"){sc=trap?75:eq>=vT?95:fpBig?92:fp?50:fb?92:fm?88:eq<.35?(callers?15:35):55;why.push(trap?t().plTrap:eq>=vT?A.value:fpBig?t().plFpBluff:fp?t().plFpSmall:fb?A.bluffOk:fm?t().plFoldMid:eq<.35?(callers?A.bluffBad:A.thin):A.thin)}
+      else{sc=trap?92:eq>=vT+.12?35:eq>=vT?60:fb||fp?55:fm?65:85;why.push(trap?t().plTrap:eq>=vT+.12?A.missed:eq>=vT?A.thinCheck:fp?t().plFpBluff:fb?t().plFoldBluff:fm?t().plFoldMid:A.checkOk)}}
   }
   let cat=null,sizeHit=false;
   if(act==="raise"&&to){const [pen,ideal]=sizePen(to,ctx);if(pen>0){const base=sc;sc=Math.max(5,sc-pen);if(base>=65){why.push(A.size(bb(ideal)));sizeHit=true}}}
@@ -8355,7 +8359,7 @@ function sizePen(to,ctx){const g=G,h=g.P[0],pt=potOf(),stk=r2(h.bet+h.stack),all
   if(g.street===0){const ideal=r2(g.curBet*(pos==="SB"||pos==="BB"?4:3.2));
     if(stk<=25||allin&&g.raiseN>=2&&stk<=g.curBet*4)return [0,ideal];const r=to/ideal;return [r<.8?10:r<=1.45?0:r<=2?10:r<=3?30:60,ideal]}
   if(g.curBet===0){const f=to/pt,ideal=r2(Math.max(1,pt*(ctx.value?(ctx.callers?.85:.66):.4)));if(stk<=pt*1.2)return [0,ideal];
-    let pen=f<.25?15:f<.45&&ctx.value&&ctx.callers?8:0;if(f>1.6)pen+=ctx.value&&ctx.callers?5:15;if(allin&&f>3)pen+=ctx.value?(ctx.callers?5:20):30;return [pen,ideal]}
+    let pen=f<.25?15:ctx.value&&ctx.callers&&f<.8?10:ctx.value&&!ctx.callers&&f>.85&&f<=1.6?6:0;if(f>1.6)pen+=ctx.value&&ctx.callers?5:15;if(allin&&f>3)pen+=ctx.value?(ctx.callers?5:20):30;return [pen,ideal]}
   const ideal=r2(g.curBet*3);if(stk<=(pt+g.curBet)*1.5)return [0,ideal];const r=to/ideal;return [r<.75?10:r<=1.5?0:r<=2.5?12:allin?45:30,ideal]}
 function gauge(sc){const a=-90+sc*1.8;return `<svg class="gauge" viewBox="0 0 140 84" aria-hidden="true"><defs><linearGradient id="pl-gg" x1="0" x2="1"><stop offset="0" stop-color="#e5484d"/><stop offset=".5" stop-color="#f5c542"/><stop offset="1" stop-color="#30a46c"/></linearGradient></defs>
   <path d="M14 74A56 56 0 0 1 126 74" stroke="url(#pl-gg)" stroke-width="14" fill="none" stroke-linecap="round"/>
@@ -8404,7 +8408,7 @@ function duRow(k){k=duK(k);return DU[k]=DU[k]||{d:0,s:0,xs:0,xh:0,xg:0,h:0,net:0
 function duelJudge(kind,cache,opts,to0){const v=G.P[1],ty0=v.ty,tb0=v.tb;v.ty="gto";v.tb=undefined;
   let gopts;try{gopts=heroOpts().map(([k,t2])=>({k,to:t2||0,sc:gradeHero(k,cache,t2).sc}))}finally{v.ty=ty0;v.tb=tb0}
   const K=k=>k==="allin"||k==="bet"?"raise":k,top=a=>{const m=Math.max(...a.map(o=>o.sc));return a.filter(o=>o.sc>=m-2).sort((x,y)=>y.sc-x.sc)};
-  const tr=top(opts),tg=top(gopts),kr=new Set(tr.map(o=>K(o.k))),kg=new Set(tg.map(o=>K(o.k))),spot=![...kr].some(x=>kg.has(x)),hk=K(kind);
+  const tr=top(opts),tg=top(gopts),key=o=>K(o.k)+(o.k==="fold"||o.k==="check"||o.k==="call"?"":":"+o.to),kg=new Set(tg.map(key)),spot=!tr.some(o=>kg.has(key(o)));
   const me=o=>o.k===kind&&o.to===to0;return {spot,res:tr.some(me)?(spot?"hit":"std"):spot&&tg.some(me)?"gto":"miss",bx:tr[0],bg:tg[0]}}
 function duelRec(gr){const r=duRow(G.duel);duelUndo={k:duK(G.duel),prev:{...r}};r.d++;r.s+=gr.sc;
   if(gr.dx.spot){r.xs++;G.xs++;if(gr.dx.res==="hit"){r.xh++;G.xh++}else if(gr.dx.res==="gto")r.xg++}saveDU()}
