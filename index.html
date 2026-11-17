@@ -205,6 +205,16 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .pl-speed{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;margin:10px 0}
 .mini img.av{box-shadow:0 0 0 2px var(--card-bg),0 2px 4px rgba(0,0,0,.35)}
 .vhead{display:flex;gap:14px;align-items:center}
+.dchip{display:flex;align-items:center;gap:10px;width:100%;padding:8px 12px;margin:4px 0;border-radius:16px;border:2px solid #22182a;box-shadow:0 3px 0 #22182a;background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.dcw{flex:1;display:flex;flex-direction:column;gap:3px}.dcw small{color:var(--muted);font-size:12px}.dcw b{font-size:16px}
+.dtier{display:inline-block;width:max-content;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--line);color:var(--ink)}
+.dtier.dom{background:#30a46c;color:#fff}.dtier.win{background:#8bc34a;color:#22182a}.dtier.learn{background:#f5c542;color:#22182a}.dtier.strug{background:#e5484d;color:#fff}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}
+.dcell{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;cursor:pointer;text-align:center}
+.dcell.on{border-color:var(--brass);box-shadow:0 0 0 2px var(--brass)}.dcell small{font-size:11px;color:var(--muted)}
+.dsum{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.dx{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:12px;margin-bottom:8px;border:2px solid #22182a}
+.dx span{font-size:13px}.dx.hit{background:#30a46c;color:#fff}.dx.gto{background:#f5c542;color:#22182a}.dx.miss{background:#e5484d;color:#fff}.dx.std{background:var(--line);color:var(--ink);font-size:13px}
 .term{color:var(--brass);font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .noterms .term{color:inherit;font-weight:inherit;cursor:inherit}
 .term:active{background:var(--brass-soft)}
@@ -520,6 +530,7 @@ html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 5
   <section id="v-play" hidden>
     <details class="pl-info"><summary data-t="plHow"></summary><p class="muted" data-t="plIntro"></p></details>
     <div class="bar" id="pl-prof"></div>
+    <div id="pl-duel" hidden></div>
     <div class="tbl-ed" id="pl-tbl" hidden></div>
     <div class="bar pl-sess" id="pl-sess"></div>
     <div class="ring" id="pl-table"></div>
@@ -783,6 +794,10 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"5 styles",modePers:"All 12"
   glTh:{"all": "All", "hands": "Hands", "table": "Table", "actions": "Actions", "math": "Math & theory", "stats": "Stats", "players": "Players"}
 ,
   setGloss:"Tap poker terms for a definition",setGlossHint:"Poker terms are highlighted in the text; tap one to see what it means."
+,
+  plDuel:"Heads-up duel",duelPick:"Pick your opponent",duelHint:"Play heads-up against one personality. Precision rewards the exploit (the play that beats this player) more than the plain GTO play. Find enough exploits to dominate them.",duelVs:"Heads-up against",duelChange:"Change",plExpl:"Exploits",duelTier:{"none": "Not played", "prog": "Warming up", "strug": "Struggling", "learn": "Learning", "win": "Winning", "dom": "Dominated"},dxHit:"Exploit found!",dxGto:"GTO play: safe, but you left value",dxMiss:"Exploit missed",dxStd:"Standard spot: GTO and the exploit agree.",dxG:"GTO",dxX:n=>`Against ${n}`
+,
+  plTrap:"Against a hyper-aggressive player, check your strong hands: he will bet for you.",plFoldBluff:"This player folds too much: a bet takes the pot."
 },
 fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 12",modeHint:"Classique : seulement les charts de style GTO. Styles : 5 familles de joueurs faciles à repérer. Les 12 personnalités : toutes les nuances, pour étudier en profondeur.",
   sty:{rock:"Rock",reg:"Reg",pro:"Pro",station:"Station",lag:"LAG"},styFam:{rock:"Serré-passif",reg:"Serré-agressif",pro:"Équilibré (GTO)",station:"Large-passif",lag:"Large-agressif"},styIncl:"Comprend :",
@@ -947,6 +962,10 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 1
   glTh:{"all": "Tout", "hands": "Mains", "table": "Table", "actions": "Actions", "math": "Maths et théorie", "stats": "Stats", "players": "Joueurs"}
 ,
   setGloss:"Toucher les termes de poker pour une définition",setGlossHint:"Les termes de poker sont mis en évidence dans le texte ; touche-en un pour voir ce qu'il veut dire."
+,
+  plDuel:"Duel en tête-à-tête",duelPick:"Choisis ton adversaire",duelHint:"Joue en tête-à-tête contre une seule personnalité. La précision récompense l'exploit (le coup qui bat ce joueur) plus que le simple coup GTO. Trouve assez d'exploits pour le dominer.",duelVs:"Tête-à-tête contre",duelChange:"Changer",plExpl:"Exploits",duelTier:{"none": "Pas joué", "prog": "Échauffement", "strug": "En difficulté", "learn": "En progrès", "win": "Gagnant", "dom": "Dominé"},dxHit:"Exploit trouvé !",dxGto:"Jeu GTO : sûr, mais tu laisses de la value",dxMiss:"Exploit raté",dxStd:"Spot standard : le GTO et l'exploit sont d'accord.",dxG:"GTO",dxX:n=>`Contre ${n}`
+,
+  plTrap:"Contre un joueur hyper-agressif, checke tes mains fortes : il misera pour toi.",plFoldBluff:"Ce joueur fold trop : une mise prend le pot."
 },
 es:{eqHowTitle:"Cómo estimar tu equity",
   eqHow:`<p><b>1. Cuenta tus outs.</b> Los outs son las cartas que te ponen por delante: un proyecto de color tiene 9, un proyecto de escalera abierta 8, un gutshot 4, dos overcards unos 6.</p>
@@ -7827,12 +7846,12 @@ const bb=x=>{const v=Number.isInteger(x)?String(x):x.toFixed(1);return (COMMA.ha
 function seatXY(k,n){const a=(90+k*360/n)*Math.PI/180;return [50+41*Math.cos(a),45+37*Math.sin(a)]}
 function tableView(o){
   const ord=ORDER(),n=ord.length,bi=ord.indexOf(o.bottom);let h='<div class="oval"></div>';
-  for(let k=0;k<n;k++){const pos=ord[(bi+k)%n],a=o.seats[pos]||{st:"fold"},bet=a.bet||0,win=a.win?" win":"";
+  for(let k=0;k<n;k++){const pos=ord[(bi+k)%n];if(o.hu&&k&&!o.seats[pos])continue;const a=o.seats[pos]||{st:"fold"},bet=a.bet||0,win=a.win?" win":"";
     if(k===0){
       h+=`<div class="pseat hero${win}"><div class="row">${cardsHTML(o.bottomCards,true)}</div><div class="pbox">${o.bottomLabel}${o.bottomSub?`<small class="mono">${o.bottomSub}</small>`:""}</div></div>`;
       if(bet)h+=`<div class="bet" style="left:50%;top:63%"><i></i>${bb(bet)}</div>`;
     }else{
-      const [x,y]=seatXY(k,n);
+      const [x,y]=o.hu?seatXY(n/2,n):seatXY(k,n);
       const sub=a.sub!=null?a.sub:a.st==="fold"?t().folded:a.st==="raise"?`${t().raiseLbl} ${bb(bet)}`:bet?bb(bet):t().toAct;
       const cards=a.cards?cardsHTML(a.cards,"sm"):holeCards(a.st==="fold");
       if(a.av){ // character seat: portrait, position, type and bet in one capsule
@@ -8362,8 +8381,9 @@ function gradeHero(kind,cache,to){cache=cache||{};const ctx={value:false,callers
       else if(act==="call"){sc=m>=0?(eq>=.7&&callers?75:90):m>-.05?55:20;why.push(m>=0?(eq>=.7&&callers?A.valRaise:A.callOk):A.callBad)}
       else{sc=eq>=.65?95:eq>=need2?60:folders&&g.street<3?50:20;why.push(eq>=.65?A.valRaise:eq>=need2?A.thin:folders?A.bluffOk:A.bluffBad)}}
     else{const vT=callers?.5:.58;ctx.value=eq>=vT;
-      if(act==="raise"){sc=eq>=vT?95:folders&&eq<.35?75:eq<.35?(callers?15:35):55;why.push(eq>=vT?A.value:folders&&eq<.35?A.bluffOk:eq<.35?(callers?A.bluffBad:A.thin):A.thin)}
-      else{sc=eq>=vT+.12?35:eq>=vT?60:85;why.push(eq>=vT+.12?A.missed:eq>=vT?A.thinCheck:A.checkOk)}}
+      const trap=types.length&&types.every(x=>["maniac","lag"].includes(x))&&eq>=vT+.12&&g.P.every(q=>!q.acted),fb=folders&&eq<.35;
+      if(act==="raise"){sc=trap?75:eq>=vT?95:fb?92:eq<.35?(callers?15:35):55;why.push(trap?t().plTrap:eq>=vT?A.value:fb?A.bluffOk:eq<.35?(callers?A.bluffBad:A.thin):A.thin)}
+      else{sc=trap?92:eq>=vT+.12?35:eq>=vT?60:fb?55:85;why.push(trap?t().plTrap:eq>=vT+.12?A.missed:eq>=vT?A.thinCheck:fb?t().plFoldBluff:A.checkOk)}}
   }
   let cat=null,sizeHit=false;
   if(act==="raise"&&to){const [pen,ideal]=sizePen(to,ctx);if(pen>0){const base=sc;sc=Math.max(5,sc-pen);if(base>=65){why.push(A.size(bb(ideal)));sizeHit=true}}}
@@ -8390,7 +8410,7 @@ function gauge(sc){const a=-90+sc*1.8;return `<svg class="gauge" viewBox="0 0 14
 const INK2="#22182a";
 function showGrade(gr){const ok=gr.sc>=65,L=t().plLv,lv=gr.sc>=85?L[4]:gr.sc>=65?L[3]:gr.sc>=45?L[2]:gr.sc>=25?L[1]:L[0];
   const el=$("pl-grade");el.hidden=false;el.className="pl-grade "+(ok?"ok":"ko");
-  el.innerHTML=`<div class="pl-g">${gauge(gr.sc)}<div class="pl-prec"><span>${t().plPrec}</span><b>${gr.sc}</b></div></div><div><div class="verdict ${ok?"ok":"ko"}">${ok?t().plRight:t().plWrong}</div><div class="pl-lv">${lv} · ${t().plYourAct}: ${gr.act}</div>${gr.why.map(x=>`<p class="muted">${x}</p>`).join("")}<div class="pl-opts"><span class="lbl">${t().plOpts}</span>${(gr.opts||[]).map(o=>`<button class="pl-opt${o.k===gr.kind&&o.to===gr.to?" me":""}" data-retry="${o.k}" data-to="${o.to}" style="--c:${o.sc>=85?"#30a46c":o.sc>=65?"#8bc34a":o.sc>=45?"#f5c542":o.sc>=25?"#f0883e":"#e5484d"}">${optLabel(o.k,o.to)} <b>${o.sc}</b></button>`).join("")}</div><button class="pill pl-undo" data-undo>${ic("undo")}${t().plUndo}</button></div>`;
+  el.innerHTML=`<div class="pl-g">${gauge(gr.sc)}<div class="pl-prec"><span>${t().plPrec}</span><b>${gr.sc}</b></div></div><div>${gr.dx?duelBox(gr.dx):""}<div class="verdict ${ok?"ok":"ko"}">${ok?t().plRight:t().plWrong}</div><div class="pl-lv">${lv} · ${t().plYourAct}: ${gr.act}</div>${gr.why.map(x=>`<p class="muted">${x}</p>`).join("")}<div class="pl-opts"><span class="lbl">${t().plOpts}</span>${(gr.opts||[]).map(o=>`<button class="pl-opt${o.k===gr.kind&&o.to===gr.to?" me":""}" data-retry="${o.k}" data-to="${o.to}" style="--c:${o.sc>=85?"#30a46c":o.sc>=65?"#8bc34a":o.sc>=45?"#f5c542":o.sc>=25?"#f0883e":"#e5484d"}">${optLabel(o.k,o.to)} <b>${o.sc}</b></button>`).join("")}</div><button class="pill pl-undo" data-undo>${ic("undo")}${t().plUndo}</button></div>`;
   const n=el.querySelector(".needle");requestAnimationFrame(()=>requestAnimationFrame(()=>{n.style.transform=`rotate(${n.dataset.a}deg)`}))}
 
 /* ---------- Play: full hands against the personalities ----------
@@ -8410,11 +8430,43 @@ function mcEq(h,board,nOpp,it){const used=new Set([...h,...board]),rest=[];for(l
     for(let o=0;o<nOpp;o++){const sc=evalH([rest[j++],rest[j++]].concat(bd));if(sc>me){lose=true;break}if(sc===me)tie++}
     if(!lose)w+=1/(tie+1)}return w/it}
 const PLKEY="holdem-drill-plopp";
-let plProf="mixed";try{const v=localStorage.getItem(PLKEY);plProf=v==="custom"||v==="read"?v:"mixed"}catch(e){}
-function paintPlProf(){$("pl-prof").innerHTML=["mixed","custom","read"].map(k=>`<button class="pill" aria-pressed="${k===plProf}" data-plprof="${k}">${k==="mixed"?ic("mixed")+t().mixed:k==="custom"?ic("table")+t().myTable:ic("read")+t().plRead}</button>`).join("");$("pl-prof").hidden=!pers();paintTblEd("pl-tbl");paintSpeed()}
+let plProf="mixed";try{const v=localStorage.getItem(PLKEY);plProf=v==="custom"||v==="read"||v==="duel"?v:"mixed"}catch(e){}
+function paintPlProf(){$("pl-prof").innerHTML=["mixed","custom","read","duel"].map(k=>`<button class="pill" aria-pressed="${k===plProf}" data-plprof="${k}">${k==="mixed"?ic("mixed")+t().mixed:k==="custom"?ic("table")+t().myTable:k==="read"?ic("read")+t().plRead:'<img class="ic" src="ui/rk-target.webp" alt="">'+t().plDuel}</button>`).join("");$("pl-prof").hidden=!pers();paintTblEd("pl-tbl");paintSpeed();paintDuelChip()}
 $("pl-prof").addEventListener("click",e=>{const b=e.target.closest("[data-plprof]");if(!b||b.dataset.plprof===plProf)return;
   plProf=b.dataset.plprof;try{localStorage.setItem(PLKEY,plProf)}catch(err){}paintPlProf();newGame()});
 $("pl-tbl").addEventListener("change",onTblChange);
+
+/* ---------- Heads-up duel: one personality, exploit vs GTO ----------
+   Each decision is graded twice: against the real opponent and as if he played GTO. When the best actions
+   differ it is an exploit spot: the exploit is the win, the GTO action is safe but leaves value.
+   Per-opponent record (this device): decisions, precision, exploit spots found, hands, net. */
+var DU={};try{DU=JSON.parse(localStorage.getItem("holdem-drill-duel"))||{}}catch(e){}
+function saveDU(){try{localStorage.setItem("holdem-drill-duel",JSON.stringify(DU))}catch(e){}}
+const DUOKEY="holdem-drill-duelopp",DUMIN=15,duK=k=>(STY[k]?"f:":"")+k;
+var duelOpp=null,duelUndo=null,duelSeen=new Set();try{duelOpp=localStorage.getItem(DUOKEY)}catch(e){}
+function duelKey(){const o=OPTS();return o.includes(duelOpp)?duelOpp:o[0]}
+function duRow(k){k=duK(k);return DU[k]=DU[k]||{d:0,s:0,xs:0,xh:0,xg:0,h:0,net:0}}
+function duelJudge(kind,cache,opts){const v=G.P[1],ty0=v.ty,tb0=v.tb;v.ty="gto";v.tb=undefined;
+  let gopts;try{gopts=heroOpts().map(([k,t2])=>({k,to:t2||0,sc:gradeHero(k,cache,t2).sc}))}finally{v.ty=ty0;v.tb=tb0}
+  const K=k=>k==="allin"||k==="bet"?"raise":k,top=a=>{const m=Math.max(...a.map(o=>o.sc));return a.filter(o=>o.sc>=m-2).sort((x,y)=>y.sc-x.sc)};
+  const tr=top(opts),tg=top(gopts),kr=new Set(tr.map(o=>K(o.k))),kg=new Set(tg.map(o=>K(o.k))),spot=![...kr].some(x=>kg.has(x)),hk=K(kind);
+  return {spot,res:kr.has(hk)?(spot?"hit":"std"):spot&&kg.has(hk)?"gto":"miss",bx:tr[0],bg:tg[0]}}
+function duelRec(gr){const r=duRow(G.duel);duelUndo={k:duK(G.duel),prev:{...r}};r.d++;r.s+=gr.sc;
+  if(gr.dx.spot){r.xs++;G.xs++;if(gr.dx.res==="hit"){r.xh++;G.xh++}else if(gr.dx.res==="gto")r.xg++}saveDU()}
+function duelBox(dx){const T=t();if(!dx.spot)return `<div class="dx std">${T.dxStd}</div>`;
+  return `<div class="dx ${dx.res}"><b>${dx.res==="hit"?T.dxHit:dx.res==="gto"?T.dxGto:T.dxMiss}</b><span>${T.dxG}: ${optLabel(dx.bg.k,dx.bg.to)} · ${T.dxX(tyName(G.P[1].ty))}: ${optLabel(dx.bx.k,dx.bx.to)}</span></div>`}
+function duelTier(k){const r=DU[duK(k)];if(!r||!r.d)return ["none",null,r];if(r.d<DUMIN)return ["prog",null,r];
+  const prec=r.s/r.d,xr=r.xs?r.xh/r.xs*100:prec,m=Math.round(.6*prec+.4*xr);return [m>=85?"dom":m>=70?"win":m>=55?"learn":"strug",m,r]}
+function duelBadge(k){const [tr,m,r]=duelTier(k);return `<span class="dtier ${tr}">${t().duelTier[tr]}${m!=null?" · "+m:tr==="prog"?` · ${r.d}/${DUMIN}`:""}</span>`}
+function duelSum(){const c={dom:0,strug:0};for(const k of OPTS()){const tr=duelTier(k)[0];if(tr in c)c[tr]++}
+  return `<p class="dsum"><span class="dtier dom">${t().duelTier.dom}: ${c.dom}/${OPTS().length}</span> <span class="dtier strug">${t().duelTier.strug}: ${c.strug}</span></p>`}
+function duelGrid(){return `<div class="dgrid">${OPTS().map(k=>{const r=DU[duK(k)];
+  return `<button data-duelgo="${k}" class="dcell${G&&G.duel===k?" on":""}">${optAv(k,48)}<b>${optName(k)}</b>${duelBadge(k)}<small>${r&&r.d?`${t().plExpl} ${r.xh}/${r.xs} · ${t().plNet} ${r.net>0?"+":""}${bb(r.net)}`:"&nbsp;"}</small></button>`}).join("")}</div>`}
+function paintDuelChip(){const el=$("pl-duel");el.hidden=!(plProf==="duel"&&pers());if(el.hidden)return;const k=duelKey();
+  el.innerHTML=`<button class="dchip" data-duelpick>${optAv(k,48)}<span class="dcw"><small>${t().duelVs}</small><b>${optName(k)}</b>${duelBadge(k)}</span><span class="pill">${t().duelChange}</span></button>`}
+$("pl-duel").addEventListener("click",e=>{if(e.target.closest("[data-duelpick]"))openSeat({duel:1})});
+function duelGo(k){duelOpp=k;try{localStorage.setItem(DUOKEY,k);localStorage.setItem(PLKEY,"duel")}catch(err){}plProf="duel";goView("play");paintPlProf();newGame()}
+$("stats").addEventListener("click",e=>{const dg=e.target.closest("[data-duelgo]");if(dg)duelGo(dg.dataset.duelgo)});
 let G=null;
 const SPKEY="holdem-drill-plspeed",SPEEDS={slow:1300,normal:650,fast:250,instant:0};let plSpeed="normal";try{const v=localStorage.getItem(SPKEY);if(v in SPEEDS)plSpeed=v}catch(e){}
 const plDelay=()=>SPEEDS[plSpeed];
@@ -8422,7 +8474,7 @@ function paintSpeed(){$("pl-speed").innerHTML=`<span class="lbl">${t().plSpeed}<
 $("pl-speed").addEventListener("click",e=>{const b=e.target.closest("[data-speed]");if(!b)return;plSpeed=b.dataset.speed;try{localStorage.setItem(SPKEY,plSpeed)}catch(err){}paintSpeed()});
 const PAKEY="holdem-drill-plauto";let plAuto=true;try{plAuto=localStorage.getItem(PAKEY)!=="0"}catch(e){}
 const fastFwd=()=>plAuto&&G&&G.P[0].folded&&!G.read;
-const plPos=i=>{const n=G.n,k=(i-G.btn+n)%n;return ORDER()[(k-3+n)%n]};
+const plPos=i=>{if(G.n===2)return i===G.btn?"SB":"BB";const n=G.n,k=(i-G.btn+n)%n;return ORDER()[(k-3+n)%n]};
 const SEATC=["#e5484d","#3e8ef7","#30a46c","#f5a524","#a463f2","#12a5a5","#ec5fa8","#8d6e63"],SEATI=[1,2,3,4,5,6,7,8];
 const seatImg=i=>`<img class="sic" src="av/seat-${(i-1)%8+1}.webp" alt="" style="--sc:${SEATC[(i-1)%8]}">`;
 const seatTag=i=>`${seatImg(i)} ${t().plSeat(i)}`;
@@ -8431,9 +8483,9 @@ const hidden=()=>G&&G.read&&G.P.some((p,i)=>i&&!p.idOK);
 const plName=i=>i?(seatHidden(i)?seatTag(i):pers()?PNAME[G.P[i].face]:lbl(plPos(i))):t().you;
 const potOf=()=>r2(G.P.reduce((a,p)=>a+p.inv,0));
 const canAct=p=>!p.folded&&!p.allin;
-function newGame(){if(G&&G.timer)clearTimeout(G.timer);$("pl-grade").hidden=true;const n=size,tb=myTable();
-  G={n,btn:rnd(n),done:0,inv:100,P:[{hero:true,stack:100}],read:plProf==="read"&&pers(),revealed:false};const ty={};
-  for(let i=1;i<n;i++)ty[i]=!pers()?"gto":plProf==="custom"?(validOpt(tb[plPos(i)])?resolve(tb[plPos(i)]):mixProf()):mixProf();
+function newGame(){if(G&&G.timer)clearTimeout(G.timer);$("pl-grade").hidden=true;const du=plProf==="duel"&&pers()?duelKey():null,n=du?2:size,tb=myTable();
+  G={n,btn:rnd(n),done:0,inv:100,P:[{hero:true,stack:100}],read:plProf==="read"&&pers(),revealed:false,duel:du,gid:Date.now(),xs:0,xh:0};const ty={};
+  for(let i=1;i<n;i++)ty[i]=du?resolve(du):!pers()?"gto":plProf==="custom"?(validOpt(tb[plPos(i)])?resolve(tb[plPos(i)]):mixProf()):mixProf();
   const faces=castFaces(ty);for(let i=1;i<n;i++){const v=Math.random();G.P.push({ty:ty[i],face:faces[i],stack:100,guess:"",idOK:false,tries:[],tb:ty[i]==="live"?(v<.05?.45:v<.75?1:2.6):undefined,hs:{n:0,vp:0,pfr:0,agg:0,calls:0,sd:0,tb3:0}});}
   G.btn=(G.btn-1+n)%n;newHand()}
 function put(i,x){const p=G.P[i];x=r2(Math.min(x,p.stack));p.stack=r2(p.stack-x);p.bet=r2(p.bet+x);p.inv=r2(p.inv+x);if(p.stack<=0){p.stack=0;p.allin=true}}
@@ -8442,7 +8494,7 @@ function newHand(){const g=G,n=g.n;if(g.timer)clearTimeout(g.timer);g.autoAt=0;g
     Object.assign(p,{bet:0,inv:0,folded:false,allin:false,acted:false,last:"",lastK:"",win:0,show:false,score:0,pf:null,rng:null,rc:null,vpH:false,pfrH:false,tbH:false})}
   const deck=shuffle([...Array(52).keys()]);g.P.forEach((p,i)=>p.cards=[deck[2*i],deck[2*i+1]].sort((a,b)=>b-a));g.deck=deck.slice(2*n);
   Object.assign(g,{board:[],street:0,curBet:1,minR:1,raiseN:0,over:false,log:[],result:"",start:g.P[0].stack,aggr:-1});
-  const sb=(g.btn+1)%n,bbI=(g.btn+2)%n;put(sb,.5);put(bbI,1);g.P[sb].last="SB";g.P[bbI].last="BB";g.toAct=(g.btn+3)%n;
+  const hu=n===2,sb=hu?g.btn:(g.btn+1)%n,bbI=hu?1-g.btn:(g.btn+2)%n;put(sb,.5);put(bbI,1);g.P[sb].last="SB";g.P[bbI].last="BB";g.toAct=hu?g.btn:(g.btn+3)%n;
   g.log.push(`<b>${t().plStreets[0]}</b> · ${plName(sb)} SB · ${plName(bbI)} BB`);step()}
 function actTxt(k,p,call){return t().plAct[k]+(k==="call"?" "+bb(call):k==="bet"||k==="raise"||k==="allin"?" "+bb(p.bet):"")}
 function doAct(i,kind,to){const g=G,p=g.P[i],call=r2(Math.min(g.curBet-p.bet,p.stack)),ptB=potOf(),b0=p.bet;
@@ -8473,9 +8525,9 @@ function optLabel(kind,to){const g=G;return kind==="fold"?t().fold:kind==="check
 function heroAct(kind,to){const g=G;if(!g||g.over||g.toAct!==0)return;
   const {snap,timer,...rest}=g;const snapNew=structuredClone(rest);
   const cache={},opts=heroOpts().map(([k,t2])=>{const r=gradeHero(k,cache,t2);return {k,to:t2||0,sc:r.sc}});
-  const gr=gradeHero(kind,cache,to);gr.act=optLabel(kind,to);gr.kind=kind;gr.to=to||0;gr.opts=opts;
+  const gr=gradeHero(kind,cache,to);gr.act=optLabel(kind,to);gr.kind=kind;gr.to=to||0;gr.opts=opts;if(g.duel){gr.dx=duelJudge(kind,cache,opts);duelRec(gr)}
   g.snap=snapNew;(g.grades=g.grades||[]).push(gr.sc);showGrade(gr);logDecision("play",gr.sc,gr.cat,gr.vs,gr.diff);doAct(0,kind,to);g.toAct=1%g.n;step()}
-function undoPlay(){const g=G;if(!g||!g.snap)return;unlogLast();clearTimeout(g.timer);const grades=(g.grades||[]).slice(0,-1);
+function undoPlay(){const g=G;if(!g||!g.snap)return;if(duelUndo&&g.duel){DU[duelUndo.k]=duelUndo.prev;saveDU();duelUndo=null}unlogLast();clearTimeout(g.timer);const grades=(g.grades||[]).slice(0,-1);
   G=structuredClone(g.snap);G.grades=grades;G.snap=null;$("pl-grade").hidden=true;paintPlay()}
 function nextStreet(){const g=G;for(const p of g.P){p.bet=0;p.acted=false;if(!p.folded&&!p.allin){p.last="";p.lastK=""}}
   if(g.street===0)g.P.forEach((p,i)=>{if(p.folded)return;p.rng=i?botRange(i):heroRange();p.rc=combosOf(p.rng)});
@@ -8493,7 +8545,7 @@ function finish(){const g=G;g.over=true;const L=g.P.filter(p=>!p.folded);
     lv.forEach((v,ix)=>{const top=ix===lv.length-1?Infinity:v;let amt=0;for(const p of g.P)amt+=Math.max(0,Math.min(p.inv,top)-prev);
       const el=L.filter(p=>p.inv>=v),best=Math.max(...el.map(p=>p.score)),ws=el.filter(p=>p.score===best);
       for(const w of ws){const sh=r2(amt/ws.length);w.win=r2(w.win+sh);w.stack=r2(w.stack+sh)}prev=v})}
-  g.done++;g.P.forEach((p,i)=>{if(!i||!p.hs)return;p.hs.n++;if(p.vpH)p.hs.vp++;if(p.pfrH)p.hs.pfr++;if(p.tbH)p.hs.tb3=(p.hs.tb3||0)+1;if(p.show)p.hs.sd++});
+  if(g.duel){const hk=g.gid+":"+g.done;if(!duelSeen.has(hk)){duelSeen.add(hk);const r=duRow(g.duel);r.h++;r.net=r2(r.net+g.P[0].stack-g.start);saveDU()}}g.done++;g.P.forEach((p,i)=>{if(!i||!p.hs)return;p.hs.n++;if(p.vpH)p.hs.vp++;if(p.pfrH)p.hs.pfr++;if(p.tbH)p.hs.tb3=(p.hs.tb3||0)+1;if(p.show)p.hs.sd++});
   g.result=g.P.map((p,i)=>p.win>0?(i?t().plWins(plName(i),bb(p.win),p.show?handName(p.score):""):t().plYouWin(bb(p.win),p.show?handName(p.score):"")):"").filter(Boolean).join(" · ");
   g.log.push(`<b>${g.result}</b>`);if(plAuto){g.autoAt=Date.now()+(g.P[0].folded&&!g.read?1200:2600);g.timer=setTimeout(newHand,g.autoAt-Date.now())}paintPlay()}
 function botAct(i){const g=G,p=g.P[i],s0=SIMP[p.ty]||SIMP.gto,s=p.tb!=null?{...s0,tb:p.tb}:s0,call=r2(g.curBet-p.bet),pt=potOf();
@@ -8552,6 +8604,7 @@ function profileHTML(ty){const f=famOf(ty);
 function paintSeat(){const c=sheetCtx;if(!c)return;let h="";
   if(c.term){const d=t().gl[c.term]||T.en.gl[c.term];if(!d){closeSeat();return}
     $("seat-body").innerHTML=`<div class="shead lex"><img class="ic big" src="ui/ic-read.webp" alt=""><div><div class="verdict">${d[0]}</div><div class="vtype">${t().glTh[GTH[c.term]]||""}</div></div></div><p class="lexdef">${d[1]}</p><button class="next" data-lexgo="${c.term}">${t().lexOpen}</button>`;return}
+  if(c.duel){$("seat-body").innerHTML=`<div class="shead"><img class="ic big" src="ui/rk-target.webp" alt=""><div><div class="verdict">${t().plDuel}</div><div class="vtype">${t().duelPick}</div></div></div><p class="muted">${t().duelHint}</p>${duelSum()}${duelGrid()}`;return}
   if(c.help2){$("seat-body").innerHTML=`<div class="shead"><img class="ic big" src="ui/rk-student.webp" alt=""><div><div class="verdict">${t().tabLearn}</div></div></div><p>${c.help2}</p>`;return}
   if(c.help){$("seat-body").innerHTML=`<div class="shead">${ic("read","big")}<div><div class="verdict">${t().plRead}</div></div></div><p>${t().plTapGuess}</p><p class="muted">${t().plReadClose}</p>`;return}
   if(c.done){$("seat-body").innerHTML=`<div class="shead">${ic("read","big")}<div><div class="verdict">${t().plRead}</div><div class="vtype">${t().plFound}</div></div></div><div class="pl-readdone"><b>${t().plReadDone(c.done.hands,c.done.wrong,c.done.score)}</b></div><div class="rd-faces">${G.P.filter((q,j)=>j).map(q=>`<span>${av(q.face,44)}<small>${PNAME[q.face]}</small><small>${tyShort(q.ty)}</small></span>`).join("")}</div><button class="next" data-newread2>${t().plNewTable}</button>`;return}
@@ -8572,6 +8625,7 @@ for(const id of ["pl-table","pf-table","df-table"])$(id).addEventListener("click
   else if(sEl.dataset.face)openSeat({face:sEl.dataset.face})});
 $("seat-sheet").addEventListener("click",e=>{if(e.target.id==="seat-sheet"||e.target.closest("[data-sclose]")){closeSeat();return}
   const lg=e.target.closest("[data-lexgo]");if(lg){const k=lg.dataset.lexgo;closeSeat();lexTh="all";lexQ="";goView("lexicon");setTimeout(()=>{const it=$("lex-"+k);if(it){it.scrollIntoView({block:"center"});it.classList.add("flash")}},80);return}
+  const dg=e.target.closest("[data-duelgo]");if(dg){closeSeat();duelGo(dg.dataset.duelgo);return}
   if(e.target.closest("[data-newread2]")){closeSeat();newGame();return}
   const pk=e.target.closest("[data-pickv]");if(pk&&sheetCtx&&sheetCtx.pick){const {pos,ed}=sheetCtx.pick;closeSeat();setTbl(pos,pk.dataset.pickv,ed);return}
   const b=e.target.closest("[data-sguess]");if(!b||!sheetCtx||sheetCtx.play==null)return;const p=G.P[sheetCtx.play],v=b.dataset.sguess;
@@ -8579,17 +8633,17 @@ $("seat-sheet").addEventListener("click",e=>{if(e.target.id==="seat-sheet"||e.ta
   const bots=G.P.filter((q,j)=>j);if(p.idOK&&bots.every(q=>q.idOK)){const wrong=bots.reduce((a,q)=>a+q.tries.length,0);openSeat({done:{hands:G.done,wrong,score:Math.max(0,100-wrong*10)}})}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("seat-sheet").hidden)closeSeat()});
 
-function paintPlay(){const g=G;if(!g)return;paintRead();if(sheetCtx&&sheetCtx.play!=null)paintSeat();const seats={};
+function paintPlay(){const g=G;if(!g)return;paintRead();if(g.duel)paintDuelChip();if(sheetCtx&&sheetCtx.play!=null)paintSeat();const seats={};
   g.P.forEach((p,i)=>{const pos=plPos(i);
     if(i===0){seats[pos]={bet:p.bet,win:p.win>0};return}
     const st=p.folded?"fold":["raise","bet","allin"].includes(p.lastK)?"raise":p.lastK==="call"?"limp":"wait";
     seats[pos]={st,bet:p.bet,av:pers()?p.face:null,anon:seatHidden(i)?t().plSeat(i):null,ai:SEATI[(i-1)%8],ac:g.read?SEATC[(i-1)%8]:null,guess:"",cards:p.show?p.cards:null,act:p.last||(!g.over&&i===g.toAct?"…":""),stack:p.stack,win:p.win>0,turn:!g.over&&i===g.toAct,
       sub:`${p.last?p.last+" · ":""}${bb(p.stack)}`}});
   const h=g.P[0],hp=plPos(0);
-  paintRing("pl-table",{bottom:hp,bottomCards:h.cards,bottomLabel:`${t().you} · ${lbl(hp)}`,bottomSub:bb(h.stack)+(h.win>0?` · +${bb(h.win)}`:""),seats,
+  paintRing("pl-table",{hu:g.n===2,bottom:hp,bottomCards:h.cards,bottomLabel:`${t().you} · ${lbl(hp)}`,bottomSub:bb(h.stack)+(h.win>0?` · +${bb(h.win)}`:""),seats,
     center:boardCenter(t().plStreets[g.over&&g.P.some(p=>p.show)?4:Math.min(g.street,3)],g.board,`${t().pot} ${bb(potOf())}`)});
   const net=r2(h.stack-g.inv);
-  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}${g.read?`<span class="lbl rd-prog" data-readinfo>${ic("read")} <b>${g.P.filter((q,j)=>j&&q.idOK).length}/${g.n-1}</b></span>`:""}<button class="pill" data-plnew>${g.read?t().plNewTable:t().plNew}</button>`;
+  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}${g.duel?`<span class="lbl">${t().plExpl}: <b>${g.xh}/${g.xs}</b></span>`:""}${g.read?`<span class="lbl rd-prog" data-readinfo>${ic("read")} <b>${g.P.filter((q,j)=>j&&q.idOK).length}/${g.n-1}</b></span>`:""}<button class="pill" data-plnew>${g.read?t().plNewTable:t().plNew}</button>`;
   let c="";
   if(g.over)c=`<p class="plres">${g.result}</p><button class="next" data-plnext>${t().plNext}</button>${g.autoAt?`<p class="muted pl-autonote">${t().plAutoNote}</p>`:""}`;
   else if(g.toAct===0){const call=r2(Math.min(g.curBet-h.bet,h.stack));
@@ -8638,7 +8692,7 @@ function leaksHTML(){const h=LOG.h.slice(-300),T=t();
   return out}
 function ratingHTML(){const T=t(),[lo,k]=tierOf(LOG.elo),nx=RKT.find(x=>x[0]>LOG.elo),pc=nx?Math.max(0,Math.min(100,Math.round((LOG.elo-lo)/(nx[0]-lo)*100))):100;
   return `<div class="srow rk"><img class="rkimg" src="ui/rk-${k}.webp" alt=""><div class="rkbody"><h3>${T.tier[k]}</h3><div class="val">${LOG.elo}</div><div class="meter"><span style="width:${pc}%"></span></div><div class="sub">${nx?T.toNext(nx[0]-LOG.elo,T.tier[nx[1]]):T.topTier} · ${T.decisions(LOG.n)}</div></div></div>
-  <div class="srow leaks"><h3><img class="ic" src="ui/rk-leak.webp" alt=""> ${T.leaksTitle}</h3>${leaksHTML()}</div>`}
+  <div class="srow leaks"><h3><img class="ic" src="ui/rk-leak.webp" alt=""> ${T.leaksTitle}</h3>${leaksHTML()}</div><div class="srow duels"><h3><img class="ic" src="ui/rk-target.webp" alt=""> ${T.plDuel}</h3>${duelSum()}${duelGrid()}</div>`}
 
 
 /* ---------- Learn: a Duolingo-style path, simple to advanced ----------
