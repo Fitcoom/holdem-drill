@@ -7684,7 +7684,7 @@ const famOf=ty=>STYK.find(k=>STY[k].includes(ty));
 function pickMember(f){const m=STY[f];let tot=0;for(const x of m)tot+=MIXW[x]||1;let r=Math.random()*tot;for(const x of m){r-=MIXW[x]||1;if(r<0)return x}return m[0]}
 const OPTS=()=>styles()?STYK:PROFILES,validOpt=k=>PROFILES.includes(k)||!!STY[k];
 const optName=k=>STY[k]?t().sty[k]:t().prof[k],optAv=(k,sz)=>av(STY[k]?STYREP[k]:k,sz);
-const resolve=k=>STY[k]?pickMember(k):k;
+const resolve=k=>STY[k]&&(styles()||!PROFILES.includes(k))?pickMember(k):k;
 const tyName=ty=>styles()?t().sty[famOf(ty)]:t().prof[ty],tyShort=ty=>styles()?STYS[famOf(ty)]:PSHORT[ty],tyColor=ty=>styles()?STYC[famOf(ty)]:AVC[ty];
 const optOf=v=>styles()&&PROFILES.includes(v)?famOf(v):!styles()&&STY[v]?STYREP[v]:v;
 
@@ -8210,7 +8210,7 @@ $("pl-tbl").addEventListener("change",onTblChange);
    Per-opponent record (this device): decisions, precision, exploit spots found, hands, net. */
 var DU={};try{DU=JSON.parse(localStorage.getItem("holdem-drill-duel"))||{}}catch(e){}
 function saveDU(){try{localStorage.setItem("holdem-drill-duel",JSON.stringify(DU))}catch(e){}}
-const DUOKEY="holdem-drill-duelopp",DUMIN=15,duK=k=>(STY[k]?"f:":"")+k;
+const DUOKEY="holdem-drill-duelopp",DUMIN=15,duK=k=>(STY[k]&&(styles()||!PROFILES.includes(k))?"f:":"")+k;
 var duelOpp=null,duelUndo=null,duelSeen=new Set();try{duelOpp=localStorage.getItem(DUOKEY)}catch(e){}
 const DOPTS=()=>styles()?[...STYK,"fakepro"]:PROFILES;
 function duelKey(){const o=DOPTS();return o.includes(duelOpp)?duelOpp:o[0]}
