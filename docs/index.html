@@ -234,7 +234,7 @@ img.av{flex:none;border-radius:50%;display:block;object-fit:cover;box-sizing:bor
 .dcell.on{border-color:var(--brass);box-shadow:0 0 0 2px var(--brass)}.dcell small{font-size:11px;color:var(--muted)}
 .dsum{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
 .dx{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:12px;margin-bottom:8px;border:2px solid #22182a}
-.dx span{font-size:13px}.dx.hit{background:#30a46c;color:#fff}.dx.gto{background:#f5c542;color:#22182a}.dx.miss{background:#e5484d;color:#fff}.dx.std{background:var(--line);color:var(--ink);font-size:13px}
+.dx span{font-size:13px}.dx.hit{background:#30a46c;color:#fff}.dx.gto{background:#f5c542;color:#22182a}.dx.miss{background:#e5484d;color:#fff}.dx.std{display:block;background:var(--line);color:var(--ink);font-size:13px}
 .term{color:var(--brass);font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .noterms .term{color:inherit;font-weight:inherit;cursor:inherit}
 .term:active{background:var(--brass-soft)}
@@ -817,7 +817,7 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"5 styles",modePers:"All 13"
 ,
   setGloss:"Tap poker terms for a definition",setGlossHint:"Poker terms are highlighted in the text; tap one to see what it means."
 ,
-  plDuel:"Heads-up duel",duelPick:"Pick your opponent",duelHint:"Play heads-up against one personality. Precision rewards the exploit (the play that beats this player) more than the plain GTO play. Find enough exploits to dominate them.",duelVs:"Heads-up against",duelChange:"Change",plExpl:"Exploits",duelTier:{"none": "Not played", "prog": "Warming up", "strug": "Struggling", "learn": "Learning", "win": "Winning", "dom": "Dominated"},dxHit:"Exploit found!",dxGto:"GTO play: safe, but you left value",dxMiss:"Exploit missed",dxStd:"Standard spot: GTO and the exploit agree.",dxG:"GTO",dxX:n=>`Against ${n}`
+  plDuel:"Heads-up duel",duelPick:"Pick your opponent",duelHint:"Play heads-up against one personality. Precision rewards the exploit (the play that beats this player) more than the plain GTO play. Find enough exploits to dominate them.",duelVs:"Heads-up against",duelChange:"Change",plExpl:"Exploits",duelTier:{"none": "Not played", "prog": "Warming up", "strug": "Struggling", "learn": "Learning", "win": "Winning", "dom": "Dominated"},dxHit:"Exploit found!",dxGto:"GTO play: safe, but you left value",dxMiss:"Exploit missed",dxStd:"Standard spot: no exploit here. The best play is the same as against a GTO player.",dxG:"GTO",dxX:n=>`Against ${n}`
 ,
   plTrap:"Against a hyper-aggressive player, check your strong hands: he will bet for you.",plFoldBluff:"This player folds too much: a bet takes the pot."
 ,
@@ -1001,7 +1001,7 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 1
 ,
   setGloss:"Toucher les termes de poker pour une définition",setGlossHint:"Les termes de poker sont mis en évidence dans le texte ; touche-en un pour voir ce qu'il veut dire."
 ,
-  plDuel:"Duel en tête-à-tête",duelPick:"Choisis ton adversaire",duelHint:"Joue en tête-à-tête contre une seule personnalité. La précision récompense l'exploit (le coup qui bat ce joueur) plus que le simple coup GTO. Trouve assez d'exploits pour le dominer.",duelVs:"Tête-à-tête contre",duelChange:"Changer",plExpl:"Exploits",duelTier:{"none": "Pas joué", "prog": "Échauffement", "strug": "En difficulté", "learn": "En progrès", "win": "Gagnant", "dom": "Dominé"},dxHit:"Exploit trouvé !",dxGto:"Jeu GTO : sûr, mais tu laisses de la value",dxMiss:"Exploit raté",dxStd:"Spot standard : le GTO et l'exploit sont d'accord.",dxG:"GTO",dxX:n=>`Contre ${n}`
+  plDuel:"Duel en tête-à-tête",duelPick:"Choisis ton adversaire",duelHint:"Joue en tête-à-tête contre une seule personnalité. La précision récompense l'exploit (le coup qui bat ce joueur) plus que le simple coup GTO. Trouve assez d'exploits pour le dominer.",duelVs:"Tête-à-tête contre",duelChange:"Changer",plExpl:"Exploits",duelTier:{"none": "Pas joué", "prog": "Échauffement", "strug": "En difficulté", "learn": "En progrès", "win": "Gagnant", "dom": "Dominé"},dxHit:"Exploit trouvé !",dxGto:"Jeu GTO : sûr, mais tu laisses de la value",dxMiss:"Exploit raté",dxStd:"Spot standard : pas d'exploit ici. Le meilleur coup est le même que contre un joueur GTO.",dxG:"GTO",dxX:n=>`Contre ${n}`
 ,
   plTrap:"Contre un joueur hyper-agressif, checke tes mains fortes : il misera pour toi.",plFoldBluff:"Ce joueur fold trop : une mise prend le pot."
 ,
