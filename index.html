@@ -430,6 +430,26 @@ html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 5
 .bnav{border-top:2px solid var(--inkl)}
 .bnav img{border:2px solid var(--inkl)}
 .note,.hint{font-size:12px;color:var(--muted);opacity:.8}
+/* layout v2: 4 tabs, sub-navigation, drills hub, option sheets */
+.top{flex-wrap:nowrap}
+@media (max-width:767px){.tagline{display:none}.logo{width:38px;height:38px}.brand{font-size:22px}}
+.subnav{display:flex;gap:8px;align-items:center;margin:10px 0 2px;flex-wrap:wrap}
+.subnav[hidden]{display:none}
+.subnav.back b{flex:1;font-family:var(--f-display);font-size:18px;letter-spacing:.02em;text-transform:uppercase}
+.subnav .streak{font-size:12px}
+body.inlesson .subnav{display:none}
+.dhub{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.dtile{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;border:2px solid var(--inkl);box-shadow:0 3px 0 var(--inkl);background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dtile:active{transform:translateY(2px);box-shadow:0 1px 0 var(--inkl)}
+.dtile img{width:52px;height:52px;border-radius:50%;border:2px solid var(--inkl);flex:none}
+.dtile span{flex:1;display:flex;flex-direction:column;gap:2px}.dtile b{font-family:var(--f-display);font-size:18px;letter-spacing:.02em}.dtile small{color:var(--muted);font-size:13px}
+.dtile em{font-style:normal;font-family:var(--f-display);font-size:20px;color:var(--brass)}
+.ochip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;margin:6px 0 2px;border-radius:999px;border:2px solid var(--inkl);box-shadow:0 3px 0 var(--inkl);background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.ochip[hidden]{display:none}.ochip .lbl{font-weight:600;color:var(--muted)}.ochip img.av,.ochip img.ic{width:22px;height:22px}
+.shtitle{margin:0 0 12px;font-family:var(--f-display);letter-spacing:.02em}
+#pl-sheet .pl-coach{display:flex;margin:12px 0}#pl-sheet .bar{margin-bottom:8px}
+.pill.ico{padding:4px 8px}.pill.ico .ic{margin:0}
+.setbtn{margin:8px 0}
 </style>
 
 <div class="wrap">
@@ -437,43 +457,27 @@ html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 5
     <div class="brandbox"><img class="logo" src="ui/logo.webp" alt=""><div><div class="brand">Exploit<span>Poker Trainer</span></div><div class="tagline" data-t="tagline"></div></div></div>
     <div class="right">
       <button class="elo" id="elo" aria-label="Rating"></button>
-      <div class="streak" aria-live="polite"><span data-t="streak"></span> <b id="streak">0</b> · <span data-t="best"></span> <b id="best">0</b></div>
       <button class="gear" id="open-settings" aria-haspopup="dialog" data-tl="settings"><img class="ic gear-ic" src="ui/ic-gear.webp" alt="" aria-hidden="true"></button>
     </div>
   </header>
   <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" data-view="preflop" data-t="tabPreflop"></button>
-    <button class="tab" role="tab" data-view="defense" data-t="tabDefense"></button>
-    <button class="tab" role="tab" data-view="villains" data-t="tabVillains"></button>
-    <button class="tab" role="tab" data-view="equity" data-t="tabEquity"></button>
-    <button class="tab" role="tab" data-view="potodds" data-t="tabPotodds"></button>
-    <button class="tab" role="tab" data-view="showdown" data-t="tabShowdown"></button>
-    <button class="tab" role="tab" data-view="learn" data-t="tabLearn"></button>
-    <button class="tab" role="tab" data-view="play" data-t="tabPlay"></button>
-    <button class="tab" role="tab" data-view="stats" data-t="tabStats"></button>
-    <button class="tab" role="tab" data-view="lexicon" data-t="tabLex"></button>
+    <button class="tab" role="tab" data-tab="learn" data-t="tabLearn"></button>
+    <button class="tab" role="tab" data-tab="drills" data-t="tabDrills"></button>
+    <button class="tab" role="tab" data-tab="play" data-t="tabPlay"></button>
+    <button class="tab" role="tab" data-tab="profile" data-t="tabProfile"></button>
   </nav>
   <nav class="bnav" aria-label="Navigation">
-    <button data-view="learn"><img src="ui/rk-student.webp" alt=""><span data-t="tabLearn"></span></button>
-    <button data-view="play"><img src="ui/ic-nav-play.webp" alt=""><span data-t="tabPlay"></span></button>
-    <button data-view="preflop"><img src="ui/ic-nav-preflop.webp" alt=""><span data-t="tabPreflop"></span></button>
-    <button data-view="villains"><img src="ui/ic-nav-villains.webp" alt=""><span data-t="tabVillains"></span></button>
-    <button data-more><img src="ui/ic-nav-more.webp" alt=""><span data-t="tabMore"></span></button>
+    <button data-tab="learn"><img src="ui/rk-student.webp" alt=""><span data-t="tabLearn"></span></button>
+    <button data-tab="drills"><img src="ui/ic-nav-preflop.webp" alt=""><span data-t="tabDrills"></span></button>
+    <button data-tab="play"><img src="ui/ic-nav-play.webp" alt=""><span data-t="tabPlay"></span></button>
+    <button data-tab="profile"><img src="ui/ic-nav-stats.webp" alt=""><span data-t="tabProfile"></span></button>
   </nav>
-  <div class="sbg" id="more-sheet" hidden><div class="ssheet"><button class="sclose" data-mclose aria-label="Close">×</button>
-    <div class="moregrid">
-      <button data-view="defense"><img src="ui/ic-nav-defense.webp" alt=""><span data-t="tabDefense"></span></button>
-      <button data-view="equity"><img src="ui/ic-nav-equity.webp" alt=""><span data-t="tabEquity"></span></button>
-      <button data-view="potodds"><img src="ui/ic-nav-potodds.webp" alt=""><span data-t="tabPotodds"></span></button>
-      <button data-view="showdown"><img src="ui/ic-nav-showdown.webp" alt=""><span data-t="tabShowdown"></span></button>
-      <button data-view="stats"><img src="ui/ic-nav-stats.webp" alt=""><span data-t="tabStats"></span></button>
-      <button data-view="lexicon"><img src="ui/ic-read.webp" alt=""><span data-t="tabLex"></span></button>
-      <button data-settings><img src="ui/ic-gear.webp" alt=""><span data-t="settings"></span></button>
-    </div></div></div>
+  <div class="subnav" id="subnav" hidden></div>
+
+  <section id="v-drills" hidden><div class="dhub" id="dhub"></div></section>
 
   <section id="v-preflop" hidden>
-    <div class="bar" id="pf-prof"></div>
-    <div class="tbl-ed" id="pf-tbl" hidden></div>
+    <button class="ochip" id="pf-chip" data-sheet="pf-sheet"></button>
     <div class="ring" id="pf-table"></div>
     <p class="q" data-t="pfQ"></p>
     <div class="answers" id="pf-ans"></div>
@@ -487,8 +491,7 @@ html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 5
   </section>
 
   <section id="v-defense" hidden>
-    <div class="bar" id="df-prof"></div>
-    <div class="tbl-ed" id="df-tbl" hidden></div>
+    <button class="ochip" id="df-chip" data-sheet="df-sheet"></button>
     <div class="ring" id="df-table"></div>
     <p class="q" id="df-q"></p>
     <div class="answers" id="df-ans"></div>
@@ -528,19 +531,13 @@ html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 5
   <section id="v-lexicon" hidden><div class="lex" id="lex"><input type="search" class="lexq" autocomplete="off"><div class="bar lexth"></div><div class="lexlist"></div></div></section>
   <section id="v-learn" hidden><div id="learn"></div></section>
   <section id="v-play" hidden>
-    <details class="pl-info"><summary data-t="plHow"></summary><p class="muted" data-t="plIntro"></p></details>
-    <div class="bar" id="pl-prof"></div>
+    <div class="bar seg" id="pl-mode"></div>
     <div id="pl-duel" hidden></div>
-    <div class="tbl-ed" id="pl-tbl" hidden></div>
     <div class="bar pl-sess" id="pl-sess"></div>
     <div class="ring" id="pl-table"></div>
     <div id="pl-ctrl"></div>
     <div class="pl-grade" id="pl-grade" hidden></div>
-    <label class="pl-coach"><input type="checkbox" id="pl-coach"> <span data-t="plCoach"></span></label>
-    <label class="pl-coach"><input type="checkbox" id="pl-auto"> <span data-t="plAuto"></span></label>
-    <div class="pl-speed" id="pl-speed"></div>
     <div id="pl-read" hidden></div>
-    <details class="pl-log"><summary data-t="plLog"></summary><ol id="pl-log"></ol></details>
   </section>
   <section id="v-villains" hidden>
     <div class="villains">
@@ -613,6 +610,24 @@ html,body{background:radial-gradient(130% 70% at 50% -10%,#1b2b23 0%,var(--bg) 5
     </div>
   </div>
 
+  <div class="sbg" id="pl-sheet" hidden><div class="ssheet" role="dialog" aria-modal="true"><button class="sclose" data-shclose aria-label="Close">×</button>
+    <h3 class="shtitle" data-t="options"></h3>
+    <div class="bar" id="pl-prof"></div>
+    <div class="tbl-ed" id="pl-tbl" hidden></div>
+    <label class="pl-coach"><input type="checkbox" id="pl-coach"> <span data-t="plCoach"></span></label>
+    <label class="pl-coach"><input type="checkbox" id="pl-auto"> <span data-t="plAuto"></span></label>
+    <div class="pl-speed" id="pl-speed"></div>
+    <details class="pl-log"><summary data-t="plLog"></summary><ol id="pl-log"></ol></details>
+    <details class="pl-info"><summary data-t="plHow"></summary><p class="muted" data-t="plIntro"></p></details>
+  </div></div>
+  <div class="sbg" id="pf-sheet" hidden><div class="ssheet" role="dialog" aria-modal="true"><button class="sclose" data-shclose aria-label="Close">×</button>
+    <div class="bar" id="pf-prof"></div>
+    <div class="tbl-ed" id="pf-tbl" hidden></div>
+  </div></div>
+  <div class="sbg" id="df-sheet" hidden><div class="ssheet" role="dialog" aria-modal="true"><button class="sclose" data-shclose aria-label="Close">×</button>
+    <div class="bar" id="df-prof"></div>
+    <div class="tbl-ed" id="df-tbl" hidden></div>
+  </div></div>
   <div class="sbg" id="seat-sheet" hidden><div class="ssheet" role="dialog" aria-modal="true"><button class="sclose" data-sclose aria-label="Close">×</button><div id="seat-body"></div></div></div>
   <div class="modal" id="limp-pop" hidden>
     <div class="sheet" role="alertdialog" aria-modal="true" aria-labelledby="limp-title">
@@ -814,6 +829,8 @@ en:{modeLbl:"Mode",modeClassic:"Classic",modeStyles:"5 styles",modePers:"All 13"
   sdHigh:r=>`${r} high`,sdKick:c=>`Same hand type (${c}): compare the cards in order, the first higher card wins. The kickers count too.`
 ,
   plSizeSmall:x=>`Bet size: about <b>${x}</b> is better here. Too small: you leave value on the table and give draws a cheap price.`
+,
+  tabDrills:"Drills",tabProfile:"Profile",segLessons:"Lessons",options:"Options",oppsLbl:"Opponents",plTable:"Table",drillGoal:{"preflop": "Open, limp or fold when it's folded to you", "defense": "Fold, call or 3-bet against an open", "equity": "Estimate your chances against a hand", "potodds": "Find the price to call", "showdown": "Name the winner at showdown"}
 },
 fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 13",modeHint:"Classique : seulement les charts de style GTO. Styles : 5 familles de joueurs faciles à repérer. Les 13 personnalités : toutes les nuances, pour étudier en profondeur.",
   sty:{rock:"Rock",reg:"Reg",pro:"Pro",station:"Station",lag:"LAG"},styFam:{rock:"Serré-passif",reg:"Serré-agressif",pro:"Équilibré (GTO)",station:"Large-passif",lag:"Large-agressif"},styIncl:"Comprend :",
@@ -998,6 +1015,8 @@ fr:{modeLbl:"Mode",modeClassic:"Classique",modeStyles:"5 styles",modePers:"Les 1
   sdHigh:r=>`hauteur ${r}`,sdKick:c=>`Même type de main (${c}) : compare les cartes dans l'ordre, la première carte plus haute gagne. Les kickers comptent aussi.`
 ,
   plSizeSmall:x=>`Taille de mise : environ <b>${x}</b> est mieux ici. Trop petit : tu laisses de la value et tu offres un prix pas cher aux tirages.`
+,
+  tabDrills:"Exercices",tabProfile:"Profil",segLessons:"Leçons",options:"Options",oppsLbl:"Adversaires",plTable:"Table",drillGoal:{"preflop": "Ouvrir, limper ou folder quand c'est à toi", "defense": "Fold, call ou 3-bet face à une ouverture", "equity": "Estime tes chances contre une main", "potodds": "Trouve le prix pour payer", "showdown": "Désigne le gagnant à l'abattage"}
 },
 es:{eqHowTitle:"Cómo estimar tu equity",
   ruleOf:n=>`Regla del ${n}`,
@@ -7588,7 +7607,7 @@ let S=blank();
 try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(o&&o.m){if(o.m.equite&&!o.m.equity){o.m.equity=o.m.equite;delete o.m.equite}S=Object.assign(S,o);S.m=Object.assign(blank().m,o.m)}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function record(mod,ok){S.m[mod][1]++;if(ok){S.m[mod][0]++;S.streak++;S.best=Math.max(S.best,S.streak)}else S.streak=0;save();paintStreak()}
-function paintStreak(){$("streak").textContent=S.streak;$("best").textContent=S.best}
+function paintStreak(){const a=$("streak"),b=$("best");if(a)a.textContent=S.streak;if(b)b.textContent=S.best}
 
 /* Each module keeps its state (incl. the chosen answer) so a language switch can repaint it as-is. */
 function verdict(ok,txt){return `<div class="verdict ${ok?"ok":"ko"}">${ok?t().correct:t().wrong}</div>${txt}<button class="next" data-next>${t().next}</button>`}
@@ -8030,7 +8049,7 @@ function paintStats(){
   const rows=Object.keys(t().mods).map(k=>{const [ok,n]=S.m[k];tot[0]+=ok;tot[1]+=n;const p=n?Math.round(ok/n*100):0;
     return `<div class="srow"><h3>${t().mods[k]}</h3><div class="val">${n?p+" %":"—"}</div><div class="meter"><span style="width:${p}%"></span></div><div class="sub">${t().sub(ok,n)}</div></div>`}).join("");
   const tp=tot[1]?Math.round(tot[0]/tot[1]*100):0;
-  $("stats").innerHTML=ratingHTML()+`<div class="srow"><h3>${t().overall}</h3><div class="val">${tot[1]?tp+" %":"—"}</div><div class="meter"><span style="width:${tp}%"></span></div><div class="sub">${t().subAll(tot[1],S.best)}</div></div>${rows}<button class="reset" id="reset">${resetArmed?t().confirmReset:t().reset}</button>${tot[1]?"":`<p class="note">${t().empty}</p>`}`;
+  $("stats").innerHTML=ratingHTML()+`<div class="srow"><h3>${t().overall}</h3><div class="val">${tot[1]?tp+" %":"—"}</div><div class="meter"><span style="width:${tp}%"></span></div><div class="sub">${t().subAll(tot[1],S.best)}</div></div>${rows}<button class="pill setbtn" data-opensettings>${ic("gear")}${t().settings}</button><button class="reset" id="reset">${resetArmed?t().confirmReset:t().reset}</button>${tot[1]?"":`<p class="note">${t().empty}</p>`}`;
   $("reset").onclick=()=>{if(!resetArmed){resetArmed=true;paintStats();return}
     resetArmed=false;S=blank();save();LOG={elo:1000,n:0,h:[]};saveLog();paintElo(0);paintStreak();paintStats()};
 }
@@ -8044,7 +8063,7 @@ function applyLang(){
   $("set-lang").value=lang;$("set-terms").checked=keepTerms&&lang!=="en";$("set-terms").disabled=lang==="en";
   $("set-terms-row").classList.toggle("off",lang==="en");$("set-terms-hint").textContent=lang==="en"?t().setTermsOff:t().setTermsHint;
   $("open-settings").setAttribute("aria-label",t().settings);$("open-settings").title=t().settings;
-  for(const k in PAINT)PAINT[k]();if(typeof paintLex==="function"&&current==="lexicon")paintLex();if(typeof paintLearn==="function"&&current==="learn")paintLearn();if(typeof paintElo==="function")paintElo(0);
+  for(const k in PAINT)PAINT[k]();if(typeof paintLex==="function"&&current==="lexicon")paintLex();if(typeof paintLearn==="function"&&current==="learn")paintLearn();if(current==="drills")paintDrills();paintSubnav(current);if(typeof paintElo==="function")paintElo(0);
   paintStudy();paintDStudy();paintDProf();paintPfProf();paintPlProf();if(G)paintPlay();if(current==="stats")paintStats();if(current==="villains")paintVillains();
 }
 $("set-lang").addEventListener("change",e=>{if(!T[e.target.value])return;lang=e.target.value;try{localStorage.setItem(LKEY,lang)}catch(err){}applyLang()});
@@ -8199,9 +8218,14 @@ function mcEq(h,board,nOpp,it){const used=new Set([...h,...board]),rest=[];for(l
     if(!lose)w+=1/(tie+1)}return w/it}
 const PLKEY="holdem-drill-plopp";
 let plProf="mixed";try{const v=localStorage.getItem(PLKEY);plProf=v==="custom"||v==="read"||v==="duel"?v:"mixed"}catch(e){}
-function paintPlProf(){$("pl-prof").innerHTML=["mixed","custom","read","duel"].map(k=>`<button class="pill" aria-pressed="${k===plProf}" data-plprof="${k}">${k==="mixed"?ic("mixed")+t().mixed:k==="custom"?ic("table")+t().myTable:k==="read"?ic("read")+t().plRead:'<img class="ic" src="ui/rk-target.webp" alt="">'+t().plDuel}</button>`).join("");$("pl-prof").hidden=!pers();paintTblEd("pl-tbl");paintSpeed();paintDuelChip()}
+let plTblSrc=plProf==="custom"?"custom":"mixed";
+function paintPlProf(){const tm=plProf==="mixed"||plProf==="custom";
+  $("pl-mode").innerHTML=[["table",ic("table")+t().plTable],["read",ic("read")+t().plRead],["duel",'<img class="ic" src="ui/rk-target.webp" alt="">'+t().plDuel]].map(([k,l])=>`<button class="pill" aria-pressed="${k==="table"?tm:k===plProf}" data-plmode="${k}">${l}</button>`).join("");$("pl-mode").hidden=!pers();
+  $("pl-prof").innerHTML=`<span class="lbl">${t().oppsLbl}</span>`+["mixed","custom"].map(k=>`<button class="pill" aria-pressed="${k===plProf}" data-plprof="${k}">${k==="mixed"?ic("mixed")+t().mixed:ic("table")+t().myTable}</button>`).join("");$("pl-prof").hidden=!pers()||!tm;paintTblEd("pl-tbl");paintSpeed();paintDuelChip()}
 $("pl-prof").addEventListener("click",e=>{const b=e.target.closest("[data-plprof]");if(!b||b.dataset.plprof===plProf)return;
-  plProf=b.dataset.plprof;try{localStorage.setItem(PLKEY,plProf)}catch(err){}paintPlProf();newGame()});
+  plProf=plTblSrc=b.dataset.plprof;try{localStorage.setItem(PLKEY,plProf)}catch(err){}paintPlProf();newGame();if(plProf==="mixed")$("pl-sheet").hidden=true});
+$("pl-mode").addEventListener("click",e=>{const b=e.target.closest("[data-plmode]");if(!b)return;const v=b.dataset.plmode==="table"?plTblSrc:b.dataset.plmode;if(v===plProf)return;
+  plProf=v;try{localStorage.setItem(PLKEY,plProf)}catch(err){}paintPlProf();newGame()});
 $("pl-tbl").addEventListener("change",onTblChange);
 
 /* ---------- Heads-up duel: one personality, exploit vs GTO ----------
@@ -8412,7 +8436,7 @@ function paintPlay(){const g=G;if(!g)return;paintRead();if(g.duel)paintDuelChip(
   paintRing("pl-table",{hu:g.n===2,bottom:hp,bottomCards:h.cards,bottomLabel:`${t().you} · ${lbl(hp)}`,bottomSub:bb(h.stack)+(h.win>0?` · +${bb(h.win)}`:""),seats,
     center:boardCenter(t().plStreets[g.over&&g.P.some(p=>p.show)?4:Math.min(g.street,3)],g.board,`${t().pot} ${bb(potOf())}`)});
   const net=r2(h.stack-g.inv);
-  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}${g.duel?`<span class="lbl">${t().plExpl}: <b>${g.xh}/${g.xs}</b></span>`:""}${g.read?`<span class="lbl rd-prog" data-readinfo>${ic("read")} <b>${g.P.filter((q,j)=>j&&q.idOK).length}/${g.n-1}</b></span>`:""}<button class="pill" data-plnew>${g.read?t().plNewTable:t().plNew}</button>`;
+  $("pl-sess").innerHTML=`<span class="lbl">${t().plHands}: <b>${g.done}</b></span><span class="lbl">${t().plNet}: <b class="${net>=0?"pos":"neg"}">${net>0?"+":""}${bb(net)}</b></span>${g.done?`<span class="lbl">${(net/g.done*100).toFixed(1)} bb/100</span>`:""}${g.grades&&g.grades.length?`<span class="lbl">${t().plScore}: <b>${Math.round(g.grades.reduce((a,b)=>a+b,0)/g.grades.length)}/100</b></span>`:""}${g.duel?`<span class="lbl">${t().plExpl}: <b>${g.xh}/${g.xs}</b></span>`:""}${g.read?`<span class="lbl rd-prog" data-readinfo>${ic("read")} <b>${g.P.filter((q,j)=>j&&q.idOK).length}/${g.n-1}</b></span>`:""}<button class="pill ico" data-plopts aria-label="${t().options}">${ic("gear")}</button><button class="pill" data-plnew>${g.read?t().plNewTable:t().plNew}</button>`;
   let c="";
   if(g.over)c=`<p class="plres">${g.result}</p><button class="next" data-plnext>${t().plNext}</button>${g.autoAt?`<p class="muted pl-autonote">${t().plAutoNote}</p>`:""}`;
   else if(g.toAct===0){const call=r2(Math.min(g.curBet-h.bet,h.stack));
@@ -8421,7 +8445,7 @@ function paintPlay(){const g=G;if(!g)return;paintRead();if(g.duel)paintDuelChip(
   else c=`<p class="q muted">${t().plWait(plName(g.toAct))}</p>`;
   $("pl-ctrl").innerHTML=c;$("pl-log").innerHTML=g.log.map(x=>`<li>${x}</li>`).join("")}
 $("pl-ctrl").addEventListener("click",e=>{const b=e.target.closest("[data-pa]");if(b)return heroAct(b.dataset.pa,+b.dataset.to);if(e.target.closest("[data-plnext]"))newHand()});
-$("pl-sess").addEventListener("click",e=>{if(e.target.closest("[data-plnew]"))newGame();else if(e.target.closest("[data-readinfo]"))openSeat({help:1})});
+$("pl-sess").addEventListener("click",e=>{if(e.target.closest("[data-plopts]")){$("pl-sheet").hidden=false;return}if(e.target.closest("[data-plnew]"))newGame();else if(e.target.closest("[data-readinfo]"))openSeat({help:1})});
 $("pl-coach").addEventListener("change",()=>paintPlay());
 $("pl-auto").checked=plAuto;$("pl-auto").addEventListener("change",e=>{plAuto=e.target.checked;try{localStorage.setItem(PAKEY,plAuto?"1":"0")}catch(err){}
   const g=G;if(!g)return;if(g.over){clearTimeout(g.timer);g.autoAt=0;if(plAuto){g.autoAt=Date.now()+1500;g.timer=setTimeout(newHand,1500)}paintPlay()}});
@@ -8461,7 +8485,7 @@ function leaksHTML(){const h=LOG.h.slice(-300),T=t();
   return out}
 function ratingHTML(){const T=t(),[lo,k]=tierOf(LOG.elo),nx=RKT.find(x=>x[0]>LOG.elo),pc=nx?Math.max(0,Math.min(100,Math.round((LOG.elo-lo)/(nx[0]-lo)*100))):100;
   return `<div class="srow rk"><img class="rkimg" src="ui/rk-${k}.webp" alt=""><div class="rkbody"><h3>${T.tier[k]}</h3><div class="val">${LOG.elo}</div><div class="meter"><span style="width:${pc}%"></span></div><div class="sub">${nx?T.toNext(nx[0]-LOG.elo,T.tier[nx[1]]):T.topTier} · ${T.decisions(LOG.n)}</div></div></div>
-  <div class="srow leaks"><h3><img class="ic" src="ui/rk-leak.webp" alt=""> ${T.leaksTitle}</h3>${leaksHTML()}</div><div class="srow duels"><h3><img class="ic" src="ui/rk-target.webp" alt=""> ${T.plDuel}</h3>${duelSum()}${duelGrid()}</div>`}
+  ${pers()?`<div class="srow duels"><h3><img class="ic" src="ui/rk-target.webp" alt=""> ${T.plDuel}</h3>${duelSum()}${duelGrid()}</div>`:""}<div class="srow leaks"><h3><img class="ic" src="ui/rk-leak.webp" alt=""> ${T.leaksTitle}</h3>${leaksHTML()}</div>`}
 
 
 /* ---------- Learn: a Duolingo-style path, simple to advanced ----------
@@ -8544,7 +8568,7 @@ function glBuild(){if(GLLANG===lang&&GLRE)return;GLLANG=lang;GLMAP=new Map();con
   for(const L of [t().gl,T.en.gl])for(const k in L){add(L[k][0].replace(/\s*\(.*\)$/,""),k);for(const a of L[k][2]||[])add(a,k)}
   words.sort((a,b)=>b.length-a.length);const esc=w=>w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
   GLRE=new RegExp("(?<![\\p{L}\\p{N}-])("+words.map(esc).join("|")+")(?![\\p{L}\\p{N}-])","giu")}
-const GLSKIP="button,select,input,textarea,a,.card,.term,.bnav,.tabs,.ring,.lnode,.pill,.ans,.brand,.streak,.elo,script,style,svg,.lex,.mini,.hc,.lhand,.lvis,.grid,.gauge,[data-noterm]";
+const GLSKIP=".subnav,.dtile,.ochip,button,select,input,textarea,a,.card,.term,.bnav,.tabs,.ring,.lnode,.pill,.ans,.brand,.streak,.elo,script,style,svg,.lex,.mini,.hc,.lhand,.lvis,.grid,.gauge,[data-noterm]";
 function glScan(root){if(!root||root.nodeType!==1||root.closest(GLSKIP))return;glBuild();
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.nodeValue.trim().length>1&&!n.parentElement.closest(GLSKIP)?1:2});
   const list=[];while(w.nextNode())list.push(w.currentNode);
@@ -8566,18 +8590,38 @@ function paintLex(){const el=$("lex");if(!el)return;const T2=t(),G2=T2.gl;
 $("lex").addEventListener("input",e=>{if(e.target.matches("input")){lexQ=e.target.value;paintLex()}});
 $("lex").addEventListener("click",e=>{const b=e.target.closest("[data-lexth]");if(b){lexTh=b.dataset.lexth;paintLex()}});
 
-/* ---------- phone navigation ---------- */
+/* ---------- navigation: 4 tabs (Learn, Drills, Play, Profile) ---------- */
 const goView=v=>{if(location.hash!=="#"+v)location.hash=v;else show(v);window.scrollTo({top:0})};
-document.querySelector(".bnav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-more")){$("more-sheet").hidden=false;return}goView(b.dataset.view)});
+const GROUP={learn:"learn",villains:"learn",lexicon:"learn",drills:"drills",preflop:"drills",defense:"drills",equity:"drills",potodds:"drills",showdown:"drills",play:"play",stats:"profile"};
+const TABHOME={learn:"learn",drills:"drills",play:"play",profile:"stats"},TABLAST={learn:"learn"};
+const DRILLS=["preflop","defense","equity","potodds","showdown"],DTAB={preflop:"tabPreflop",defense:"tabDefense",equity:"tabEquity",potodds:"tabPotodds",showdown:"tabShowdown"};
+for(const n of document.querySelectorAll(".bnav,.tabs"))n.addEventListener("click",e=>{const b=e.target.closest("[data-tab]");if(b)goView(b.dataset.tab==="learn"?TABLAST.learn:TABHOME[b.dataset.tab])});
+function paintSubnav(v){const el=$("subnav"),g=GROUP[v],T=t();
+  if(g==="learn"){el.hidden=false;el.className="subnav seg";el.innerHTML=[["learn",T.segLessons],...(pers()?[["villains",T.tabVillains]]:[]),["lexicon",T.tabLex]].map(([k,l])=>`<button class="pill" aria-pressed="${k===v}" data-sub="${k}">${l}</button>`).join("");return}
+  if(g==="drills"&&v!=="drills"){el.hidden=false;el.className="subnav back";el.innerHTML=`<button class="pill" data-sub="drills">← ${T.tabDrills}</button><b>${T[DTAB[v]]}</b><span class="streak">${T.streak} <b id="streak">0</b> · ${T.best} <b id="best">0</b></span>`;paintStreak();return}
+  el.hidden=true;el.innerHTML=""}
+$("subnav").addEventListener("click",e=>{const b=e.target.closest("[data-sub]");if(b)goView(b.dataset.sub)});
+function paintDrills(){const T=t();$("dhub").innerHTML=DRILLS.map(k=>{const [ok,n]=S.m[k];return `<button class="dtile" data-sub="${k}"><img src="ui/ic-nav-${k}.webp" alt=""><span><b>${T[DTAB[k]]}</b><small>${T.drillGoal[k]}</small></span><em>${n?Math.round(ok/n*100)+"%":"–"}</em></button>`}).join("")}
+$("dhub").addEventListener("click",e=>{const b=e.target.closest("[data-sub]");if(b)goView(b.dataset.sub)});
 $("elo").addEventListener("click",()=>goView("stats"));
 document.addEventListener("click",e=>{const b=e.target.closest("[data-practice]");if(b)goView(b.dataset.practice)});
-$("more-sheet").addEventListener("click",e=>{if(e.target.id==="more-sheet"||e.target.closest("[data-mclose]")){$("more-sheet").hidden=true;return}
-  const b=e.target.closest("button");if(!b)return;$("more-sheet").hidden=true;if(b.hasAttribute("data-settings")){$("open-settings").click();return}if(b.dataset.view)goView(b.dataset.view)});
+document.addEventListener("click",e=>{if(e.target.closest("[data-opensettings]"))openSettings()});
+/* option sheets: Play options, players behind (Preflop), opponent (Defense) */
+const SHEETS=["pl-sheet","pf-sheet","df-sheet"];
+document.addEventListener("click",e=>{const o=e.target.closest("[data-sheet]");if(o)$(o.dataset.sheet).hidden=false});
+for(const id of SHEETS)$(id).addEventListener("click",e=>{if(e.target.id===id||e.target.closest("[data-shclose]"))$(id).hidden=true});
+$("pf-prof").addEventListener("click",e=>{const b=e.target.closest("[data-pfprof]");if(b&&b.dataset.pfprof==="mixed")$("pf-sheet").hidden=true});
+$("df-prof").addEventListener("click",e=>{const b=e.target.closest("[data-prof]");if(b&&b.dataset.prof!=="custom")$("df-sheet").hidden=true});
+function paintChips(){const T=t();
+  $("pf-chip").innerHTML=`<span class="lbl">${T.behindLbl}</span> ${pfProf==="custom"?ic("table")+T.myTable:ic("mixed")+T.mixed} ▾`;
+  $("df-chip").innerHTML=`<span class="lbl">${T.oppLbl}</span> ${dProf==="custom"?ic("table")+T.myTable:dProf==="random"?ic("mixed")+T.random:optAv(dProf,22)+optName(dProf)} ▾`;
+  $("pf-chip").hidden=$("df-chip").hidden=!pers()}
+{const a=paintPfProf,b=paintDProf;paintPfProf=function(){a();paintChips()};paintDProf=function(){b();paintChips()}}
 /* answer feedback is a bottom sheet on phones: tap its header to fold it and look at the table */
 document.addEventListener("click",e=>{const v=e.target.closest(".fb > .verdict");if(v)v.parentElement.classList.toggle("min")});
 
 /* ---------- navigation ---------- */
-const VIEWS=["lexicon","learn","play","preflop","defense","equity","potodds","showdown","villains","stats"];
+const VIEWS=["drills","lexicon","learn","play","preflop","defense","equity","potodds","showdown","villains","stats"];
 const INIT={preflop:newPreflop,defense:newDefense,equity:newEquity,potodds:newPotOdds,showdown:newShowdown};
 const STATE={preflop:()=>pf,defense:()=>df,equity:()=>eq,potodds:()=>po,showdown:()=>sd};
 const ANS={preflop:i=>answerPreflop(i),defense:i=>answer("defense",df,i,paintDefense),equity:i=>answer("equity",eq,i,paintEquity),potodds:i=>answer("potodds",po,i,paintPotOdds),showdown:i=>answer("showdown",sd,i,paintShowdown)};
@@ -8585,7 +8629,7 @@ let current="preflop";const started={};
 function paintMode(){
   document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===mode));
   $("pf-prof").hidden=$("df-prof").hidden=!pers();paintTblEd("pf-tbl");paintTblEd("df-tbl");
-  document.querySelector('.tab[data-view="villains"]').hidden=!pers();document.querySelector('.bnav [data-view="villains"]').hidden=!pers();
+  paintSubnav(current);
 }
 $("mode").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b||b.dataset.mode===mode)return;
   mode=b.dataset.mode;try{localStorage.setItem(MKEY,mode)}catch(err){}paintMode();
@@ -8593,24 +8637,20 @@ $("mode").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");i
   for(const k of ["preflop","defense"])if(started[k])INIT[k]();if(G)newGame();applyLang()});
 function show(v){
   if(v==="equite")v="equity";
-  if(v==="villains"&&!pers())v="preflop";
+  if(v==="villains"&&!pers())v="learn";
   if(!v)v="learn";
   if(!VIEWS.includes(v))v="preflop";current=v;resetArmed=false;
   for(const x of VIEWS)$("v-"+x).hidden=x!==v;
-  document.querySelectorAll(".tab").forEach(tb=>tb.setAttribute("aria-selected",tb.dataset.view===v));
+  const grp=GROUP[v];if(grp==="learn")TABLAST.learn=v;document.querySelectorAll("[data-tab]").forEach(tb=>{tb.setAttribute("aria-current",tb.dataset.tab===grp);tb.setAttribute("aria-selected",tb.dataset.tab===grp)});paintSubnav(v);
   if(INIT[v]&&!started[v]){started[v]=true;INIT[v]()}
   if(v==="stats")paintStats();
   if(v==="villains")paintVillains();
-  if(!$("seat-sheet").hidden)closeSeat();$("more-sheet").hidden=true;
-  const MORE=["defense","equity","potodds","showdown","stats","lexicon"];
-  document.querySelectorAll(".bnav [data-view]").forEach(b=>b.setAttribute("aria-current",b.dataset.view===v));
-  document.querySelector(".bnav [data-more]").setAttribute("aria-current",MORE.includes(v));
+  if(!$("seat-sheet").hidden)closeSeat();for(const x of SHEETS)$(x).hidden=true;
+  if(v==="drills")paintDrills();
   if(v==="play"){paintPlProf();if(!G)newGame();else paintPlay()}
   if(v==="learn")paintLearn();
   if(v==="lexicon")paintLex();else document.body.classList.remove("inlesson");
 }
-document.querySelector(".tabs").addEventListener("click",e=>{const tb=e.target.closest(".tab");if(!tb)return;
-  if(location.hash!=="#"+tb.dataset.view)location.hash=tb.dataset.view;else show(tb.dataset.view)});
 window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
 document.addEventListener("click",e=>{if(e.target.closest("[data-next]")&&INIT[current]){INIT[current]();window.scrollTo({top:0,behavior:"smooth"})}});
 document.addEventListener("keydown",e=>{
